@@ -48,3 +48,32 @@ Git Bash를 실행합니다. 이 프로그램은 윈도우즈 CMD 창과 비슷�
 
 
 
+## PIP 라이브러리 설치하기
+
+도그푸터는 Python 으로 작성되었습니다. 또한 Python 에서 제공하는 기본 라이브러리 외에 외부 라이브러리를 사용합니다.
+아래 명령어를 Git Bash에서 순서대로 실행해주시길 바랍니다.
+
+
+```
+$ python -m pip install --upgrade pip
+```
+
+```
+$ pip install flask-restful
+```
+
+```
+$ pip install pyautogui
+```
+
+```
+$ pip install numpy
+```
+
+```
+$ pip install opencv-python
+
+```
+
+
+
