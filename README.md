@@ -84,5 +84,14 @@ pip install opencv-python
 pip install matplotlib
 ```
 
+```
+pip install belfrywidgets
+```
 
+```
+pip install simple_rest_client
+```
 
+```
+pip install python-telegram-bot
+```
