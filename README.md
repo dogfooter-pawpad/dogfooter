@@ -47,6 +47,11 @@ Git Bash를 실행합니다. 이 프로그램은 윈도우즈 CMD 창과 비슷�
 "Git Bash Here"가 없으면 Git for Windows가 제대로 설치가 되지 않은 것입니다. 설치를 제대로 해주세요.
 "Git Bash Here"가 보인다면 클릭해주세요. 해당 폴더에서 Git Bash가 실행됩니다.
 
+실행된 화면에서 아래와 똑같이 입력해주세요. 복사해서 붙여넣어도 됩니다.
+
+```
+git clone https://github.com/dogfooter-pawpad/dogfooter.git
+```
 
 
 ## PIP 라이브러리 설치하기
@@ -56,28 +61,37 @@ Git Bash를 실행합니다. 이 프로그램은 윈도우즈 CMD 창과 비슷�
 
 
 ```
-$ python -m pip install --upgrade pip
+python -m pip install --upgrade pip
 ```
 
 ```
-$ pip install flask-restful
+pip install pywin32
 ```
 
 ```
-$ pip install pyautogui
+pip install pyautogui
 ```
 
 ```
-$ pip install numpy
+pip install numpy
 ```
 
 ```
-$ pip install opencv-python
+pip install opencv-python
 ```
 
 ```
-$ pip install matplotlib
+pip install matplotlib
 ```
 
+```
+pip install belfrywidgets
+```
 
+```
+pip install simple_rest_client
+```
 
+```
+pip install python-telegram-bot
+```
