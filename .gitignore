@@ -1,0 +1,11 @@
+.idea/*
+*workspace*
+test_*.py
+screenshot
+log
+account*.dat
+__pycache__/*
+*.pyc
+dist
+build
+lyb.cfg
