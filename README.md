@@ -34,17 +34,18 @@
 
 [Python 3.6.8 버전 윈도우 64비트(Windows 10) 다운로드 링크](https://www.python.org/ftp/python/3.6.8/python-3.6.8-amd64-webinstall.exe)
 
-## Git Bash 실행하기
+## Git Bash 실행해보기
 
 "Git for Windows" 를 제대로 설치했다면 "Git Bash"라는 프로그램이 있어햐 합니다. 해당 프로그램이 없다면 구글링을 통해서 제대로 설치해주세요.
 Git Bash를 실행합니다. 이 프로그램은 윈도우즈 CMD 창과 비슷하게 생겼습니다.
 
 ## 도그푸터 깃허브 오픈 소스 다운로드 받기
 
-도그푸터 소스를 내려받을 디렉토리를 만듭니다. 
-디렉토리로 이동 후 마우스를 우클릭하며 메뉴에 "Git Bash Here" 가 있어야 합니다.
+도그푸터 소스를 내려받을 새폴더를 만듭니다. D:\dogfooter 와 같이 아무 곳에나 원하시는 이름으로 폴더를 만듭니다.
+폴더로 이동 후 마우스를 우클릭해봅니다.
+우클릭하면 뜨는 팝업 메뉴에 "Git Bash Here" 가 있어야 합니다.
 "Git Bash Here"가 없으면 Git for Windows가 제대로 설치가 되지 않은 것입니다. 설치를 제대로 해주세요.
-"Git Bash Here"가 보인다면 클릭해주세요. 해당 디렉토리에서 Git Bash가 실행됩니다.
+"Git Bash Here"가 보인다면 클릭해주세요. 해당 폴더에서 Git Bash가 실행됩니다.
 
 
 
