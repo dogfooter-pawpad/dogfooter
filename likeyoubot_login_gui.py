@@ -128,8 +128,8 @@ class LYBLoginGUI:
         frame_right.pack(fill=tkinter.BOTH, expand=True)
         frame_top.pack()
 
-        if not lybconstant.LYB_DO_BOOLEAN_SAVE_LOGIN_ACCOUNT + '_chatid' in self.configure.common_config:
-            self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_SAVE_LOGIN_ACCOUNT + '_chatid'] = ''
+        if not lybconstant.LYB_DO_BOOLEAN_SAVE_LOGIN_ACCOUNT + '_chat_id' in self.configure.common_config:
+            self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_SAVE_LOGIN_ACCOUNT + '_chat_id'] = ''
 
         self.option_dic[lybconstant.LYB_DO_BOOLEAN_SAVE_LOGIN_ACCOUNT] = tkinter.BooleanVar()
         self.option_dic[lybconstant.LYB_DO_BOOLEAN_SAVE_LOGIN_ACCOUNT].trace(
@@ -248,11 +248,11 @@ class LYBLoginGUI:
 
             self.main_frame.pack_forget()
 
-            # chatid = self.lybhttp.get_chatid()
-            chatid = self.rest.get_chatid()
+            # chat_id = self.lybhttp.get_chat_id()
+            chat_id = self.rest.get_chat_id()
 
-            if chatid != None:
-                self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_SAVE_LOGIN_ACCOUNT + '_chatid'] = chatid
+            if chat_id != None:
+                self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_SAVE_LOGIN_ACCOUNT + '_chat_id'] = chat_id
 
             if self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_AUTO_UPDATE] == True:
                 self.auto_update()

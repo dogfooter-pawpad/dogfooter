@@ -89,7 +89,7 @@ try:
     with open(resource_path('host'), 'r') as host_file:
         configure.root_url = host_file.readline()
 except FileNotFoundError:
-    configure.root_url = 'https://pawpad.kr'
+    configure.root_url = 'http://www.pawpad.kr:9000'
 
 configure.merge()
 root.update()

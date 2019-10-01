@@ -225,7 +225,6 @@ class LYBGUI:
         # self.keyword_entry.insert(0, self.configure.keyword)
         # self.keyword_entry.focus()
 
-
         label = ttk.Label(
             master=frame,
             text="앱 플레이어: "
@@ -529,8 +528,6 @@ class LYBGUI:
         # 	)
 
         # check_box.pack(anchor=tkinter.W)
-
-
 
         frame = ttk.Frame(frame_inner, relief=frame_relief)
         if not lybconstant.LYB_DO_BOOLEAN_USE_INACTIVE_MODE in self.configure.common_config:
@@ -895,17 +892,6 @@ class LYBGUI:
 
         # - TAB
 
-
-
-
-
-
-
-
-
-
-
-
         # 탭 추가
         self.option_dic['common_tab'] = ttk.Notebook(
             master=self.tab_frame[-1]
@@ -940,24 +926,17 @@ class LYBGUI:
 
         # frame_label = self.add_monitor_master_frame()
 
-
         self.option_dic['monitor_master'].pack(anchor=tkinter.NW, fill=tkinter.BOTH, padx=2, pady=2)
 
         frame_bottom = ttk.Frame(self.option_dic['monitoring_tab'])
         frame_log = ttk.Frame(frame_bottom)
         # ----- INFORMATION LOGGING ------
 
-
-
-
-
-
         # self.logger.critical('CRITICAL')
         # self.logger.error('ERROR')
         # self.logger.warn('WARN')
         # self.logger.info('INFO')
         # self.logger.debug('DEBUG')
-
 
         # frame = ttk.Frame(frame_log)
         # frame.pack(pady=2)
@@ -1150,8 +1129,6 @@ class LYBGUI:
         # 	offvalue 			= False
         # 	)
         # checkbutton.pack(side=tkinter.LEFT)
-
-
 
         frame.pack(anchor=tkinter.W, padx=2)
 
@@ -1402,7 +1379,7 @@ class LYBGUI:
         )
         button.pack(anchor=tkinter.W, fill=tkinter.X)
 
-        if self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_SAVE_LOGIN_ACCOUNT + '_chatid'] == '':
+        if self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_SAVE_LOGIN_ACCOUNT + '_chat_id'] == '':
             self.telegram_button_label.set('연동하기')
             self.telegram_entry.set(self.generate_token())
         # entry.select_range(0, tkinter.END)
@@ -1411,16 +1388,16 @@ class LYBGUI:
 
         s = ttk.Style(login_frame)
         s.configure('green_label.TLabel', foreground="green")
-        self.telegram_chatid_label = tkinter.StringVar(login_frame)
+        self.telegram_chat_id_label = tkinter.StringVar(login_frame)
         label = ttk.Label(
             master=login_frame,
-            textvariable=self.telegram_chatid_label,
+            textvariable=self.telegram_chat_id_label,
             justify=tkinter.LEFT,
             style='green_label.TLabel'
         )
         label.pack()
-        self.telegram_chatid_label.set(
-            self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_SAVE_LOGIN_ACCOUNT + '_chatid'])
+        self.telegram_chat_id_label.set(
+            self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_SAVE_LOGIN_ACCOUNT + '_chat_id'])
         login_frame.pack(fill=tkinter.X, padx=2)
 
         button_frame = ttk.Frame(frame_br)
@@ -1482,7 +1459,6 @@ class LYBGUI:
         # 	y=lybconstant.LYB_PADDING,
         # 	width=lybconstant.LYB_LABEL_WIDTH, height=lybconstant.LYB_LABEL_HEIGHT
         # 	)
-
 
         threshold_label.pack(side=tkinter.LEFT)
 
@@ -2242,12 +2218,6 @@ class LYBGUI:
         # 	self.game_options[self.games[0]]['work_list_listbox'].insert('end', each_work)
         # 	self.configure.common_config[self.games[0]]['work_list'].append(each_work)
 
-
-
-
-
-
-
         self.game_tab_dic = {
         }
         # 다크에덴M
@@ -2382,8 +2352,6 @@ class LYBGUI:
         # 	self.height
         # 	)
 
-
-
         # 클랜즈: 달의 그림자
 
         # game_index += 1
@@ -2395,11 +2363,6 @@ class LYBGUI:
         # 	self.width,
         # 	self.height
         # 	)
-
-
-
-
-
 
         # 열혈강호M
 
@@ -2499,7 +2462,6 @@ class LYBGUI:
 
         # 	)
 
-
         # -- 스케쥴 목록
         # self.game_frame[self.games[0]]['schedule_list'] = ttk.Frame(self.tab_frame[-1], relief=frame_relief)
         # self.game_options[self.games[0]]['schedule_list_listbox'] = tkinter.Listbox(
@@ -2527,7 +2489,6 @@ class LYBGUI:
 
         # for each_work in self.configure.common_config[self.games[0]]['schedule_list']:
         # 	self.game_options[self.games[0]]['schedule_list_listbox'].insert('end', each_work)
-
 
         # self.game_frame[self.games[0]]['options'] = ttk.Frame(self.tab_frame[-1], relief=frame_relief)
 
@@ -2641,7 +2602,7 @@ class LYBGUI:
                 if self.check_ads() == False:
                     self.terminateWorker(None)
                     rest = self.login()
-                    chat_id = rest.get_chatid()
+                    chat_id = rest.get_chat_id()
                     rest.send_telegram_message(chat_id, '※ 광고가 팝업되면서 프로그램이 중지되었습니다.')
 
         # self.update_telegram()
@@ -2693,7 +2654,7 @@ class LYBGUI:
             return
 
         if (not 'restart_app_player_status' in self.option_dic or
-                    self.option_dic['restart_app_player_status'] == False):
+                self.option_dic['restart_app_player_status'] == False):
             self.option_dic['restart_app_player_status'] = False
 
         if self.option_dic['restart_app_player_status'] == False:
@@ -2744,7 +2705,6 @@ class LYBGUI:
             '재시작 지연 시간: ' + str(int(time.time() - self.option_dic['restart_app_player_delay'])) + ' / ' + str(
                 delay_restart) + ' 초')
         # self.logger.warn(self.option_dic['restart_app_player_retry'])
-
 
         # 종료된 앱플레이어들이 전부 다시 서치됐는가?
         if self.restart_app_player_search == True:
@@ -2813,7 +2773,7 @@ class LYBGUI:
         self.last_check_telegram = time.time()
 
         rest = self.login()
-        chat_id = rest.get_chatid()
+        chat_id = rest.get_chat_id()
         if chat_id is None or len(str(chat_id)) == 0:
             return
 
@@ -2899,12 +2859,12 @@ class LYBGUI:
     def process_command(self, command):
         message_to_return = None
 
-        if command == None or command[0] != '/':
+        if command is None or command[0] != '/':
             self.logger.error('올바르지 않은 형식의 명령: ' + str(command))
         else:
             rest = self.login()
             base_point = rest.get_elem('telegram_point')
-            if base_point == None:
+            if base_point is None:
                 base_point = 0
             else:
                 base_point = int(base_point)
@@ -2926,7 +2886,7 @@ class LYBGUI:
                     self.send_screenshot_telegram()
                     message_to_return = '전체 화면 스크린샷 전송 완료'
 
-        if message_to_return == None:
+        if message_to_return is None:
             message_to_return = \
                 '지원하지 않는 명령: ' + str(command) + '\n\n' + \
                 '도그푸터 지원 명령어 목록:\n\n' + \
@@ -2939,7 +2899,7 @@ class LYBGUI:
                 '※ 명령어 입력 후 응답이 오지 않는다면 전송에 실패 한 것입니다. 다시 입력하세요.\n'
 
         rest = self.login()
-        chat_id = rest.get_chatid()
+        chat_id = rest.get_chat_id()
         rest.send_telegram_message(chat_id, message_to_return)
 
     def process_message(self, worker, message):
@@ -2949,7 +2909,7 @@ class LYBGUI:
             if message.message != None and len(message.message) > 0 and not message.message in self.worker_dic:
                 if self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_COMMON_TELEGRAM_NOTIFY + 'recovery'] == True:
                     rest = self.login()
-                    chat_id = rest.get_chatid()
+                    chat_id = rest.get_chat_id()
                     rest.send_telegram_message(chat_id, '매크로 재실행됨 - ' + str(message.message))
 
                 max_recovery_count = self.configure.common_config[lybconstant.LYB_DO_STRING_RECOVERY_COUNT]
@@ -3028,7 +2988,7 @@ class LYBGUI:
         elif message.type == 'error':
             if self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_COMMON_TELEGRAM_NOTIFY + 'recovery'] == True:
                 rest = self.login()
-                chat_id = rest.get_chatid()
+                chat_id = rest.get_chat_id()
                 rest.send_telegram_message(chat_id, '[오류 발생] ' + message.message)
 
             self.logging_message("FAIL", message.message)
@@ -3046,7 +3006,7 @@ class LYBGUI:
 
     def logging_message(self, tag, logging_message):
 
-        if tag == 'GOOD' or tag == 'NICE' or tag == 'SUB':
+        if tag == 'GOOD' or tag == 'NICE' or tag == 'SUB' or tag == 'SUCCESS':
             self.logger.info(logging_message)
         elif tag == 'BAD' or tag == 'FAIL':
             self.logger.warn(logging_message)
@@ -3075,10 +3035,7 @@ class LYBGUI:
         # 		self.logging_message('SUCCESS', '실행 인증 코드 [' + self.configure.common_config['security_code'] + '] 승인됨')
         # 		self.security_authority = True
 
-
         # license_limit = lybconstant.LYB_LICENSE_LIMIT - time.time()
-
-
 
         # 20180210
         # try:
@@ -3109,7 +3066,6 @@ class LYBGUI:
         # 	self.ready_to_start = True
         # 	self.searchWindow(None)
         # else:
-
 
         # for i in range(self.search_window.size()):
         # 	if not self.search_window.get(i) in self.configure.window_config:
@@ -3145,7 +3101,6 @@ class LYBGUI:
 
         # 	# self.configure.common_config['pixel_tolerance_entry'] = self.pixel_tolerance_entry.get()
 
-
         # 	# if int(self.wakeup_period_entry.get()) <= 0:
         # 	# 	self.wakeup_period_entry.set('1')
 
@@ -3164,7 +3119,6 @@ class LYBGUI:
         # 	self.logging_message('FAIL', '작업을 수행할 창이 선택되지 않았습니다.' )
         # 	# self.ready_to_start = False
         # 	return
-
 
         # self.start_button.configure(stat='disabled')
         # self.search_button.configure(stat='disabled')
@@ -3478,14 +3432,12 @@ class LYBGUI:
     # 				c_label += self.search_window.get(item)
     # 		count += 1
 
-
     # 	if c_label == '':
     # 		c_label = lybconstant.LYB_LABEL_SELECT_WINDOW_TEXT
     # 	elif count > 1 and count == self.search_window.size():
     # 		c_label = lybconstant.LYB_LABEL_SELECTED_ALL
 
     # 	# print('count=', count, 'search_window=', self.search_window.size(), c_label)
-
 
     # 	self.configure_label.configure(
     # 		text 				= c_label
@@ -3548,7 +3500,6 @@ class LYBGUI:
         # if is_selected == False:
         # 	# 공통적용
         # 	self.configure.common_config[value] = self.gui_config_dic[value].get()
-
 
         # print(self.configure.window_config)
         # print(self.configure.common_config)
@@ -3656,7 +3607,6 @@ class LYBGUI:
     # 			#schedule_list.append(selected_work_name)
     # 			schedule_list.insert(len(schedule_list) - 1, selected_work_name)
     # 			self.game_options[game_name]['schedule_list_listbox'].insert(self.game_options[game_name]['schedule_list_listbox'].size() - 1, selected_work_name)
-
 
     # def select_schedule_list(self, event, game_name):
 
@@ -3774,7 +3724,6 @@ class LYBGUI:
     # 	except:
     # 		self.logger.error(traceback.format_exc())
     # 	self.set_config(lybconstant.LYB_DO_BOOLEAN_LOG_LEVEL + 'remove')
-
 
     def callback_hompage(self, event):
         webbrowser.open_new(likeyoubot_http.LYBHttp.getMacroBaseUrl())
@@ -4274,8 +4223,6 @@ class LYBGUI:
             # 		self.option_dic[window_name + '_monitor']
             # 		)
 
-
-
             # for window_name, thread in self.worker_dic.items():
             # 	if not window_name + '_monitor' in self.option_dic:
             # 		self.option_dic[window_name + '_monitor'] = self.add_monitor_master(window_name)
@@ -4323,8 +4270,8 @@ class LYBGUI:
                     text_arg = each_arg
             elif i == 2:
                 if (not window_name in self.current_work_dic or
-                            self.current_work_dic[window_name] != each_arg
-                    ):
+                        self.current_work_dic[window_name] != each_arg
+                ):
                     self.logger.debug(
                         'wlist work: ' + self.wlist_stringvar_dic[window_name].get() + ' game work: ' + each_arg)
                     if window_name in self.current_work_dic:
@@ -4489,7 +4436,6 @@ class LYBGUI:
         # s = ttk.Style()
         # s.configure('monitor_button.TButton', highlightbackground='green')
 
-
         self.monitor_button_index[0] = column_count
         button = ttk.Button(
             master=frame_label,
@@ -4557,7 +4503,6 @@ class LYBGUI:
         # 		)
         # 	button.pack(side=tkinter.LEFT)
         # column_count += 1
-
 
         # if arg113 != None:
         # 	self.monitor_button_index[4] = column_count
@@ -4810,19 +4755,27 @@ class LYBGUI:
 
             chat_id = rest.connect_telegram(self.telegram_entry.get())
             if chat_id != '':
-                error_message = rest.login(mb_3=chat_id)
+                error_message = rest.update_chat_id(chat_id)
                 if error_message == '':
                     self.telegram_button_label.set('연동해제')
-                    self.telegram_chatid_label.set(chat_id)
+                    self.telegram_chat_id_label.set(chat_id)
+
+                    self.logger.info('DEBUG1')
+
                     rest.send_telegram_message(chat_id,
-                                                  self.telegram_entry.get() + ' from DogFooter Macro ' + lybconstant.LYB_VERSION)
+                                               self.telegram_entry.get() + ' from DogFooter Macro ' + lybconstant.LYB_VERSION)
+
+                    self.logger.info('DEBUG2')
 
                     self.logging_message("SUCCESS", "텔레그램 연동에 성공했습니다.")
                     self.logging_message("SUCCESS", "도그푸터 봇이 메세지를 전송했습니다.")
                     self.logging_message("SUCCESS", "텔레그램 알람이 온다면 텔레그램 연동에 성공한 것입니다.")
                     self.logging_message("SUCCESS", "연동해제 버튼을 눌러서 언제든지 해제 할 수 있습니다.")
                     self.telegram_entry.set('')
-                    chat_id = rest.get_chatid(refresh=True)
+
+                    self.logger.info('DEBUG3')
+
+                    chat_id = rest.get_chat_id(refresh=True)
                     self.logger.debug('update chatting id: ' + str(chat_id))
                     return
             self.logging_message("FAIL", "텔레그램 연동에 실패했습니다.")
@@ -4830,13 +4783,13 @@ class LYBGUI:
         else:
             rest = self.login()
 
-            error_message = rest.login(mb_3='-1')
+            error_message = rest.update_chat_id(0)
             if error_message == '':
                 self.logging_message("SUCCESS", "텔레그램 연동을 해제했습니다.")
                 self.telegram_button_label.set('연동하기')
-                self.telegram_chatid_label.set('')
+                self.telegram_chat_id_label.set('')
                 self.telegram_entry.set(self.generate_token())
-                chat_id = rest.get_chatid(refresh=True)
+                chat_id = rest.get_chat_id(refresh=True)
 
     def get_mb_point(self):
         if self.mb_point != None:
@@ -4850,8 +4803,8 @@ class LYBGUI:
         return self.mb_point
 
     # def get_mb_ip(self):
-        # rest = self.login()
-        # return rest.get_ip()
+    # rest = self.login()
+    # return rest.get_ip()
 
     def login(self):
         if self.rest is not None:
@@ -4873,7 +4826,7 @@ class LYBGUI:
         screenShot = ImageGrab.grab()
         png_name = self.save_image(screenShot, 'ss_command')
         rest = self.login()
-        chat_id = rest.get_chatid()
+        chat_id = rest.get_chat_id()
         self.rest.send_telegram_image(chat_id, png_name)
 
     def save_image(self, image, png_name):

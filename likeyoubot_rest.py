@@ -3,8 +3,6 @@ import time
 
 from simple_rest_client.api import API
 import likeyoubot_logger
-import json
-from collections import namedtuple
 import traceback
 import telegram
 
@@ -26,7 +24,7 @@ class LYBRest:
             json_encode_body=True,
         )
         self.rest.add_resource(resource_name='api')
-        self.adjustTime = 0
+        self.adjustTime = 32400
 
     def login(self):
         payload = {
@@ -43,6 +41,25 @@ class LYBRest:
             if r['err'] is None:
                 data = r['data']
                 self.access_token = data['access_token']
+                return ''
+            else:
+                return r['err']
+        except:
+            return 'error'
+
+    def update_chat_id(self, chat_id):
+        payload = {
+            'data': {
+                'category': 'private',
+                'service': 'UpdateChatId',
+                'access_token': self.access_token,
+                'chat_id': str(chat_id),
+            }
+        }
+        try:
+            res = self.rest.api.create(body=payload)
+            r = res.body
+            if r['err'] is None:
                 return ''
             else:
                 return r['err']
@@ -95,8 +112,8 @@ class LYBRest:
         except:
             self.logger.error(traceback.format_exc())
 
-    def get_chatid(self):
-        if self.chat_id >= 0:
+    def get_chat_id(self):
+        if self.chat_id > 0:
             return self.chat_id
 
         payload = {
@@ -111,12 +128,14 @@ class LYBRest:
             r = res.body
             if r['err'] is None:
                 data = r['data']
-                self.chat_id = int(data['chat_id'])
-                return self.chat_id
-            else:
-                return r['err']
+                if 'chat_id' in data:
+                    self.chat_id = int(data['chat_id'])
+                    if self.chat_id > 0:
+                        return self.chat_id
         except:
-            self.logger.error(traceback.format_exc())
+            return None
+
+        return None
 
     def get_version(self):
         payload = {
@@ -188,8 +207,8 @@ class LYBRest:
     def connect_telegram(self, match_string):
         try:
             last_log = self.getTelegramUpdates(-1, match_string=match_string)
-            if last_log != None:
-                return str(last_log.message.chat_id)
+            if last_log is not None:
+                return str(last_log.message.chat.id)
         except:
             self.logger.error(traceback.format_exc())
             return ''
@@ -216,11 +235,12 @@ class LYBRest:
         return ''
 
     def send_telegram_message(self, chat_id, message):
-        if chat_id < 0:
+        if int(chat_id) <= 0:
             return
 
         try:
             m_token = self.get_token()
+
             bot = telegram.Bot(token=m_token)
             bot.sendMessage(chat_id=chat_id, text=message)
         except telegram.error.TimedOut:
@@ -232,7 +252,7 @@ class LYBRest:
             return ''
 
     def send_telegram_image(self, chat_id, image_url):
-        if chat_id < 0:
+        if chat_id <= 0:
             return
         try:
             m_token = self.get_token()
@@ -264,7 +284,7 @@ class LYBRest:
                     if update_id < eachLog.update_id:
                         update_id = int(eachLog.update_id)
                 else:
-                    if chat_id == -1:
+                    if chat_id <= 0:
                         self.logger.debug('텔레그램 연동')
                         if str(eachLog.message.text) == match_string:
                             if self.last_id != eachLog.update_id:

@@ -457,7 +457,7 @@ class LYBGame():
         if self.rest is None:
             self.rest = self.login()
             self.rest.login()
-        chat_id = self.rest.get_chatid()
+        chat_id = self.rest.get_chat_id()
 
         if image == None:
             self.rest.send_telegram_message(chat_id, message)

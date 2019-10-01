@@ -321,10 +321,10 @@ class LYBHttp:
 
         return self.json_obj['login_point'].replace(',', '', 5)
 
-    def get_chatid(self, refresh=False):
+    def get_chat_id(self, refresh=False):
         if self.json_obj != None:
             if refresh == False:
-                return self.json_obj[self.mb_id]['chatid']
+                return self.json_obj[self.mb_id]['chat_id']
 
         error_message = self.login()
         if error_message != '':
@@ -342,7 +342,7 @@ class LYBHttp:
             self.logger.error(str(sys.exc_info()[0]) + '(' + str(sys.exc_info()[1]) + ')')
             return None
 
-        return self.json_obj[self.mb_id]['chatid']
+        return self.json_obj[self.mb_id]['chat_id']
 
     def get_version(self):
         if self.json_obj != None:
