@@ -81,7 +81,6 @@ if ( pipJson ) {
         if ( !pip_user.hasOwnProperty(pip[i]) ) {
             pip_user[pip[i]] = true;
             pip_command = '"pip" install ' + pip[i];
-            console.log(pip_command)
             execSync(pip_command, function(error, stdout, stderr) {
                 console.log(stdout);
             });
