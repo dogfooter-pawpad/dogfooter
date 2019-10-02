@@ -1,13 +1,9 @@
 import tkinter
 from tkinter import ttk
-from tkinter import font
-import threading
 import time
-import collections
 import likeyoubot_worker
 import queue
 import pickle
-import sys
 import os
 import likeyoubot_message
 
@@ -685,7 +681,7 @@ class LYBGUI:
             text="GET",
             width=3,
             style='button_0.TButton',
-            command=lambda: self.getWindowLocation(None)
+            command=lambda: self.get_window_location(None)
         )
         self.get_location_window_button.pack(side=tkinter.LEFT, padx=1)
 
@@ -707,10 +703,9 @@ class LYBGUI:
             self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'number'] = 1
         self.gui_config_dic[lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'number'].set(
             self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'number'])
-        self.gui_config_dic[lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'number'].trace('w',
-                                                                                             lambda
-                                                                                                 *args: self.callback_fix_window_location_number_stringvar(
-                                                                                                 args))
+        self.gui_config_dic[lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'number'].trace('w', lambda
+            *args: self.callback_fix_window_location_number_stringvar(
+            args))
 
         combobox = ttk.Combobox(
             master=frame,
@@ -1701,7 +1696,7 @@ class LYBGUI:
         self.recovery_count_stringvar = tkinter.StringVar(frame)
 
         combobox_list = []
-        for i in range(100, 10001):
+        for i in range(10, 1000, 10):
             combobox_list.append(i)
 
         combobox = ttk.Combobox(
@@ -1710,7 +1705,7 @@ class LYBGUI:
             textvariable=self.recovery_count_stringvar,
             state='readonly',
             justify=tkinter.RIGHT,
-            width=3,
+            width=5,
             font=lybconstant.LYB_FONT
         )
         combobox.pack(side=tkinter.LEFT)
@@ -2549,7 +2544,8 @@ class LYBGUI:
 
         self.logger.critical('Successfully initialized')
 
-        self.startLongPollingWorker()
+        self.start_long_polling_worker()
+        self.start_websocket_worker()
         self.manage_workers()
 
     def manage_workers(self):
@@ -2971,7 +2967,7 @@ class LYBGUI:
                 self.app_player_process.set('')
                 if len(self.configure.keyword) > 0:
                     self.logging_message("FAIL", "[" + self.configure.keyword + "]" + " 단어가 포함된 창 검색 실패")
-                self.logging_message("FAIL", "창 사이즈(800x450), 창 최소화 상태인지 확인")
+                self.logging_message("FAIL", "창 사이즈( 960 x 540 ), 창이 최소화 상태인지 확인")
             self.refresh_window_game()
         elif message.type == 'log':
             self.logging_message(None, message.message)
@@ -3254,14 +3250,21 @@ class LYBGUI:
         # 	if i !=0:
         # 		self.note.tab(i, stat='normal')
 
-    def startLongPollingWorker(self):
+    def start_long_polling_worker(self):
         worker_thread = self.executeThread(is_system=True)
-        if worker_thread == None:
+        if worker_thread is None:
             return
 
-        worker_thread.command_queue.put_nowait(likeyoubot_message.LYBMessage('longPolling', self))
+        worker_thread.command_queue.put_nowait(likeyoubot_message.LYBMessage('long_polling', self))
 
-    def getWindowLocation(self, e):
+    def start_websocket_worker(self):
+        worker_thread = self.executeThread(is_system=True)
+        if worker_thread is None:
+            return
+
+        worker_thread.command_queue.put_nowait(likeyoubot_message.LYBMessage('websocket', self))
+
+    def get_window_location(self, e):
         worker_thread = self.executeThread()
         if worker_thread == None:
             return

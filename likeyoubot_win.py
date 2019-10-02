@@ -13,8 +13,8 @@ import random
 
 
 class LYBWin:
-    WIDTH = 800
-    HEIGHT = 450
+    WIDTH = 960
+    HEIGHT = 540
     NOX_EXTRA_WIDTH = 2
     NOX_EXTRA_HEIGHT = 30
 
@@ -135,17 +135,27 @@ class LYBWin:
             if not hwnd in self.handle_list:
                 (top_left_x, top_left_y, bottom_right_x, bottom_right_y) = win32gui.GetWindowRect(hwnd)
                 # print('--------------------> !!! found window DEBUG3 new : ', (top_left_x, top_left_y, bottom_right_x, bottom_right_y))
-                # print(abs(bottom_right_x - top_left_x))
+                # print(win32gui.GetWindowText(hwnd), abs(bottom_right_y - top_left_y))
 
-                if (abs(bottom_right_x - top_left_x - LYBWin.WIDTH) < 50 and
+                if (abs(bottom_right_x - top_left_x - LYBWin.WIDTH) < 100 and
                             abs(bottom_right_y - top_left_y - LYBWin.HEIGHT) < 100
                     ):
-                    # print(abs(bottom_right_x - top_left_x))
-                    if abs(bottom_right_x - top_left_x) == LYBWin.WIDTH + 38:
-                        # MOMO
+                    print(win32gui.GetWindowText(hwnd), abs(bottom_right_x - top_left_x))
+                    if abs(bottom_right_y - top_left_y) == LYBWin.HEIGHT + 38:
+                        # LDPlayer FHD
                         win32gui.EnumChildWindows(hwnd, self.callback_momo_child_process, hwnd)
-                    elif abs(bottom_right_x - top_left_x) == LYBWin.WIDTH + 4:
-                        # Nox
+                    elif abs(bottom_right_y - top_left_y) == LYBWin.HEIGHT + 56:
+                        # LDPlayer UHD
+                        win32gui.EnumChildWindows(hwnd, self.callback_momo_child_process, hwnd)
+                    elif abs(bottom_right_y - top_left_y) == LYBWin.HEIGHT + 34:
+                        # Nox FHD
+                        self.handle_list.append(hwnd)
+                    elif abs(bottom_right_y - top_left_y) == LYBWin.HEIGHT + 37:
+                        # Nox UHD
+                        self.handle_list.append(hwnd)
+                        # win32gui.EnumChildWindows(hwnd, self.callback_nox_child_process, hwnd)
+                    elif abs(bottom_right_y - top_left_y) == LYBWin.HEIGHT + 50:
+                        # Nox UHD
                         self.handle_list.append(hwnd)
                         # win32gui.EnumChildWindows(hwnd, self.callback_nox_child_process, hwnd)
                     elif abs(bottom_right_x - top_left_x) == LYBWin.WIDTH + 40:
@@ -204,9 +214,9 @@ class LYBWin:
                     self.side_window_dic[each_window] = each_side
                     # 녹스 사이드바
 
-    def setInvisible(self, hwnd):
+    def set_invisible(self, hwnd):
         try:
-            win32gui.ShowWindow(hwnd, win32con.SW_HIDE)
+            # win32gui.ShowWindow(hwnd, win32con.SW_HIDE)
             win32gui.SetWindowPos(hwnd, win32con.HWND_BOTTOM, 0, 0, 0, 0, win32con.SWP_NOMOVE + win32con.SWP_NOSIZE)
             # win32gui.SetWindowLong(hwnd, win32con.GWL_EXSTYLE,
             #                        win32gui.GetWindowLong(hwnd, win32con.GWL_EXSTYLE) | win32con.WS_EX_TOOLWINDOW);
@@ -214,19 +224,19 @@ class LYBWin:
             win32gui.SetWindowLong(hwnd, win32con.GWL_EXSTYLE,
                                    win32gui.GetWindowLong(hwnd, win32con.GWL_EXSTYLE) | win32con.WS_EX_LAYERED | win32con.WS_EX_TOOLWINDOW);
             win32gui.SetLayeredWindowAttributes(hwnd, 0, 0, 2)
-            win32gui.ShowWindow(hwnd, win32con.SW_SHOW)
+            # win32gui.ShowWindow(hwnd, win32con.SW_SHOW)
         except:
             print('fail: ' + str(sys.exc_info()[0]) + '(' + str(sys.exc_info()[1]) + ')')
 
-    def setVisible(self, hwnd):
+    def set_visible(self, hwnd):
         try:
-            win32gui.ShowWindow(hwnd, win32con.SW_HIDE)
+            # win32gui.ShowWindow(hwnd, win32con.SW_HIDE)
             # win32gui.SetWindowLong(hwnd, win32con.GWL_EXSTYLE, win32gui.GetWindowLong(hwnd, win32con.GWL_EXSTYLE) | win32con.WS_EX_APPWINDOW);
             # win32gui.SetWindowLong(hwnd, win32con.GWL_EXSTYLE,
             #                        win32gui.GetWindowLong(hwnd, win32con.GWL_EXSTYLE) & ~win32con.WS_EX_TOOLWINDOW);
             win32gui.SetWindowLong(hwnd, win32con.GWL_EXSTYLE,
                                    win32gui.GetWindowLong(hwnd, win32con.GWL_EXSTYLE) & ~win32con.WS_EX_LAYERED & ~win32con.WS_EX_TOOLWINDOW );
-            win32gui.ShowWindow(hwnd, win32con.SW_SHOW)
+            # win32gui.ShowWindow(hwnd, win32con.SW_SHOW)
             self.set_foreground(hwnd)
         except:
             print('fail: ' + str(sys.exc_info()[0]) + '(' + str(sys.exc_info()[1]) + ')')

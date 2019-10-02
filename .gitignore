@@ -10,3 +10,8 @@ dist
 build
 lyb.cfg
 host
+*.lyb
+node_modules
+yarn.lock
+pip-user.json
+*.vbs

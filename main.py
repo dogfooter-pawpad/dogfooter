@@ -73,9 +73,9 @@ except FileNotFoundError:
     y = (hs / 2) - (h / 2)
 
     root.geometry('%dx%d+%d+%d' % (w, h, x, y))
-    configure = likeyoubot_configure.LYBConfigure(x, y, w, h, 'MOMO|Nox', resource_path('lyb.cfg'))
+    configure = likeyoubot_configure.LYBConfigure(x, y, w, h, '', resource_path('lyb.cfg'))
     configure.setGeometryLogin(w, h, x, y)
-    configure.setGeometry(800, 640, x, y)
+    configure.setGeometry(800, 700, x, y)
     try:
         with open(resource_path('lyb.cfg'), 'wb') as dat_file:
             pickle.dump(configure, dat_file)
@@ -89,7 +89,7 @@ try:
     with open(resource_path('host'), 'r') as host_file:
         configure.root_url = host_file.readline()
 except FileNotFoundError:
-    configure.root_url = 'http://www.pawpad.kr:9000'
+    dogfooter_logger.error(str(sys.exc_info()[0]) + '(' + str(sys.exc_info()[1]) + ')')
 
 configure.merge()
 root.update()
