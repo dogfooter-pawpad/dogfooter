@@ -27,12 +27,16 @@ server.listen(PORT, function listening() {
   });
 
 /* On any connection */
-wss.on('connection', (ws) => {
+wss.on('connection', (ws, req) => {
     /* Connection is OK then add an event */
+//    console.log(req.client);
     ws.on('message', (message) => {
         /* Log the received message */
         console.log(`Message received from client: ${message}`);
 
+    });
+    wss.on('close', (ws) => {
+        console.log('연결끊김:');
     });
     console.log('도그푸터 매크로 로그인에 성공했습니다.');
 });
@@ -43,6 +47,8 @@ const pip_file_path = './pip.json';
 const git_file_path = './.git';
 const vbs_file_path = './도그푸터 바로 실행.vbs';
 let pip_user = null;
+
+const execSync = require('child_process').execSync;
 
 if (fs.existsSync(pip_user_file_path)) {
     pip_user = JSON.parse(fs.readFileSync(pip_user_file_path, 'utf8'));
@@ -60,12 +66,13 @@ Set WshShell = Nothing
     fs.writeFile(vbs_file_path, vbs_content, 'utf8', function(e) {
 
     });
-
+    execSync('"python" -m pip install --upgrade pip', function(error, stdout, stderr) {
+        console.log(stdout);
+    });
 } else {
     console.log('업데이트 확인 중입니다...')
 }
 
-const execSync = require('child_process').execSync;
 execSync('"git" pull', function(error, stdout, stderr) {
     console.log(stdout)
 });
@@ -79,6 +86,7 @@ if ( pipJson ) {
     let pip = pipJson.pip;
     for ( let i = 0; i < pip.length; i++ ) {
         if ( !pip_user.hasOwnProperty(pip[i]) ) {
+            console.log('파이썬 모듈 업데이트 중입니다.')
             pip_user[pip[i]] = true;
             pip_command = '"pip" install ' + pip[i];
             execSync(pip_command, function(error, stdout, stderr) {
