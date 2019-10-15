@@ -531,7 +531,7 @@ class LYBGUI:
 
         frame = ttk.Frame(frame_inner, relief=frame_relief)
         if not lybconstant.LYB_DO_BOOLEAN_USE_INACTIVE_MODE in self.configure.common_config:
-            self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_USE_INACTIVE_MODE] = False
+            self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_USE_INACTIVE_MODE] = True
 
         self.gui_config_dic[lybconstant.LYB_DO_BOOLEAN_USE_INACTIVE_MODE] = tkinter.BooleanVar()
         self.gui_config_dic[lybconstant.LYB_DO_BOOLEAN_USE_INACTIVE_MODE].set(
@@ -596,7 +596,7 @@ class LYBGUI:
 
         frame = ttk.Frame(frame_inner, relief=frame_relief)
         if not lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'boolean' in self.configure.common_config:
-            self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'boolean'] = False
+            self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'boolean'] = True
 
         self.gui_config_dic[lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'boolean'] = tkinter.BooleanVar()
         self.gui_config_dic[lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'boolean'].set(
