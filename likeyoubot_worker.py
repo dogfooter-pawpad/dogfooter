@@ -258,17 +258,21 @@ class LYBWorker(threading.Thread):
 
                     self.response_queue.join()
                     break
+                elif recv_msg.type == 'websocket':
+                    self.ui = recv_msg.message
+                    threading.currentThread().setName('websocket_worker')
+                    # websocket.enableTrace(True)
+                    # ws = websocket.WebSocketApp("ws://localhost:18091",
+                    #                             on_message=self.on_message,
+                    #                             on_error=self.on_error,
+                    #                             on_close=self.on_close)
+                    # ws.on_open = self.on_open
+                    if self.ui.ws is not None:
+                        self.ui.ws.run_forever()
                 elif recv_msg.type == 'long_polling':
                     self.ui = recv_msg.message
-                    threading.currentThread().setName('LongPollingWorker')
-                    websocket.enableTrace(True)
-                    ws = websocket.WebSocketApp("ws://localhost:18091",
-                                                on_message=self.on_message,
-                                                on_error=self.on_error,
-                                                on_close=self.on_close)
-                    ws.on_open = self.on_open
-                    ws.run_forever()
-                    self.logger.info('LongPollingWorker started')
+                    threading.currentThread().setName('long_polling_worker')
+                    self.logger.info('long_polling_worker started')
                     if self.win is None:
                         self.win = likeyoubot_win.LYBWin(self.ui.configure.window_title, self.ui.configure)
                 elif recv_msg.type == 'thumbnail':
@@ -380,7 +384,7 @@ class LYBWorker(threading.Thread):
                     # 		'[' + self.window_title + '] 창에서 [' + self.game_name + '] 게임에 대해 작업을 시작합니다')
                     # 	)
 
-                    self.app_player_type = self.win.get_player(self.hwnd)
+                    self.app_player_type, resolution = self.win.get_player(self.hwnd)
                     win_width, win_height = self.win.get_player_size(self.hwnd)
 
                     # print(win_width, win_height)
@@ -488,7 +492,7 @@ class LYBWorker(threading.Thread):
                 elif self.ui != None:
                     rc = self.long_polling()
                     if rc < 0:
-                        self.logger.error('LongPollingWorker is terminated abnormally.')
+                        self.logger.error('long_polling_worker is terminated abnormally.')
                         break
             except:
                 self.logger.error(traceback.format_exc())
@@ -714,9 +718,7 @@ class LYBWorker(threading.Thread):
 
     @staticmethod
     def on_open(ws):
-        for i in range(3):
-            time.sleep(1)
-            ws.send("Hello %d" % i)
+        ws.send("%s connected" % threading.currentThread().getName())
         time.sleep(1)
-        ws.close()
-        print("thread terminating...")
+        # ws.close()
+        # print("thread terminating...")

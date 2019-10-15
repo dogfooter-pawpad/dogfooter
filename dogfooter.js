@@ -47,11 +47,19 @@ const pip_file_path = './pip.json';
 const git_file_path = './.git';
 const vbs_file_path = './도그푸터 바로 실행.vbs';
 let pip_user = null;
+let branch = 'master'
+if ( process.argv.length > 2 ) {
+    branch = process.argv[2]
+}
 
 const execSync = require('child_process').execSync;
 
 if (fs.existsSync(pip_user_file_path)) {
-    pip_user = JSON.parse(fs.readFileSync(pip_user_file_path, 'utf8'));
+    try {
+        pip_user = JSON.parse(fs.readFileSync(pip_user_file_path, 'utf8'));
+    } catch (e) {
+        pip_user = null
+    }
 }
 
 if ( pip_user === null) {
@@ -60,7 +68,7 @@ if ( pip_user === null) {
     console.log('도그푸터 초기화 중입니다...')
     const vbs_content = `
 Set WshShell = CreateObject("WScript.Shell" )
-WshShell.Run "node dogfooter.js", 0
+WshShell.Run "node dogfooter.js ${branch}", 0
 Set WshShell = Nothing
     `;
     fs.writeFile(vbs_file_path, vbs_content, 'utf8', function(e) {
@@ -71,6 +79,14 @@ Set WshShell = Nothing
     });
 } else {
     console.log('업데이트 확인 중입니다...')
+}
+
+try {
+    execSync('"git" checkout ' + branch, function(error, stdout, stderr) {
+        console.log(stdout)
+    });
+} catch (e) {
+    console.log('브랜치 이름을 잘못 입력했습니다.(' + branch + ')');
 }
 
 execSync('"git" pull', function(error, stdout, stderr) {

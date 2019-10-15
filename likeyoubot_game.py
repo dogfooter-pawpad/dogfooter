@@ -485,8 +485,8 @@ class LYBGame():
 
             now = datetime.datetime.now()
             now_time = now.strftime('%y%m%d_%H%M%S')
-            png_name = directory + '\\' + png_name + '_' + str(now_time) + '_' + self.window.get_player(
-                self.hwnd) + '.png'
+            app_player_type, resolution = self.window.get_player(self.hwnd)
+            png_name = directory + '\\' + png_name + '_' + str(now_time) + '_' + str(app_player_type) + '.png'
 
             crop_area = self.window.get_player_screen_rect(self.hwnd)
 

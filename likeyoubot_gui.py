@@ -1,6 +1,9 @@
 import tkinter
 from tkinter import ttk
 import time
+
+import websocket
+
 import likeyoubot_worker
 import queue
 import pickle
@@ -90,6 +93,7 @@ class LYBGUI:
         self.timeClickedAds = 0
         self.mb_point = None
         self.first_for_ads = True
+        self.ws = None
         # --- COMMON TAB
 
         self.monitor_button_index = [-1, -1, -1, -1, -1]
@@ -2553,7 +2557,7 @@ class LYBGUI:
         # self.information.see("end")
         # print('[DEBUG] REMOVE ME:', self.gui_config_dic[lybconstant.LYB_DO_STRING_INACTIVE_MODE_FLAG].get())
 
-        if self.search_worker == True:
+        if self.search_worker:
             self.searchWindow(None)
             self.search_worker = False
 
@@ -3258,15 +3262,24 @@ class LYBGUI:
         worker_thread.command_queue.put_nowait(likeyoubot_message.LYBMessage('long_polling', self))
 
     def start_websocket_worker(self):
+
+
         worker_thread = self.executeThread(is_system=True)
         if worker_thread is None:
             return
+
+        websocket.enableTrace(True)
+        self.ws = websocket.WebSocketApp("ws://localhost:18091",
+                                    on_message=likeyoubot_worker.LYBWorker.on_message,
+                                    on_error=likeyoubot_worker.LYBWorker.on_error,
+                                    on_close=likeyoubot_worker.LYBWorker.on_close)
+        self.ws.on_open = likeyoubot_worker.LYBWorker.on_open
 
         worker_thread.command_queue.put_nowait(likeyoubot_message.LYBMessage('websocket', self))
 
     def get_window_location(self, e):
         worker_thread = self.executeThread()
-        if worker_thread == None:
+        if worker_thread is None:
             return
 
         worker_thread.command_queue.put_nowait(likeyoubot_message.LYBMessage('GetWindowLocation', self))

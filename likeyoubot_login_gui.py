@@ -152,7 +152,7 @@ class LYBLoginGUI:
 
         check_box.pack(anchor=tkinter.E)
         frame.pack(anchor=tkinter.E)
-        frame = ttk.Frame(frame_bottom)
+        # frame = ttk.Frame(frame_bottom)
 
         if not lybconstant.LYB_DO_BOOLEAN_AUTO_UPDATE in self.configure.common_config:
             self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_AUTO_UPDATE] = False
@@ -172,8 +172,8 @@ class LYBLoginGUI:
             offvalue=False
         )
 
-        check_box.pack(anchor=tkinter.E)
-        frame.pack(anchor=tkinter.E)
+        # check_box.pack(anchor=tkinter.E)
+        # frame.pack(anchor=tkinter.E)
 
         frame_extra = ttk.Frame(frame_bottom)
         frame_extra.pack(pady=1)
@@ -189,7 +189,7 @@ class LYBLoginGUI:
             cursor='hand2'
         )
         label.pack(side=tkinter.LEFT)
-        label.bind("<Button-1>", self.callback_hompage)
+        label.bind("<Button-1>", self.callback_homepage)
         frame.pack(anchor=tkinter.E)
         frame_bottom.pack(fill=tkinter.X, pady=5)
         label_frame.pack(padx=5, pady=10)
@@ -216,7 +216,7 @@ class LYBLoginGUI:
 
         self.master.bind('<Return>', self.callback_login_button)
 
-    def callback_hompage(self, event):
+    def callback_homepage(self, event):
         return
 
     # webbrowser.open_new(likeyoubot_http.LYBHttp.getMacroBaseUrl() + '/bbs/register.php')
