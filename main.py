@@ -53,7 +53,7 @@ try:
         configure = pickle.load(dat_file)
         if configure.getGeometryLogin() == None:
             w = 320
-            h = 140
+            h = 180
             ws = root.winfo_screenwidth()
             hs = root.winfo_screenheight()
             x = (ws / 2) - (w / 2)
@@ -66,7 +66,7 @@ try:
     dogfooter_logger.debug('configure.path [' + configure.path + ']')
 except FileNotFoundError:
     w = 320
-    h = 140
+    h = 180
     ws = root.winfo_screenwidth()
     hs = root.winfo_screenheight()
     x = (ws / 2) - (w / 2)
