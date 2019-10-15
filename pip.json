@@ -3,6 +3,7 @@
     "pywin32",
     "pyautogui",
     "numpy",
+    "requests",
     "opencv-python",
     "matplotlib",
     "belfrywidgets",
