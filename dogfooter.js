@@ -126,9 +126,5 @@ fs.writeFile(pip_user_file_path, JSON.stringify(pip_user), 'utf8', function(e) {
 const exec = require('child_process').exec;
 console.log('도그푸터 매크로 실행 중입니다. 잠시만 기다려주세요.')
 exec('"python" main.py', function(error, stdout, stderr) {
-//    console.log('python error:', error)
-//    console.log('python stdout:', stdout)
-//    console.log('python stderr:', stderr)
-
   process.exit()
 });
