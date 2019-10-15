@@ -5,6 +5,7 @@ from simple_rest_client.api import API
 import likeyoubot_logger
 import traceback
 import telegram
+import json
 
 
 class LYBRest:
@@ -38,14 +39,33 @@ class LYBRest:
         try:
             res = self.rest.api.create(body=payload)
             r = res.body
-            if r['err'] is None:
+            if 'data' in r:
                 data = r['data']
                 self.access_token = data['access_token']
                 return ''
             else:
-                return r['err']
+                return json.loads(r)['err']
         except:
-            return 'error'
+            return '로그인 에러'
+
+    def get_public_elem(self, elem):
+        payload = {
+            'data': {
+                'category': 'public',
+                'service': 'GetElement',
+                'element': elem,
+            }
+        }
+        try:
+            res = self.rest.api.create(body=payload)
+            r = res.body
+            if 'data' in r:
+                data = r['data']
+                return data['value']
+            else:
+                return json.loads(r)['err']
+        except:
+            return '에러'
 
     def update_chat_id(self, chat_id):
         payload = {
@@ -59,12 +79,12 @@ class LYBRest:
         try:
             res = self.rest.api.create(body=payload)
             r = res.body
-            if r['err'] is None:
+            if 'data' in r:
                 return ''
             else:
-                return r['err']
+                return json.loads(r)['err']
         except:
-            return 'error'
+            return '업데이트 에러'
 
     def get_login_point(self):
         if self.login_point >= 0:
@@ -80,12 +100,12 @@ class LYBRest:
         try:
             res = self.rest.api.create(body=payload)
             r = res.body
-            if r['err'] is None:
+            if 'data' in r:
                 data = r['data']
                 self.login_point = data['point']
                 return self.login_point
             else:
-                return r['err']
+                return json.loads(r)['err']
         except:
             self.logger.error(traceback.format_exc())
 
@@ -103,12 +123,12 @@ class LYBRest:
         try:
             res = self.rest.api.create(body=payload)
             r = res.body
-            if r['err'] is None:
+            if 'data' in r:
                 data = r['data']
                 self.point = data['point']
                 return self.point
             else:
-                return r['err']
+                return json.loads(r)['err']
         except:
             self.logger.error(traceback.format_exc())
 
@@ -126,7 +146,7 @@ class LYBRest:
         try:
             res = self.rest.api.create(body=payload)
             r = res.body
-            if r['err'] is None:
+            if 'data' in r:
                 data = r['data']
                 if 'chat_id' in data:
                     self.chat_id = int(data['chat_id'])
@@ -148,11 +168,11 @@ class LYBRest:
         try:
             res = self.rest.api.create(body=payload)
             r = res.body
-            if r['err'] is None:
+            if 'data' in r:
                 data = r['data']
                 return data['version']
             else:
-                return r['err']
+                return json.loads(r)['err']
         except:
             self.logger.error(traceback.format_exc())
 
@@ -167,11 +187,11 @@ class LYBRest:
         try:
             res = self.rest.api.create(body=payload)
             r = res.body
-            if r['err'] is None:
+            if 'data' in r:
                 data = r['data']
                 return data['update_file_list']
             else:
-                return r['err']
+                return json.loads(r)['err']
         except:
             self.logger.error(traceback.format_exc())
 
@@ -187,11 +207,11 @@ class LYBRest:
         try:
             res = self.rest.api.create(body=payload)
             r = res.body
-            if r['err'] is None:
+            if 'data' in r:
                 data = r['data']
                 return data['value']
             else:
-                return r['err']
+                return json.loads(r)['err']
         except:
             self.logger.error(traceback.format_exc())
 
