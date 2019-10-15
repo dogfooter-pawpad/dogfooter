@@ -189,7 +189,7 @@ class LYBLoginGUI:
             cursor='hand2'
         )
         label.pack(side=tkinter.LEFT)
-        label.bind("<Button-1>", self.callback_homepage)
+        label.bind("<Button-1>", self.callback_hompage)
         frame.pack(anchor=tkinter.E)
         frame_bottom.pack(fill=tkinter.X, pady=5)
         label_frame.pack(padx=5, pady=10)
@@ -216,7 +216,7 @@ class LYBLoginGUI:
 
         self.master.bind('<Return>', self.callback_login_button)
 
-    def callback_homepage(self, event):
+    def callback_hompage(self, event):
         return
 
     # webbrowser.open_new(likeyoubot_http.LYBHttp.getMacroBaseUrl() + '/bbs/register.php')

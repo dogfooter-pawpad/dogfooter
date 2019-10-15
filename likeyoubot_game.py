@@ -248,7 +248,7 @@ class LYBGame():
                     self.logger.debug('허용 가중치: ' + str(int(self.weight_threshold * 100)) + '%, RGB 가중치: ' + str(
                         int(self.weight_tolerance * 100)) + '%')
 
-                    return 0
+                    return 404
 
         if is_new_search:
             self.logger.info("[화면 전환] %s %s%% 상태 코드: %s" \
@@ -485,8 +485,8 @@ class LYBGame():
 
             now = datetime.datetime.now()
             now_time = now.strftime('%y%m%d_%H%M%S')
-            app_player_type, resolution = self.window.get_player(self.hwnd)
-            png_name = directory + '\\' + png_name + '_' + str(now_time) + '_' + str(app_player_type) + '.png'
+            png_name = directory + '\\' + png_name + '_' + str(now_time) + '_' + self.window.get_player(
+                self.hwnd) + '.png'
 
             crop_area = self.window.get_player_screen_rect(self.hwnd)
 
@@ -597,11 +597,11 @@ class LYBGame():
     def click_back(self):
         if self.player_type == 'nox':
             if self.terminate_status == 0:
-                if self.side_hwnd == None:
+                if self.side_hwnd is None:
                     self.logger.warn('녹스 사이드바 검색 실패로 종료 기능 사용 불가')
                     self.request_terminate = False
                     return
-                self.window.mouse_click(self.side_hwnd, 16, likeyoubot_win.LYBWin.HEIGHT - 115)
+                self.window.mouse_click(self.side_hwnd, 16, likeyoubot_win.LYBWin.HEIGHT - 70)
         elif self.player_type == 'momo':
             if self.terminate_status == 0:
                 self.window.mouse_click(self.parent_hwnd,
@@ -615,7 +615,7 @@ class LYBGame():
         if self.player_type == 'nox':
             if self.terminate_status == 0:
                 # self.mouse_click_with_cursor(660, 350)
-                if self.side_hwnd == None:
+                if self.side_hwnd is None:
                     self.logger.warn('녹스 사이드바 검색 실패로 종료 기능 사용 불가')
                     self.request_terminate = False
                     return

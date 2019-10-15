@@ -10,7 +10,7 @@ import pickle
 import os
 import likeyoubot_message
 
-import likeyoubot_sample as LYBSAMPLE
+import likeyoubot_penguinsisle as LYBPENGUINSISLE
 
 from likeyoubot_configure import LYBConstant as lybconstant
 import datetime
@@ -386,7 +386,7 @@ class LYBGUI:
         self.gui_config_dic = {}
 
         self.games = [
-            lybconstant.LYB_GAME_SAMPLE,
+            lybconstant.LYB_GAME_PENGUINSISLE,
             # lybconstant.LYB_GAME_LIN2REV,
             # lybconstant.LYB_GAME_CLANS,
             # lybconstant.LYB_GAME_YEOLHYUL
@@ -1623,7 +1623,7 @@ class LYBGUI:
         label.pack(side=tkinter.LEFT)
 
         if not lybconstant.LYB_DO_STRING_PERIOD_UPDATE_UI in self.configure.common_config:
-            self.configure.common_config[lybconstant.LYB_DO_STRING_PERIOD_UPDATE_UI] = float(0.5)
+            self.configure.common_config[lybconstant.LYB_DO_STRING_PERIOD_UPDATE_UI] = float(5)
 
         frame.pack(anchor=tkinter.W)
         self.update_period_ui_entry.set(str(self.configure.common_config[lybconstant.LYB_DO_STRING_PERIOD_UPDATE_UI]))
@@ -1877,13 +1877,13 @@ class LYBGUI:
         frame.pack(anchor=tkinter.W)
 
         if not lybconstant.LYB_DO_STRING_THUMBNAIL_SIZE + 'width' in self.configure.common_config:
-            self.configure.common_config[lybconstant.LYB_DO_STRING_THUMBNAIL_SIZE + 'width'] = 320
+            self.configure.common_config[lybconstant.LYB_DO_STRING_THUMBNAIL_SIZE + 'width'] = 180
         self.thumbnail_width_stringvar.set(
             self.configure.common_config[lybconstant.LYB_DO_STRING_THUMBNAIL_SIZE + 'width'])
         self.thumbnail_width_stringvar.trace('w', lambda *args: self.callback_thumbnail_width_stringvar(args))
 
         if not lybconstant.LYB_DO_STRING_THUMBNAIL_SIZE + 'height' in self.configure.common_config:
-            self.configure.common_config[lybconstant.LYB_DO_STRING_THUMBNAIL_SIZE + 'height'] = 180
+            self.configure.common_config[lybconstant.LYB_DO_STRING_THUMBNAIL_SIZE + 'height'] = 320
         self.thumbnail_height_stringvar.set(
             self.configure.common_config[lybconstant.LYB_DO_STRING_THUMBNAIL_SIZE + 'height'])
         self.thumbnail_height_stringvar.trace('w', lambda *args: self.callback_thumbnail_height_stringvar(args))
@@ -1968,7 +1968,7 @@ class LYBGUI:
         frame.pack(anchor=tkinter.W)
 
         if not lybconstant.LYB_DO_STRING_RECOVERY_COUNT + 'freezing_limit' in self.configure.common_config:
-            self.configure.common_config[lybconstant.LYB_DO_STRING_RECOVERY_COUNT + 'freezing_limit'] = 30
+            self.configure.common_config[lybconstant.LYB_DO_STRING_RECOVERY_COUNT + 'freezing_limit'] = 60
 
         self.freezing_limit_stringvar.set(
             self.configure.common_config[lybconstant.LYB_DO_STRING_RECOVERY_COUNT + 'freezing_limit'])
@@ -2222,7 +2222,7 @@ class LYBGUI:
         # 다크에덴M
 
         game_index = 0
-        lyb_game_tab = LYBSAMPLE.LYBSampleTab(
+        lyb_game_tab = LYBPENGUINSISLE.LYBPenguinsisleTab(
             self.tab_frame[game_index + 1],
             self.configure,
             self.game_options[self.games[game_index]],
@@ -2230,7 +2230,7 @@ class LYBGUI:
             self.width,
             self.height
         )
-        self.game_tab_dic[lybconstant.LYB_GAME_SAMPLE] = lyb_game_tab
+        self.game_tab_dic[lybconstant.LYB_GAME_PENGUINSISLE] = lyb_game_tab
 
         # # 헌드레드 소울
         # lybhttp = self.login()
@@ -2592,18 +2592,18 @@ class LYBGUI:
 
         self.update_restart_app_player()
 
-        currentHour = int(datetime.datetime.today().hour)
-
-        if self.first_for_ads == True:
-            self.check_ads()
-            self.first_for_ads = False
-        else:
-            if currentHour >= 9 and currentHour < 24 and len(self.workers) > 0:
-                if self.check_ads() == False:
-                    self.terminateWorker(None)
-                    rest = self.login()
-                    chat_id = rest.get_chat_id()
-                    rest.send_telegram_message(chat_id, '※ 광고가 팝업되면서 프로그램이 중지되었습니다.')
+        # currentHour = int(datetime.datetime.today().hour)
+        #
+        # if self.first_for_ads == True:
+        #     self.check_ads()
+        #     self.first_for_ads = False
+        # else:
+        #     if currentHour >= 9 and currentHour < 24 and len(self.workers) > 0:
+        #         if self.check_ads() == False:
+        #             self.terminateWorker(None)
+        #             rest = self.login()
+        #             chat_id = rest.get_chat_id()
+        #             rest.send_telegram_message(chat_id, '※ 광고가 팝업되면서 프로그램이 중지되었습니다.')
 
         # self.update_telegram()
 

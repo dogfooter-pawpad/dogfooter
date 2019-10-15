@@ -8,7 +8,7 @@ from PIL import ImageGrab
 import cv2
 import numpy as np
 from likeyoubot_configure import LYBConstant as lybconstant
-import likeyoubot_sample
+import likeyoubot_penguinsisle
 import likeyoubot_logger
 import traceback
 import pyautogui
@@ -349,8 +349,8 @@ class LYBWorker(threading.Thread):
                     # 무슨 게임이냐에 따라서
                     try:
 
-                        if self.game_name == lybconstant.LYB_GAME_SAMPLE:
-                            self.game = likeyoubot_sample.LYBSample(None, None, self.win)
+                        if self.game_name == lybconstant.LYB_GAME_PENGUINSISLE:
+                            self.game = likeyoubot_penguinsisle.LYBPenguinsisle(None, None, self.win)
                         # elif self.game_name == lybconstant.LYB_GAME_HUNDREDSOUL:
                         # 	self.game = likeyoubot_hundredsoul.LYBHundredSoul(None, None, self.win)
 
@@ -384,7 +384,7 @@ class LYBWorker(threading.Thread):
                     # 		'[' + self.window_title + '] 창에서 [' + self.game_name + '] 게임에 대해 작업을 시작합니다')
                     # 	)
 
-                    self.app_player_type, resolution = self.win.get_player(self.hwnd)
+                    self.app_player_type = self.win.get_player(self.hwnd)
                     win_width, win_height = self.win.get_player_size(self.hwnd)
 
                     # print(win_width, win_height)

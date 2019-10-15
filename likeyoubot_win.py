@@ -13,11 +13,10 @@ import random
 
 
 class LYBWin:
-    WIDTH = 960
-    HEIGHT = 540
+    WIDTH = 540
+    HEIGHT = 960
     NOX_EXTRA_WIDTH = 2
     NOX_EXTRA_HEIGHT = 30
-    NOX_EXTRA_UHD_HEIGHT = 46
 
     def __init__(self, my_name, configure=None):
         # self.logger = likeyoubot_logger.LYBLogger.getLogger()
@@ -145,25 +144,16 @@ class LYBWin:
                     diff_width = abs(top_left_x - bottom_right_x)
                     diff_height = abs(bottom_right_y - top_left_y)
 
-                    print(win32gui.GetWindowText(hwnd), diff_width, diff_height)
+                    # print(win32gui.GetWindowText(hwnd), diff_width, diff_height)
 
                     if diff_height == LYBWin.HEIGHT + 34 and diff_width == LYBWin.WIDTH + 4:
                         # 녹스 FHD
                         self.handle_list.append(hwnd)
-                    elif diff_height == LYBWin.HEIGHT + 50 and diff_width == LYBWin.WIDTH + 4:
-                        # 녹스 UHD
-                        self.handle_list.append(hwnd)
                     elif diff_height == LYBWin.HEIGHT + 38 and diff_width == LYBWin.WIDTH + 38:
                         # LDPlayer FHD
                         win32gui.EnumChildWindows(hwnd, self.callback_momo_child_process, hwnd)
-                    elif diff_height == LYBWin.HEIGHT + 56 and diff_width == LYBWin.WIDTH + 56:
-                        # LDPlayer UHD
-                        win32gui.EnumChildWindows(hwnd, self.callback_momo_child_process, hwnd)
                     elif diff_height == LYBWin.HEIGHT + 30 and diff_width == LYBWin.WIDTH + 38:
-                        # MEmu FHD Portrait
-                        win32gui.EnumChildWindows(hwnd, self.callback_memu_child_process, hwnd)
-                    elif diff_height == LYBWin.HEIGHT + 34 and diff_width == LYBWin.WIDTH + 40:
-                        # MEmu FHD Landscape
+                        # MEmu FHD
                         win32gui.EnumChildWindows(hwnd, self.callback_memu_child_process, hwnd)
                     elif abs(bottom_right_y - top_left_y) == LYBWin.HEIGHT + 38:
                         # LDPlayer FHD
@@ -186,21 +176,24 @@ class LYBWin:
                         # Memu
                         win32gui.EnumChildWindows(hwnd, self.callback_memu_child_process, hwnd)
 
+
+
+
                         # if re.match('Nox', str(win32gui.GetWindowText(hwnd))):
                         #     print('Nox 사이드 바: ', str(win32gui.GetWindowText(hwnd)), win32gui.IsWindowVisible(hwnd))
 
         if win32gui.IsWindowVisible(hwnd) != 0:
             # 녹스 사이드 바 이름 변경됨 6.0.5.1
-            if (re.match('nox', str(win32gui.GetWindowText(hwnd))) is not None or
-                    re.match('Nox', str(win32gui.GetWindowText(hwnd))) is not None or
-                    re.match('Form', str(win32gui.GetWindowText(hwnd))) is not None):
-                print('--------------------> !!! found window DEBUG4 Nox : ', str(win32gui.GetWindowText(hwnd)))
-                if hwnd not in self.side_window_handle_list:
+            if (    re.match('nox', str(win32gui.GetWindowText(hwnd))) != None or
+                    re.match('Nox', str(win32gui.GetWindowText(hwnd))) != None or
+                    re.match('Form', str(win32gui.GetWindowText(hwnd))) != None
+                ):
+                # print('--------------------> !!! found window DEBUG4 Nox : ', str(win32gui.GetWindowText(hwnd)))
+                if not hwnd in self.side_window_handle_list:
                     (top_left_x, top_left_y, bottom_right_x, bottom_right_y) = win32gui.GetWindowRect(hwnd)
-                    print('--------------------> !!! found window DEBUG5 Nox : ',
-                          (top_left_x, top_left_y, bottom_right_x, bottom_right_y))
-                    if abs(bottom_right_x - top_left_x) - 36 < 80 and abs(
-                            bottom_right_y - top_left_y - LYBWin.HEIGHT) < 80:
+                    # print('--------------------> !!! found window DEBUG5 Nox : ', (top_left_x, top_left_y, bottom_right_x, bottom_right_y))
+                    if abs(bottom_right_x - top_left_x) - 36 < 40 and abs(
+                                            bottom_right_y - top_left_y - LYBWin.HEIGHT) < 40:
                         self.side_window_handle_list.append(hwnd)
                         #
                         # 모모 멀티플레이어
@@ -214,7 +207,7 @@ class LYBWin:
 
             # 녹스 멀티앱플레이어
             if lybconstant.LYB_MULTI_APP_PLAYER_NAME_NOX in str(win32gui.GetWindowText(hwnd)):
-                # print(str(lybconstant.LYB_MULTI_APP_PLAYER_NAME_NOX) + ':[' + str(win32gui.GetWindowText(hwnd)) + '][' + str ( (s_x, s_y) ) + '] [' + str( (w_width, w_height) ) + ']')
+                # print(str(lybconstant.LYB_MULTI_APP_PLAYER_NAME_NOX) + ':[' + str(win32gui.GetWindowText(hwnd)) + '][' + str ( (s_x, s_y) ) + '] [' + str( (w_width, w_height) ) + ']') 
                 self.multi_window_handle_dic[lybconstant.LYB_MULTI_APP_PLAYER_NAME_NOX] = hwnd
 
         if re.match(self.my_name, str(win32gui.GetWindowText(hwnd))) != None and win32gui.IsWindowVisible(hwnd) != 0:
@@ -227,7 +220,7 @@ class LYBWin:
 
         for each_side in self.side_window_handle_list:
             (s_x, s_y, s_bx, s_by) = win32gui.GetWindowRect(each_side)
-            # self.logger.debug('side:' + str((s_x, s_y, s_bx, s_by)) )
+            # self.logger.debug('side:' + str((s_x, s_y, s_bx, s_by)) ) 
             for each_window in self.handle_list:
                 (w_x, w_y, w_bx, w_by) = win32gui.GetWindowRect(each_window)
                 # self.logger.debug('main:' + str((w_x, w_y, w_bx, w_by)) )
@@ -428,24 +421,19 @@ class LYBWin:
         # print('[APP PLAYER]', win32gui.GetWindowText(hwnd), '[', s_x, s_y, ']', '[', w_width, 'x', w_height, ']')
         extra_width = LYBWin.NOX_EXTRA_WIDTH * 2
         extra_height = LYBWin.NOX_EXTRA_HEIGHT + extra_width
-        extra_uhd_height = LYBWin.NOX_EXTRA_UHD_HEIGHT + extra_width
         if w_width == (LYBWin.WIDTH + extra_width) and w_height == (LYBWin.HEIGHT + extra_height):
-            return 'nox', ''
-        elif w_width == (LYBWin.WIDTH + extra_width) and w_height == (LYBWin.HEIGHT + extra_uhd_height):
-            return 'nox', 'uhd'
+            return 'nox'
         elif w_width == LYBWin.WIDTH and w_height == LYBWin.HEIGHT and process_name == 'TheRender':
-            return 'momo', ''
+            return 'momo'
         elif w_width == LYBWin.WIDTH and w_height == LYBWin.HEIGHT and process_name == 'RenderWindowWindow':
-            return 'momo', ''
+            return 'momo'
 
-        return '', ''
+        return ''
 
     def get_player_screen_rect(self, hwnd):
-        player_name, resolution = self.get_player(hwnd)
+        player_name = self.get_player(hwnd)
 
-        if player_name == 'nox' and resolution == 'uhd':
-            return LYBWin.NOX_EXTRA_WIDTH, LYBWin.NOX_EXTRA_UHD_HEIGHT + LYBWin.NOX_EXTRA_WIDTH, LYBWin.NOX_EXTRA_WIDTH + LYBWin.WIDTH, LYBWin.NOX_EXTRA_UHD_HEIGHT + LYBWin.NOX_EXTRA_WIDTH + LYBWin.HEIGHT
-        elif player_name == 'nox':
+        if player_name == 'nox':
             return LYBWin.NOX_EXTRA_WIDTH, LYBWin.NOX_EXTRA_HEIGHT + LYBWin.NOX_EXTRA_WIDTH, LYBWin.NOX_EXTRA_WIDTH + LYBWin.WIDTH, LYBWin.NOX_EXTRA_HEIGHT + LYBWin.NOX_EXTRA_WIDTH + LYBWin.HEIGHT
         else:
             return 0, 0, LYBWin.WIDTH, LYBWin.HEIGHT
@@ -453,30 +441,26 @@ class LYBWin:
     def get_player_anchor_rect(self, hwnd):
         (anchor_x, anchor_y, end_x, end_y) = win32gui.GetWindowRect(hwnd)
 
-        player_name, resolution = self.get_player(hwnd)
+        player_name = self.get_player(hwnd)
 
-        if player_name == 'nox' and resolution == 'uhd':
-            return anchor_x, anchor_y + (LYBWin.NOX_EXTRA_UHD_HEIGHT + LYBWin.NOX_EXTRA_HEIGHT), end_x, end_y
-        elif player_name == 'nox':
-            return anchor_x, anchor_y, end_x, end_y
+        if player_name == 'nox':
+            return (anchor_x, anchor_y, end_x, end_y)
         else:
-            return anchor_x - LYBWin.NOX_EXTRA_WIDTH, anchor_y - (LYBWin.NOX_EXTRA_HEIGHT + LYBWin.NOX_EXTRA_WIDTH), end_x, end_y
+            return (anchor_x - LYBWin.NOX_EXTRA_WIDTH, anchor_y - (LYBWin.NOX_EXTRA_HEIGHT + LYBWin.NOX_EXTRA_WIDTH), end_x, end_y)
+
+        return anchor_x, anchor_y, end_x, end_y
 
     def get_player_size(self, hwnd):
         (anchor_x, anchor_y, end_x, end_y) = win32gui.GetWindowRect(hwnd)
 
-        player_name, resolution = self.get_player(hwnd)
+        player_name = self.get_player(hwnd)
 
         w = end_x - anchor_x
         h = end_y - anchor_y
 
         extra_width = LYBWin.NOX_EXTRA_WIDTH * 2
         extra_height = LYBWin.NOX_EXTRA_HEIGHT + extra_width
-        extra_uhd_height = LYBWin.NOX_EXTRA_UHD_HEIGHT + extra_width
-        if player_name == 'nox' and resolution == 'uhd':
-            w = end_x - anchor_x - extra_width
-            h = end_y - anchor_y - extra_uhd_height
-        elif player_name == 'nox':
+        if player_name == 'nox':
             w = end_x - anchor_x - extra_width
             h = end_y - anchor_y - extra_height
         else:
@@ -487,13 +471,11 @@ class LYBWin:
 
     def get_player_adjust(self, hwnd):
 
-        player_name, resolution = self.get_player(hwnd)
-        if player_name == 'nox' and resolution == 'uhd':
-            return 0, LYBWin.NOX_EXTRA_UHD_HEIGHT - LYBWin.NOX_EXTRA_HEIGHT
-        elif player_name == 'nox':
-            return 0, 0
+        player_name = self.get_player(hwnd)
+        if player_name == 'nox':
+            return (0, 0)
         else:
-            return -LYBWin.NOX_EXTRA_WIDTH, -(LYBWin.NOX_EXTRA_WIDTH + LYBWin.NOX_EXTRA_HEIGHT)
+            return (-LYBWin.NOX_EXTRA_WIDTH, -(LYBWin.NOX_EXTRA_WIDTH + LYBWin.NOX_EXTRA_HEIGHT))
 
     def get_window_screenshot(self, hwnd, flag):
         # hwnd = win32gui.FindWindow(None, '계산기')

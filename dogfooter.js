@@ -55,11 +55,7 @@ if ( process.argv.length > 2 ) {
 const execSync = require('child_process').execSync;
 
 if (fs.existsSync(pip_user_file_path)) {
-    try {
-        pip_user = JSON.parse(fs.readFileSync(pip_user_file_path, 'utf8'));
-    } catch (e) {
-        pip_user = null
-    }
+    pip_user = JSON.parse(fs.readFileSync(pip_user_file_path, 'utf8'));
 }
 
 if ( pip_user === null) {
@@ -68,7 +64,7 @@ if ( pip_user === null) {
     console.log('도그푸터 초기화 중입니다...')
     const vbs_content = `
 Set WshShell = CreateObject("WScript.Shell" )
-WshShell.Run "node dogfooter.js ${branch}", 0
+WshShell.Run "node dogfooter.js", 0
 Set WshShell = Nothing
     `;
     fs.writeFile(vbs_file_path, vbs_content, 'utf8', function(e) {
