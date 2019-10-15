@@ -27,16 +27,17 @@ server.listen(PORT, function listening() {
   });
 
 /* On any connection */
-wss.on('connection', (ws, req) => {
+wss.on('connection', (connection, req) => {
     /* Connection is OK then add an event */
 //    console.log(req.client);
-    ws.on('message', (message) => {
+    connection.on('message', (message) => {
         /* Log the received message */
-        console.log(`Message received from client: ${message}`);
-
+//        console.log(`Message received from client: ${message}`);
+//        connection.send('----------------------------------------------------------')
     });
-    wss.on('close', (ws) => {
+    connection.on('close', (connection) => {
         console.log('연결끊김:');
+        process.exit()
     });
     console.log('도그푸터 매크로 로그인에 성공했습니다.');
 });
@@ -50,6 +51,10 @@ let pip_user = null;
 let branch = 'master'
 if ( process.argv.length > 2 ) {
     branch = process.argv[2]
+} else {
+    console.log('게임을 선택해야 합니다.');
+    console.log('실행방법> node dogfooter.js <게임코드명>');
+    process.exit()
 }
 
 const execSync = require('child_process').execSync;
@@ -121,9 +126,12 @@ fs.writeFile(pip_user_file_path, JSON.stringify(pip_user), 'utf8', function(e) {
 const exec = require('child_process').exec;
 console.log('도그푸터 매크로 실행 중입니다. 잠시만 기다려주세요.')
 exec('"python" main.py', function(error, stdout, stderr) {
-    console.log('python error:', error)
-    console.log('python stdout:', stdout)
-    console.log('python stderr:', stderr)
+//    console.log('python error:', error)
+//    console.log('python stdout:', stdout)
+//    console.log('python stderr:', stderr)
 
-    process.exit()
+    if ( error ) {
+        console.log('python error:', error)
+        process.exit()
+    }
 });
