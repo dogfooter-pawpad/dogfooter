@@ -8,7 +8,7 @@ __pycache__/*
 *.pyc
 dist
 build
-lyb.cfg
+lyb.cfg*
 *.lyb
 node_modules
 yarn.lock

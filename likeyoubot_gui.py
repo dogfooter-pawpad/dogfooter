@@ -1195,14 +1195,15 @@ class LYBGUI:
 
         frame = ttk.Frame(frame_log)
         frame_sub = ttk.LabelFrame(frame, text='바로가기')
-        # button = ttk.Button(
-        #     master=frame_sub,
-        #     text="홈페이지",
-        #     width=14,
-        #     style='button_homepage.TButton',
-        #     command=lambda: self.callback_hompage(None)
-        # )
-        # button.pack()
+        button = ttk.Button(
+            master=frame_sub,
+            text="홈페이지",
+            width=14,
+            style='button_homepage.TButton',
+            command=lambda: self.callback_homepage(None)
+        )
+        button.pack()
+
         # button = ttk.Button(
         #     master=frame_sub,
         #     text="블로그",
@@ -1211,14 +1212,16 @@ class LYBGUI:
         #     command=lambda: self.callback_blog(None)
         # )
         # button.pack()
-        button = ttk.Button(
-            master=frame_sub,
-            text="기능명세서",
-            width=14,
-            style='button_homepage.TButton',
-            command=lambda: self.callback_docs(None)
-        )
-        button.pack()
+
+        # button = ttk.Button(
+        #     master=frame_sub,
+        #     text="기능명세서",
+        #     width=14,
+        #     style='button_homepage.TButton',
+        #     command=lambda: self.callback_docs(None)
+        # )
+        # button.pack()
+
         frame_sub.pack()
         frame_sub = ttk.LabelFrame(frame, text='오픈채팅방')
         # button = ttk.Button(
@@ -1968,7 +1971,7 @@ class LYBGUI:
         frame.pack(anchor=tkinter.W)
 
         if not lybconstant.LYB_DO_STRING_RECOVERY_COUNT + 'freezing_limit' in self.configure.common_config:
-            self.configure.common_config[lybconstant.LYB_DO_STRING_RECOVERY_COUNT + 'freezing_limit'] = 120
+            self.configure.common_config[lybconstant.LYB_DO_STRING_RECOVERY_COUNT + 'freezing_limit'] = 60
 
         self.freezing_limit_stringvar.set(
             self.configure.common_config[lybconstant.LYB_DO_STRING_RECOVERY_COUNT + 'freezing_limit'])
@@ -2834,6 +2837,10 @@ class LYBGUI:
                 if self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_LOG_LEVEL + 'warn'] == False:
                     continue
             elif debug_level == 'I':
+                # try:
+                #     self.ws.send(line.split('\n')[0].split('FileInfo')[0])
+                # except:
+                #     pass
                 if self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_LOG_LEVEL + 'info'] == False:
                     continue
             elif debug_level == 'D':
@@ -3263,19 +3270,32 @@ class LYBGUI:
 
     def start_websocket_worker(self):
 
-
         worker_thread = self.executeThread(is_system=True)
         if worker_thread is None:
             return
 
         websocket.enableTrace(True)
         self.ws = websocket.WebSocketApp("ws://localhost:18091",
-                                    on_message=likeyoubot_worker.LYBWorker.on_message,
-                                    on_error=likeyoubot_worker.LYBWorker.on_error,
-                                    on_close=likeyoubot_worker.LYBWorker.on_close)
-        self.ws.on_open = likeyoubot_worker.LYBWorker.on_open
+                                         on_message=self.on_message,
+                                         on_error=self.on_error,
+                                         on_close=self.on_close)
+        self.ws.on_open = self.on_open
 
         worker_thread.command_queue.put_nowait(likeyoubot_message.LYBMessage('websocket', self))
+
+    def on_message(self, message):
+        self.logger.debug(str(message))
+
+    def on_error(self, error):
+        self.logger.error(str(error))
+
+    def on_close(self):
+        self.logger.debug("Closed")
+
+    def on_open(self):
+        self.logger.debug('onopen')
+        self.ws.send('Connected')
+        time.sleep(1)
 
     def get_window_location(self, e):
         worker_thread = self.executeThread()
@@ -3741,11 +3761,13 @@ class LYBGUI:
     # 		self.logger.error(traceback.format_exc())
     # 	self.set_config(lybconstant.LYB_DO_BOOLEAN_LOG_LEVEL + 'remove')
 
-    def callback_hompage(self, event):
-        webbrowser.open_new(likeyoubot_http.LYBHttp.getMacroBaseUrl())
+    def callback_homepage(self, event):
+        rest = likeyoubot_rest.LYBRest(self.configure.root_url, "", "")
+        public_token = rest.get_public_elem("public_token")
+        webbrowser.open_new(r"https://pawpad.kr/bbs/" + public_token)
 
     def callback_blog(self, event):
-        webbrowser.open_new(r"https://numaking.cafe24.com")
+        webbrowser.open_new(r"https://pawpad.kr/bbs/")
 
     def callback_docs(self, event):
         rest = self.login()

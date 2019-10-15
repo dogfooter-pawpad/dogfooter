@@ -71,14 +71,6 @@ if ( pip_user === null) {
     pip_user = {}
     // 처음 실행
     console.log('도그푸터 초기화 중입니다...')
-    const vbs_content = `
-Set WshShell = CreateObject("WScript.Shell" )
-WshShell.Run "node dogfooter.js ${branch}", 0
-Set WshShell = Nothing
-    `;
-    fs.writeFile(vbs_file_path, vbs_content, 'utf8', function(e) {
-
-    });
     execSync('"python" -m pip install --upgrade pip', function(error, stdout, stderr) {
         console.log(stdout);
     });
@@ -87,16 +79,32 @@ Set WshShell = Nothing
 }
 
 try {
-    execSync('"git" checkout ' + branch, function(error, stdout, stderr) {
-        console.log(stdout)
-    });
+    stdout = execSync('"git" rev-parse --abbrev-ref HEAD');
+//    console.log('DEBUG2:', String.fromCharCode.apply(String, stdout));
+
+    if (!stdout.includes(branch)) {
+         fs.renameSync('./lyb.cfg', './lyb.cfg.' + ('' + stdout).replace(/\n/, '') + '.' +  (new Date()).toISOString().replace(/T/, ' ').replace(/\..+/, '').replace(' ', '').replace(/-/gi, '').replace(/:/gi, ''), function(err) {
+            if ( err ) console.log('ERROR: ' + err);
+        });
+    }
 } catch (e) {
-    console.log('브랜치 이름을 잘못 입력했습니다.(' + branch + ')');
 }
 
-execSync('"git" pull', function(error, stdout, stderr) {
-    console.log(stdout)
-});
+try {
+    stdout = execSync('"git" checkout ' + branch);
+    const vbs_content = `
+Set WshShell = CreateObject("WScript.Shell" )
+WshShell.Run "node dogfooter.js ${branch}", 0
+Set WshShell = Nothing
+    `;
+    fs.writeFile(vbs_file_path, vbs_content, 'utf8', function(e) {
+
+    });
+} catch (e) {
+    console.log('게임코드명이 잘못됐습니다.(' + branch + ')');
+    process.exit();
+}
+execSync('"git" pull');
 
 let pipJson = null;
 if (fs.existsSync(pip_file_path)) {
@@ -110,9 +118,7 @@ if ( pipJson ) {
             console.log('파이썬 모듈 업데이트 중입니다.')
             pip_user[pip[i]] = true;
             pip_command = '"pip" install ' + pip[i];
-            execSync(pip_command, function(error, stdout, stderr) {
-                console.log(stdout);
-            });
+            execSync(pip_command);
         }
     }
 }
@@ -126,5 +132,10 @@ fs.writeFile(pip_user_file_path, JSON.stringify(pip_user), 'utf8', function(e) {
 const exec = require('child_process').exec;
 console.log('도그푸터 매크로 실행 중입니다. 잠시만 기다려주세요.')
 exec('"python" main.py', function(error, stdout, stderr) {
-  process.exit()
+//    console.log('python error:', error)
+//    console.log('python stdout:', stdout)
+//    console.log('python stderr:', stderr)
+
+//    console.log('python error:', error)
+    process.exit()
 });

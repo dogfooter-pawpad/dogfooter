@@ -338,7 +338,7 @@ class LYBScene():
         # self.game_object.window.mouse_click(self.game_object.hwnd, loc_x, loc_y)
         self.game_object.window.mouse_click(self.game_object.hwnd, loc_x, loc_y)
         # self.logger.debug('보정되지 않은 좌표는 lyb_mouse_click_location2를 사용', (loc_x, loc_y))
-        self.logger.debug('[클릭 좌표] (' + str(loc_x) + ', ' + str(loc_y) + ')')
+        self.logger.info('[클릭 좌표] (' + str(loc_x) + ', ' + str(loc_y) + ')')
 
     def lyb_mouse_click(self, object_name, custom_tolerance=-1, custom_threshold=-1, delay=0, release=True):
         threshold = float(self.game_object.common_config['threshold_entry'])
@@ -391,7 +391,8 @@ class LYBScene():
     def lyb_mouse_drag(self, from_pixelbox, to_pixelbox, delay=0.5, stop_delay=0):
         (from_x, from_y) = self.get_location(from_pixelbox)
         (to_x, to_y) = self.get_location(to_pixelbox)
-        self.logger.info('[마우스 드래그] %s -> %s' % (str(self.get_location(from_pixelbox)), str(self.get_location(to_pixelbox))))
+        self.logger.info(
+            '[마우스 드래그] %s -> %s' % (str(self.get_location(from_pixelbox)), str(self.get_location(to_pixelbox))))
         self.lyb_mouse_drag_location(from_x, from_y, to_x, to_y, delay=delay, stop_delay=stop_delay)
 
     def lyb_mouse_drag_location(self, from_x, from_y, to_x, to_y, delay=0.5, stop_delay=0):
@@ -498,4 +499,3 @@ class LYBScene():
     def period_bot(self, weight):
         # print(self.get_window_config('wakeup_period_entry'))
         return self.game_object.period_bot(weight)
-

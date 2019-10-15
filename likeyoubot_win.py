@@ -197,10 +197,9 @@ class LYBWin:
                 print('--------------------> !!! found window DEBUG4 Nox : ', str(win32gui.GetWindowText(hwnd)))
                 if hwnd not in self.side_window_handle_list:
                     (top_left_x, top_left_y, bottom_right_x, bottom_right_y) = win32gui.GetWindowRect(hwnd)
-                    print('--------------------> !!! found window DEBUG5 Nox : ',
-                          (top_left_x, top_left_y, bottom_right_x, bottom_right_y))
+                    print('--------------------> !!! found window DEBUG5 Nox : ', (top_left_x, top_left_y, bottom_right_x, bottom_right_y))
                     if abs(bottom_right_x - top_left_x) - 36 < 80 and abs(
-                            bottom_right_y - top_left_y - LYBWin.HEIGHT) < 80:
+                                            bottom_right_y - top_left_y - LYBWin.HEIGHT) < 80:
                         self.side_window_handle_list.append(hwnd)
                         #
                         # 모모 멀티플레이어
@@ -327,6 +326,9 @@ class LYBWin:
 
         # win32gui.SendMessage(hwnd, win32con.WM_LBUTTONDOWN, win32con.MK_LBUTTON, lParam)
         win32gui.PostMessage(hwnd, win32con.WM_LBUTTONDOWN, win32con.MK_LBUTTON, lParam)
+        if delay == 0:
+            delay = 0.2
+
         if delay > 0:
             time.sleep(delay)
 

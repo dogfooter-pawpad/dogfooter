@@ -36,15 +36,15 @@ class LYBLogger:
 		clog_fh = logging.FileHandler(log_path)
 		clog_fh.setFormatter(formatter)
 
-		clog_ch = logging.StreamHandler()
-		clog_ch.setFormatter(formatter)
+		# clog_ch = logging.StreamHandler()
+		# clog_ch.setFormatter(formatter)
 
 		log_fd = open(log_path, "a")
-		sys.stdout = log_fd
-		sys.stderr = log_fd
+		# sys.stdout = log_fd
+		# sys.stderr = log_fd
 
 		LYBLogger.dogfooter_logger.addHandler(clog_fh)
-		LYBLogger.dogfooter_logger.addHandler(clog_ch)
+		# LYBLogger.dogfooter_logger.addHandler(clog_ch)
 
 		LYBLogger.dogfooter_logger.setLevel(logging.DEBUG)
 		LYBLogger.logPath = log_path

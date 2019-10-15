@@ -12,7 +12,6 @@ import likeyoubot_sample
 import likeyoubot_logger
 import traceback
 import pyautogui
-import websocket
 
 
 class LYBWorker(threading.Thread):
@@ -124,8 +123,8 @@ class LYBWorker(threading.Thread):
                 elif recv_msg.type == 'search':
                     window_config = recv_msg.message
                     (handle_list, side_handle_dic, parent_handle_dic, multi_handle_dic) = self.findWindows()
-                    self.logger.info(handle_list)
-                    self.logger.info(parent_handle_dic)
+                    self.logger.debug(handle_list)
+                    self.logger.debug(parent_handle_dic)
 
                     window_list, rhwnds_dic = self.set_location(window_config, handle_list, side_handle_dic,
                                                                 parent_handle_dic)
@@ -272,7 +271,7 @@ class LYBWorker(threading.Thread):
                 elif recv_msg.type == 'long_polling':
                     self.ui = recv_msg.message
                     threading.currentThread().setName('long_polling_worker')
-                    self.logger.info('long_polling_worker started')
+                    self.logger.debug('long_polling_worker started')
                     if self.win is None:
                         self.win = likeyoubot_win.LYBWin(self.ui.configure.window_title, self.ui.configure)
                 elif recv_msg.type == 'thumbnail':
@@ -444,7 +443,7 @@ class LYBWorker(threading.Thread):
                         self.response_queue.put_nowait(
                             likeyoubot_message.LYBMessage('log',
                                                           '[' + self.window_title + '] 창 크기: ' + str(
-                                                              (win_width, win_height)) + ' - (840, 450) 불일치')
+                                                              (win_width, win_height)) + ' - (' + str(likeyoubot_win.LYBWin.WIDTH) + 'x' + str(likeyoubot_win.LYBWin.HEIGHT) + ') 불일치')
                         )
                         self.response_queue.put_nowait(
                             likeyoubot_message.LYBMessage('end_return', 'Fail to initialize'))
@@ -563,7 +562,7 @@ class LYBWorker(threading.Thread):
             else:
                 current_window_image_grab = self.win.get_window_screenshot(self.hwnd, inactive_flag)
         except:
-            self.logger.error(traceback.format_exc())
+           # self.logger.error(traceback.format_exc())
             return 0
         # e = time.time()
         # print('[DEBUG] Grab Screenshot:', round(e-s,2))
@@ -704,21 +703,22 @@ class LYBWorker(threading.Thread):
 
         return window_list, rhwnds_dic
 
-    @staticmethod
-    def on_message(message):
-        print(message)
-
-    @staticmethod
-    def on_error(ws, error):
-        print(error)
-
-    @staticmethod
-    def on_close(ws):
-        print("### closed ###")
-
-    @staticmethod
-    def on_open(ws):
-        ws.send("%s connected" % threading.currentThread().getName())
-        time.sleep(1)
-        # ws.close()
-        # print("thread terminating...")
+    # @staticmethod
+    # def on_message(ws, message):
+    #     print(message)
+    #
+    # @staticmethod
+    # def on_error(ws, error):
+    #     print(error)
+    #
+    # @staticmethod
+    # def on_close(ws):
+    #     print("### closed ###")
+    #
+    # @staticmethod
+    # def on_open(ws):
+    #     print('onopen')
+    #     ws.send("%s connected" % threading.currentThread().getName())
+    #     time.sleep(1)
+    #     # ws.close()
+    #     # print("thread terminating...")
