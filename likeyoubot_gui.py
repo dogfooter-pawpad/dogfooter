@@ -1968,7 +1968,7 @@ class LYBGUI:
         frame.pack(anchor=tkinter.W)
 
         if not lybconstant.LYB_DO_STRING_RECOVERY_COUNT + 'freezing_limit' in self.configure.common_config:
-            self.configure.common_config[lybconstant.LYB_DO_STRING_RECOVERY_COUNT + 'freezing_limit'] = 30
+            self.configure.common_config[lybconstant.LYB_DO_STRING_RECOVERY_COUNT + 'freezing_limit'] = 120
 
         self.freezing_limit_stringvar.set(
             self.configure.common_config[lybconstant.LYB_DO_STRING_RECOVERY_COUNT + 'freezing_limit'])
