@@ -8,7 +8,7 @@ from PIL import ImageGrab
 import cv2
 import numpy as np
 from likeyoubot_configure import LYBConstant as lybconstant
-import likeyoubot_sample
+import likeyoubot_eosred
 import likeyoubot_logger
 import traceback
 import pyautogui
@@ -348,8 +348,8 @@ class LYBWorker(threading.Thread):
                     # 무슨 게임이냐에 따라서
                     try:
 
-                        if self.game_name == lybconstant.LYB_GAME_SAMPLE:
-                            self.game = likeyoubot_sample.LYBSample(None, None, self.win)
+                        if self.game_name == lybconstant.LYB_GAME_EOSRED:
+                            self.game = likeyoubot_eosred.LYBEosRed(None, None, self.win)
                         # elif self.game_name == lybconstant.LYB_GAME_HUNDREDSOUL:
                         # 	self.game = likeyoubot_hundredsoul.LYBHundredSoul(None, None, self.win)
 
