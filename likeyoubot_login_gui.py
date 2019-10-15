@@ -1,4 +1,5 @@
 import tkinter
+import webbrowser
 from tkinter import ttk
 from tkinter import font
 import time
@@ -189,7 +190,25 @@ class LYBLoginGUI:
             cursor='hand2'
         )
         label.pack(side=tkinter.LEFT)
-        label.bind("<Button-1>", self.callback_homepage)
+        label.bind("<Button-1>", self.callback_register)
+        frame.pack(anchor=tkinter.E)
+        frame_bottom.pack(fill=tkinter.X, pady=5)
+        label_frame.pack(padx=5, pady=10)
+
+        frame_extra = ttk.Frame(frame_bottom)
+        frame_extra.pack(pady=1)
+
+        link_url = "아이디 비밀번호 찾기"
+        frame = ttk.Frame(frame_bottom)
+        label = ttk.Label(
+            master=frame,
+            text=link_url,
+            justify=tkinter.LEFT,
+            style='label_link.TLabel',
+            cursor='hand2'
+        )
+        label.pack(side=tkinter.LEFT)
+        label.bind("<Button-1>", self.callback_password_lost)
         frame.pack(anchor=tkinter.E)
         frame_bottom.pack(fill=tkinter.X, pady=5)
         label_frame.pack(padx=5, pady=10)
@@ -216,7 +235,18 @@ class LYBLoginGUI:
 
         self.master.bind('<Return>', self.callback_login_button)
 
-    def callback_homepage(self, event):
+    def callback_register(self, event):
+        rest = likeyoubot_rest.LYBRest(self.configure.root_url, "", "")
+        public_token = rest.get_public_elem("public_token")
+        webbrowser.open_new(r"https://pawpad.kr/bbs/" + public_token + r"/register.php")
+
+        return
+
+    def callback_password_lost(self, event):
+        rest = likeyoubot_rest.LYBRest(self.configure.root_url, "", "")
+        public_token = rest.get_public_elem("public_token")
+        webbrowser.open_new(r"https://pawpad.kr/bbs/" + public_token + r"/password_lost.php")
+
         return
 
     # webbrowser.open_new(likeyoubot_http.LYBHttp.getMacroBaseUrl() + '/bbs/register.php')
@@ -236,16 +266,20 @@ class LYBLoginGUI:
 
         # error_message = self.lybhttp.login()
         error_message = self.rest.login()
+        self.logger.info('로그인:' + str(error_message))
         if error_message == '':
             # login_point = self.lybhttp.get_login_point()
             # login_point = self.rest.get_login_point()
             # if int(self.lybhttp.mb_point) < int(login_point):
+            self.logger.info('DEBUG1')
             if self.rest.get_point() < self.rest.get_login_point():
+                self.shake_frame()
                 error_message = '포인트가 부족합니다.(현재: ' + str(self.rest.get_point()) + '점, 필요: ' + str(
                     self.rest.get_login_point()) + '점)'
                 self.option_dic[lybconstant.LYB_DO_STRING_LOGIN_MESSAGE].set(error_message)
                 return
 
+            self.logger.info('DEBUG3')
             self.main_frame.pack_forget()
 
             # chat_id = self.lybhttp.get_chat_id()
