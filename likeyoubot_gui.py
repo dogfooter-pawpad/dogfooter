@@ -10,7 +10,7 @@ import pickle
 import os
 import likeyoubot_message
 
-import likeyoubot_sample as LYBSAMPLE
+import likeyoubot_eosred as LYBEOSRED
 
 from likeyoubot_configure import LYBConstant as lybconstant
 import datetime
@@ -386,7 +386,7 @@ class LYBGUI:
         self.gui_config_dic = {}
 
         self.games = [
-            lybconstant.LYB_GAME_SAMPLE,
+            lybconstant.LYB_GAME_EOSRED,
             # lybconstant.LYB_GAME_LIN2REV,
             # lybconstant.LYB_GAME_CLANS,
             # lybconstant.LYB_GAME_YEOLHYUL
@@ -2225,7 +2225,7 @@ class LYBGUI:
         # 다크에덴M
 
         game_index = 0
-        lyb_game_tab = LYBSAMPLE.LYBSampleTab(
+        lyb_game_tab = LYBEOSRED.LYBEosRedTab(
             self.tab_frame[game_index + 1],
             self.configure,
             self.game_options[self.games[game_index]],
@@ -2233,7 +2233,7 @@ class LYBGUI:
             self.width,
             self.height
         )
-        self.game_tab_dic[lybconstant.LYB_GAME_SAMPLE] = lyb_game_tab
+        self.game_tab_dic[lybconstant.LYB_GAME_EOSRED] = lyb_game_tab
 
         # # 헌드레드 소울
         # lybhttp = self.login()
@@ -3270,15 +3270,16 @@ class LYBGUI:
 
     def start_websocket_worker(self):
 
+
         worker_thread = self.executeThread(is_system=True)
         if worker_thread is None:
             return
 
         websocket.enableTrace(True)
         self.ws = websocket.WebSocketApp("ws://localhost:18091",
-                                         on_message=self.on_message,
-                                         on_error=self.on_error,
-                                         on_close=self.on_close)
+                                    on_message=self.on_message,
+                                    on_error=self.on_error,
+                                    on_close=self.on_close)
         self.ws.on_open = self.on_open
 
         worker_thread.command_queue.put_nowait(likeyoubot_message.LYBMessage('websocket', self))

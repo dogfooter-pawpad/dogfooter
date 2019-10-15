@@ -213,7 +213,7 @@ class LYBWin:
 
             # 녹스 멀티앱플레이어
             if lybconstant.LYB_MULTI_APP_PLAYER_NAME_NOX in str(win32gui.GetWindowText(hwnd)):
-                # print(str(lybconstant.LYB_MULTI_APP_PLAYER_NAME_NOX) + ':[' + str(win32gui.GetWindowText(hwnd)) + '][' + str ( (s_x, s_y) ) + '] [' + str( (w_width, w_height) ) + ']')
+                # print(str(lybconstant.LYB_MULTI_APP_PLAYER_NAME_NOX) + ':[' + str(win32gui.GetWindowText(hwnd)) + '][' + str ( (s_x, s_y) ) + '] [' + str( (w_width, w_height) ) + ']') 
                 self.multi_window_handle_dic[lybconstant.LYB_MULTI_APP_PLAYER_NAME_NOX] = hwnd
 
         if re.match(self.my_name, str(win32gui.GetWindowText(hwnd))) != None and win32gui.IsWindowVisible(hwnd) != 0:
@@ -226,7 +226,7 @@ class LYBWin:
 
         for each_side in self.side_window_handle_list:
             (s_x, s_y, s_bx, s_by) = win32gui.GetWindowRect(each_side)
-            # self.logger.debug('side:' + str((s_x, s_y, s_bx, s_by)) )
+            # self.logger.debug('side:' + str((s_x, s_y, s_bx, s_by)) ) 
             for each_window in self.handle_list:
                 (w_x, w_y, w_bx, w_by) = win32gui.GetWindowRect(each_window)
                 # self.logger.debug('main:' + str((w_x, w_y, w_bx, w_by)) )
