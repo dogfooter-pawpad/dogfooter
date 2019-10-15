@@ -87,7 +87,7 @@ npm install --loglevel verbose
 그리고 아래 명령을 입력하면 도그푸터 매크로가 실행됩니다.
 
 ```
-node dogfooter.js
+node dogfooter.js master
 ```
 
 도그푸터 매크로 실행시 로그인 팝업창이 뜨게 됩니다. 
