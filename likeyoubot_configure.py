@@ -134,11 +134,11 @@ class LYBConstant():
 
     LYB_LICENSE_LIMIT = time.mktime((2017, 12, 30, 0, 0, 0, 0, 0, 0))
 
-    LYB_GAME_SAMPLE = '샘플'
-    LYB_GAME_DATA_SAMPLE = 'sample'
+    LYB_GAME_EOSRED = '에오스레드'
+    LYB_GAME_DATA_EOSRED = 'eosred'
 
     LYB_GAMES = {
-        LYB_GAME_SAMPLE: LYB_GAME_DATA_SAMPLE,
+        LYB_GAME_EOSRED: LYB_GAME_DATA_EOSRED,
     }
 
     LYB_MULTI_APP_PLAYER_NAME_MOMO = '[MOMO]멀티플레이어'
@@ -167,7 +167,7 @@ class LYBConstant():
     LYB_FONT = (LYB_FONT_FAMILY, LYB_FONT_SIZE)
 
     LYB_DO_PREFIX = 'do_'
-    LYB_SAMPLE_PREFIX = 'sample_'
+    LYB_EOSRED_PREFIX = 'eosred_'
 
     LYB_STATISTIC_0 = '스케쥴 완료 횟수'
     LYB_STATISTIC_1 = '플레이 시간'
@@ -254,7 +254,7 @@ class LYBConstant():
                            '텔레그램 연동 방법:\n\n' \
                            '0. 아래 입력칸에 아무거나 입력하세요. 이왕이면 본인만 알 수 있는 거로 입력하세요.\n' \
                            '1. 텔레그램에 가입하세요. -> https://www.telegram.org\n' \
-                           '2. 텔레그램 대화 상대에서 "@DogFooter 를 검색하세요.\n' \
+                           '2. 텔레그램 대화 상대에서 "@DogFooterBot 를 검색하세요.\n' \
                            '3. 텔레그램 도그푸터 봇과 대화를 시작하세요.\n' \
                            '4. 도그푸터 봇 대화창에 0번에서 입력한 것을 대화창에 쓰세요.\n' \
                            '5. "연동하기" 버튼을 클릭하세요. \n' \
@@ -449,9 +449,9 @@ class LYBConstant():
     LYB_DO_STRING_CLOSE_APP_NOX_NEW = LYB_DO_PREFIX + 'close_app_nox_new_boolenvar'
     LYB_DO_STRING_TERA_ETC = LYB_DO_PREFIX + 'tera_etc_stringvar_'
 
-    LYB_DO_STRING_SAMPLE_WORK = LYB_DO_PREFIX + LYB_SAMPLE_PREFIX + 'work_'
-    LYB_DO_STRING_SAMPLE_NOTIFY = LYB_DO_PREFIX + LYB_SAMPLE_PREFIX + 'notify_'
-    LYB_DO_STRING_SAMPLE_ETC = LYB_DO_PREFIX + LYB_SAMPLE_PREFIX + 'etc_'
+    LYB_DO_STRING_EOSRED_WORK = LYB_DO_PREFIX + LYB_EOSRED_PREFIX + 'work_'
+    LYB_DO_STRING_EOSRED_NOTIFY = LYB_DO_PREFIX + LYB_EOSRED_PREFIX + 'notify_'
+    LYB_DO_STRING_EOSRED_ETC = LYB_DO_PREFIX + LYB_EOSRED_PREFIX + 'etc_'
 
     def __init__(self):
         pass
