@@ -93,8 +93,33 @@ Node.js 에 대한 자세한 설명은 아래 공식 홈페이지를 참고하�
 
 [Node.js 64비트 인스톨러 다운로드 링크](https://nodejs.org/dist/v10.16.3/node-v10.16.3-x64.msi)
 
+
+<img src="/images/guide_030.PNG" title="Nodejs 설치 가이드" alt="guide_030"></img><br/>
+
+동의 체크한 후에 계속 Next 합니다. 기본 값을 건들 필요는 없습니다.
+
+<img src="/images/guide_031.PNG" title="Nodejs 설치 가이드" alt="guide_031"></img><br/>
+
+<img src="/images/guide_032.PNG" title="Nodejs 설치 가이드" alt="guide_032"></img><br/>
+
+<img src="/images/guide_033.PNG" title="Nodejs 설치 가이드" alt="guide_033"></img><br/>
+
+<img src="/images/guide_034.PNG" title="Nodejs 설치 가이드" alt="guide_034"></img><br/>
+
+<img src="/images/guide_035.PNG" title="Nodejs 설치 가이드" alt="guide_035"></img><br/>
+
+<img src="/images/guide_036.PNG" title="Nodejs 설치 가이드" alt="guide_036"></img><br/>
+
+Nodejs 설치가 완료되었습니다.
+
+<img src="/images/guide_037.PNG" title="Nodejs 설치 가이드" alt="guide_037"></img><br/>
+
 다운로드 후 설치가 제대로 되었다면 도그푸터 소스 폴더에서 마우스 우클릭 > Git Bash 실행을 하나 더 합니다.
 그리고 아래 명령을 입력합니다.
+
+
+깃허브에서 받은 소스가 dogfooter/dogfooter 경로에 있기 때문입니다. 
+
 
 # 도그푸터 실행하기
 
