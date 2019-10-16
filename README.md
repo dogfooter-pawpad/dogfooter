@@ -114,13 +114,14 @@ Nodejs 설치가 완료되었습니다.
 
 <img src="/images/guide_037.PNG" title="Nodejs 설치 가이드" alt="guide_037"></img><br/>
 
-다운로드 후 설치가 제대로 되었다면 방금 전 폴더로 가보면 다음과 같이 새로운 이름의 폴더가 있는 걸 볼 수 있습니다.
+다운로드 후 설치가 제대로 되었다면 방금 전 폴더에 다음과 같이 이름이 dogfooter인 폴더가 있는 걸 볼 수 있습니다.
 깃허브에서 dogfooter 소스를 다운로드 받아왔기 때문입니다.
-dogfooter 폴더를 더블클릭해서 들어갑니다.
+dogfooter 폴더를 더블클릭해서 이 폴더 안으로 들어갑니다.
 
 <img src="/images/guide_040.PNG" title="dogfooter 실행 가이드" alt="guide_040"></img><br/>
 
-그럼 아래와 같이 소스들이 있는 걸 볼 수 있습니다.
+그럼 아래와 같이 Python 소스 및 몇몇 파일들이 있는 걸 볼 수 있습니다.
+
 이 폴더에서 마우스 우클릭 > Git Bash 실행을 하나 더 합니다.
 
 <img src="/images/guide_041.PNG" title="dogfooter 실행 가이드" alt="guide_041"></img><br/>
