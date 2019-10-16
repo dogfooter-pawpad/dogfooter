@@ -227,16 +227,17 @@ node dogfooter.js master
 
 주요 소스는 이렇습니다.
 
-likeyoubot_win.py :
 
-비활성 마우스 이벤트 처리
-비활성 앱플레이어 인식 처리
-비활성된 앱플레이어로부터 이미지 얻어오기
+## 1. likeyoubot_win.py
 
-likeyoutbot_game.py :
+  1. 비활성 마우스 이벤트 처리
+  2. 비활성 앱플레이어 인식 처리
+  3. 비활성된 앱플레이어로부터 이미지 얻어오기
+  
+## 2. likeyoutbot_game.py
 
-OpenCV를 이용한 이미지 서칭 알고리즘
-numpy, matlab을 사용한 서칭 알고리즘
+  1. OpenCV를 이용한 이미지 서칭 알고리즘
+  2. numpy, matlab을 사용한 서칭 알고리즘
 
 회원 가입해서 사용하는 매크로는 제가 무료로 운영하는 매크로를 함께 사용하기 위함입니다.
 
