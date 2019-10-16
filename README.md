@@ -83,9 +83,7 @@ Git Bash 설치가 완료되었습니다.
 
 <img src="/images/guide_017.PNG" title="Git Bash 설치 가이드" alt="guide_017"></img><br/>
 
-"Git for Windows" 를 제대로 설치했다면 "Git Bash"라는 프로그램이 있어햐 합니다. 해당 프로그램이 없다면 구글링을 통해서 제대로 설치해주세요.
-이제 Git Bash를 실행합니다. 이 프로그램은 윈도우즈 CMD 창과 비슷하게 생겼습니다.
-
+"Git Bash"는 다음 단계에서 실행합니다.
 
 
 ## 도그푸터 깃허브 소스 다운로드 받기
