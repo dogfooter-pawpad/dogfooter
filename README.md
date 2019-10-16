@@ -93,16 +93,35 @@ Git Bash 설치가 완료되었습니다.
 
 C:\dogfooter 나 D:\dogfooter 와 같이 폴더를 만듭니다.
 
+<img src="/images/guide_020.PNG" title="Git 소스 받기 가이드" alt="guide_020"></img><br/>
+
 폴더로 이동 후 마우스를 우클릭해봅니다.
+
+<img src="/images/guide_021.PNG" title="Git 소스 받기 가이드" alt="guide_021"></img><br/>
+
 우클릭하면 뜨는 팝업 메뉴에 "Git Bash Here" 가 있어야 합니다.
 "Git Bash Here"가 없으면 Git for Windows가 제대로 설치가 되지 않은 것입니다. 설치를 제대로 해주세요.
 "Git Bash Here"가 보인다면 클릭해주세요. 해당 폴더에서 Git Bash가 실행됩니다.
 
-실행된 화면에서 아래와 똑같이 입력해주세요. 복사해서 붙여넣어도 됩니다.
+<img src="/images/guide_022.PNG" title="Git 소스 받기 가이드" alt="guide_022"></img><br/>
+
+실행된 Git Bash 는 아래와 같이 생겼습니다.
+
+<img src="/images/guide_023.PNG" title="Git 소스 받기 가이드" alt="guide_023"></img><br/>
+
+실행된 화면에 아래와 똑같이 입력해주세요. 복사해서 붙여넣어도 됩니다.
 
 ```
 git clone https://github.com/dogfooter-pawpad/dogfooter.git
 ```
+
+<img src="/images/guide_024.PNG" title="Git 소스 받기 가이드" alt="guide_024"></img><br/>
+
+<img src="/images/guide_025.PNG" title="Git 소스 받기 가이드" alt="guide_025"></img><br/>
+
+도그푸터 소스를 다운로드 받아왔습니다.
+
+<img src="/images/guide_026.PNG" title="Git 소스 받기 가이드" alt="guide_026"></img><br/>
 
 ## Node.js 설치
 
