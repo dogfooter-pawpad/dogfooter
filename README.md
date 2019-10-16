@@ -188,7 +188,7 @@ npm install --loglevel verbose
 
 <img src="/images/guide_045.PNG" title="dogfooter 실행 가이드" alt="guide_045"></img><br/>
 
-그럼 아래와 같이 뭐라고 뭐라고 합니다. 실행에 필요한 라이브러리를 자동으로 설치가 됩니다.
+그럼 아래와 같이 뭐라고 뭐라고 합니다. npm이 실행에 필요한 라이브러리를 자동으로 설치합니다.
 
 <img src="/images/guide_046.PNG" title="dogfooter 실행 가이드" alt="guide_046"></img><br/>
 
@@ -197,7 +197,7 @@ npm install --loglevel verbose
 도그푸터 소스가 위치한 폴더로 이동합니다. 
 위에서 했던 방식으로 폴더에서 마우스로 우클릭하여 "Git Bash"를 실행합니다.
 
-위에서 입력한 아래 명령은 생략합니다.(처음 설치할 때 한번만 실행하는 명령입니다.)
+아래 명령은 이미 했기 때문에 생략합니다.(처음 설치할 때 한번만 실행하는 명령입니다.)
 
 ```
 npm install --loglevel verbose
@@ -208,6 +208,8 @@ npm install --loglevel verbose
 ```
 node dogfooter.js master
 ```
+
+실행에 필요한 Python 모듈들을 다운받습니다. 약 5분에서 10분정도가 걸립니다. 기다려주세요.
 
 <img src="/images/guide_048.PNG" title="dogfooter 실행 가이드" alt="guide_048"></img><br/>
 
@@ -221,9 +223,23 @@ node dogfooter.js master
 
 <img src="/images/guide_050.PNG" title="dogfooter 실행 가이드" alt="guide_050"></img><br/>
 
-이후 회원 가입은 자유이며 자작해서 사용하실 분들은 마음대로 코드를 수정하여 사용하시기 바랍니다.
-회원 가입해서 사용하는 매크로는 제가 직접 제작하는 매크로를 함께 사용하기 위함입니다.
-당연히 무료이고 앞으로도 무료입니다.
+이후 회원 가입은 자유이며 코드에서 로그인 부분을 수정하여 사용하시기 바랍니다. 또한 매크로 기능 중 필요한 부분만 검색해서 테스트를 하시면 많은 도움이 될 겁니다.
+
+주요 소스는 이렇습니다.
+
+likeyoubot_win.py :
+
+비활성 마우스 이벤트 처리
+비활성 앱플레이어 인식 처리
+비활성된 앱플레이어로부터 이미지 얻어오기
+
+likeyoutbot_game.py :
+
+OpenCV를 이용한 이미지 서칭 알고리즘
+numpy, matlab을 사용한 서칭 알고리즘
+
+회원 가입해서 사용하는 매크로는 제가 무료로 운영하는 매크로를 함께 사용하기 위함입니다.
+
 
 
 
