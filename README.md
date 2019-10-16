@@ -237,9 +237,9 @@ node dogfooter.js master
 ## 2. likeyoutbot_game.py
 
   1. OpenCV를 이용한 이미지 서칭 알고리즘
-  2. numpy, matlab을 사용한 서칭 알고리즘
+  2. numpy, matlab을 이용한 서칭 알고리즘
 
-회원 가입해서 사용하는 매크로는 제가 무료로 운영하는 매크로를 함께 사용하기 위함입니다.
+회원 가입 기능은 제가 무료로 운영하는 매크로를 위한 것이므로 신경쓰지 않으셔도 됩니다.
 
 
 
