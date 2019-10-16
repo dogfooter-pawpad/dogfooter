@@ -162,19 +162,41 @@ Nodejs 설치가 완료되었습니다.
 
 <img src="/images/guide_037.PNG" title="Nodejs 설치 가이드" alt="guide_037"></img><br/>
 
-다운로드 후 설치가 제대로 되었다면 도그푸터 소스 폴더에서 마우스 우클릭 > Git Bash 실행을 하나 더 합니다.
-그리고 아래 명령을 입력합니다.
+다운로드 후 설치가 제대로 되었다면 방금 전 폴더로 가보면 다음과 같이 새로운 이름의 폴더가 있는 걸 볼 수 있습니다.
+깃허브에서 dogfooter 소스를 다운로드 받아왔기 때문입니다.
+dogfooter 폴더를 더블클릭해서 들어갑니다.
 
+<img src="/images/guide_040.PNG" title="dogfooter 실행 가이드" alt="guide_040"></img><br/>
 
-깃허브에서 받은 소스가 dogfooter/dogfooter 경로에 있기 때문입니다. 
+그럼 아래와 같이 소스들이 있는 걸 볼 수 있습니다.
+이 폴더에서 마우스 우클릭 > Git Bash 실행을 하나 더 합니다.
 
+<img src="/images/guide_041.PNG" title="dogfooter 실행 가이드" alt="guide_041"></img><br/>
+
+<img src="/images/guide_042.PNG" title="dogfooter 실행 가이드" alt="guide_042"></img><br/>
+
+<img src="/images/guide_043.PNG" title="dogfooter 실행 가이드" alt="guide_043"></img><br/>
+
+<img src="/images/guide_044.PNG" title="dogfooter 실행 가이드" alt="guide_044"></img><br/>
+
+그리고 아래 명령을 입력합니다. 복사해서 붙여넣어도 됩니다.
+
+```
+npm install --loglevel verbose
+```
+
+<img src="/images/guide_045.PNG" title="dogfooter 실행 가이드" alt="guide_045"></img><br/>
+
+그럼 아래와 같이 뭐라고 뭐라고 합니다. 실행에 필요한 라이브러리를 자동으로 설치가 됩니다.
+
+<img src="/images/guide_046.PNG" title="dogfooter 실행 가이드" alt="guide_046"></img><br/>
 
 # 도그푸터 실행하기
 
 도그푸터 소스가 위치한 폴더로 이동합니다. 
 위에서 했던 방식으로 폴더에서 마우스로 우클릭하여 "Git Bash"를 실행합니다.
 
-처음 실행시 아래 명령을 입력합니다.
+처음 실행시에는 위에서 입력한 아래 명령을 항상 입력합니다. 이후로는 하지 않아도 됩니다.
 
 ```
 npm install --loglevel verbose
@@ -186,9 +208,23 @@ npm install --loglevel verbose
 node dogfooter.js master
 ```
 
+<img src="/images/guide_048.PNG" title="dogfooter 실행 가이드" alt="guide_048"></img><br/>
+
+포트를 방화벽에서 허용해줍니다.
+
+<img src="/images/guide_047.PNG" title="dogfooter 실행 가이드" alt="guide_047"></img><br/>
+
+<img src="/images/guide_049.PNG" title="dogfooter 실행 가이드" alt="guide_049"></img><br/>
+
 도그푸터 매크로 실행시 로그인 팝업창이 뜨게 됩니다.
 
-이후 회원 가입은 자유이며 마음대로 코드를 수정하여 사용하시기 바랍니다.
+<img src="/images/guide_050.PNG" title="dogfooter 실행 가이드" alt="guide_050"></img><br/>
+
+이후 회원 가입은 자유이며 자작해서 사용하실 분들은 마음대로 코드를 수정하여 사용하시기 바랍니다.
+회원 가입해서 사용하는 매크로는 제가 직접 제작하는 매크로를 함께 사용하기 위함입니다.
+당연히 무료이고 앞으로도 무료입니다.
+
+
 
 
 
