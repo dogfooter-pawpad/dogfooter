@@ -179,7 +179,6 @@ node dogfooter.js master
 
 주요 소스는 이렇습니다.
 
-
 ## 1. likeyoubot_win.py
 
   1. 비활성 마우스 이벤트 처리
@@ -193,6 +192,18 @@ node dogfooter.js master
 
 회원 가입 기능은 제가 무료로 운영하는 매크로를 위한 것이므로 신경쓰지 않으셔도 됩니다.
 
+# 추가 내용
+
+## 바로가기 만들기
+
+
+<img src="/images/guide_060.PNG" title="바로가기 아이콘 가이드" alt="guide_060"></img><br/>
+
+<img src="/images/guide_063.PNG" title="바로가기 아이콘 가이드" alt="guide_063"></img><br/>
+
+<img src="/images/guide_062.PNG" title="바로가기 아이콘 가이드" alt="guide_062"></img><br/>
+
+<img src="/images/guide_064.PNG" title="바로가기 아이콘 가이드" alt="guide_064"></img><br/>
 
 
 
