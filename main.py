@@ -6,6 +6,10 @@ import pickle
 import os
 import likeyoubot_login_gui
 import likeyoubot_logger
+# from pystray import MenuItem as item
+# import pystray
+# from PIL import Image
+
 
 def connresize(e):
     global configure
@@ -47,11 +51,30 @@ root.resizable(width=False, height=False)
 root.iconbitmap(resource_path('images/dogfooterbot_icon.ico'))
 root.bind("<Configure>", connresize)
 
+
+# def quit_window(icon, item):
+#     icon.stop()
+#     root.destroy()
+#
+#
+# def show_window(icon, item):
+#     icon.stop()
+#     root.after(0, root.deiconify)
+#
+#
+# def withdraw_window():
+#     root.withdraw()
+#     image = Image.open("images/dogfooterbot_icon.ico")
+#     menu = (item('종료', quit_window), item('보이기', show_window))
+#     icon = pystray.Icon("name", image, "도그푸터", menu)
+#     icon.run()
+
+
 # TODO: 설정 파일 읽어오기
 try:
     with open(resource_path('lyb.cfg'), 'rb') as dat_file:
         configure = pickle.load(dat_file)
-        if configure.getGeometryLogin() == None:
+        if configure.getGeometryLogin() is None:
             w = 320
             h = 180
             ws = root.winfo_screenwidth()
@@ -102,4 +125,5 @@ dogfooter_logger.debug('size: ' + str(root.winfo_width()) + ' ' + str(root.winfo
 # lyb_gui = likeyoubot_gui.LYBGUI(root, configure)
 likeyoubot_login_gui.LYBLoginGUI(root, configure)
 
+# root.protocol('WM_DELETE_WINDOW', withdraw_window)
 root.mainloop()
