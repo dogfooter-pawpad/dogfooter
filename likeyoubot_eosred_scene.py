@@ -88,6 +88,7 @@ class LYBEosRedScene(likeyoubot_scene.LYBScene):
                 (650, 190, 720, 220),
             ]
 
+            is_found = False
             pb_name = 'gabang_scene_item_white'
             for each in location_list:
                 (loc_x, loc_y), match_rate = self.game_object.locationOnWindowPart(
@@ -100,8 +101,12 @@ class LYBEosRedScene(likeyoubot_scene.LYBScene):
                 )
                 self.logger.debug(pb_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
                 if loc_x != -1:
+                    is_found = True
                     self.lyb_mouse_click_location(loc_x - 15, loc_y - 15)
                     break
+
+            if is_found is False:
+                self.status = 30
         else:
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
                 self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
