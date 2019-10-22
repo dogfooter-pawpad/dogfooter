@@ -295,6 +295,7 @@ class LYBEosRedScene(likeyoubot_scene.LYBScene):
                 self.status = self.get_option('last_status')
         elif self.status == 25:
             self.set_option('found', True)
+            self.status += 1
         else:
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
                 self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
