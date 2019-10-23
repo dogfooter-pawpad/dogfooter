@@ -465,8 +465,8 @@ class LYBEosRedScene(likeyoubot_scene.LYBScene):
 
             if elapsed_time > self.period_bot(cfg_duration):
                 self.set_option(self.current_work + '_end_flag', True)
-
-            self.loggingElapsedTime('[' + str(self.current_work) + '] 경과 시간', elapsed_time, cfg_duration, period=60)
+            else:
+                self.loggingElapsedTime('[' + str(self.current_work) + '] 경과 시간', elapsed_time, cfg_duration, period=60)
 
             if self.get_option(self.current_work + '_end_flag'):
                 self.set_option(self.current_work + '_end_flag', False)
@@ -475,6 +475,24 @@ class LYBEosRedScene(likeyoubot_scene.LYBScene):
                 return self.status
 
             self.process_main_quest()
+
+        elif self.status == self.get_work_status('자동 사냥'):
+            cfg_duration = int(self.get_game_config(lybconstant.LYB_DO_STRING_EOSRED_WORK + 'auto_duration'))
+            elapsed_time = self.get_elapsed_time()
+
+            if elapsed_time > self.period_bot(cfg_duration):
+                self.set_option(self.current_work + '_end_flag', True)
+            else:
+                self.loggingElapsedTime('[' + str(self.current_work) + '] 경과 시간', elapsed_time, cfg_duration, period=60)
+
+            if self.get_option(self.current_work + '_end_flag'):
+                self.set_option(self.current_work + '_end_flag', False)
+                self.status = self.last_status[self.current_work] + 1
+                return self.status
+
+            if self.is_skill_auto():
+                self.lyb_mouse_click('main_scene_skill_auto', custom_threshold=0)
+                return self.status
 
         elif self.status == self.get_work_status('도감'):
 
@@ -726,12 +744,9 @@ class LYBEosRedScene(likeyoubot_scene.LYBScene):
 
         return False, match_rate
 
-    def is_auto(self, limit=2):
-        return self.is_status_by_resource2('자동 꺼짐 감지', 'no_auto_loc', 0.7, limit, reverse=True)
-
     def is_gabang_full(self, limit=2):
         return self.is_status_by_resource(
-            '[가방 100% 감지]',
+            '가방 100% 감지',
             'main_scene_gabang_full_loc',
             custom_top_level=(255, 75, 75),
             custom_below_level=(200, 0, 0),
@@ -739,6 +754,28 @@ class LYBEosRedScene(likeyoubot_scene.LYBScene):
             custom_threshold=0.7,
             limit_count=limit,
             reverse=True,
+        )
+
+    def is_auto(self, limit=2):
+        return self.is_status_by_resource(
+            '자동 진행 꺼짐 감지',
+            'main_scene_auto_loc',
+            custom_top_level=(255, 255, 15),
+            custom_below_level=(100, 100, 0),
+            custom_rect=(440, 310, 480, 350),
+            custom_threshold=0.5,
+            limit_count=limit,
+            reverse=True,
+        )
+
+    def is_skill_auto(self, limit=2):
+        return self.is_status_by_resource2(
+            '자동 전투 꺼짐 감지',
+            'main_scene_skill_auto_loc',
+            custom_threshold=0.5,
+            custom_top_level=255,
+            custom_below_level=250,
+            limit_count=limit,
         )
 
     def is_status_by_resource(self, log_message, resource_name, custom_threshold, custom_top_level, custom_below_level,
@@ -774,14 +811,19 @@ class LYBEosRedScene(likeyoubot_scene.LYBScene):
             return True
 
         if check_count > 0:
-            self.logger.debug(log_message + '..(' + str(check_count) + '/' + str(limit_count) + ')')
+            self.logger.debug('[' + log_message + ']' + ' (' + str(check_count) + '/' + str(limit_count) + ')')
         self.set_option(resource_name + 'check_count', check_count + 1)
 
         return False
 
-    def is_status_by_resource2(self, log_message, resource_name, custom_threshold, limit_count=-1, reverse=False):
-        match_rate = self.game_object.rateMatchedResource(self.window_pixels, resource_name)
-        self.logger.debug(resource_name + ' ' + str(round(match_rate, 2)))
+    def is_status_by_resource2(self, log_message, resource_name, custom_threshold, custom_top_level=-1, custom_below_level=-1, limit_count=-1, reverse=False):
+        match_rate = self.game_object.rateMatchedResource(
+            self.window_pixels,
+            resource_name,
+            custom_top_level=custom_top_level,
+            custom_below_level=custom_below_level
+        )
+        # self.logger.debug(resource_name + ' ' + str(round(match_rate, 2)))
         if match_rate > custom_threshold and reverse is False:
             self.set_option(resource_name + 'check_count', 0)
             return False
@@ -799,7 +841,7 @@ class LYBEosRedScene(likeyoubot_scene.LYBScene):
             return True
 
         if check_count > 0:
-            self.logger.debug(log_message + '..(' + str(check_count) + '/' + str(limit_count) + ')')
+            self.logger.info(log_message + '..(' + str(check_count) + '/' + str(limit_count) + ')')
         self.set_option(resource_name + 'check_count', check_count + 1)
 
         return False

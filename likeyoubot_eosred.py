@@ -14,6 +14,7 @@ class LYBEosRed(lybgame.LYBGame):
         '게임 시작',
         '로그인',
         '메인 퀘스트',
+        '자동 사냥',
         '도감',
         '분해',
 
@@ -324,7 +325,45 @@ class LYBEosRedTab(lybgame.LYBGameTab):
         frame.pack(anchor=tkinter.W)
 
         frame_label.pack(anchor=tkinter.NW, padx=5, pady=5)
-        
+
+        frame_label = ttk.LabelFrame(frame_l, text='자동 사냥')
+
+        frame = ttk.Frame(frame_label)
+        label = ttk.Label(
+            master=frame,
+            text=self.get_option_text('진행 시간(초)', width=27)
+        )
+        label.pack(side=tkinter.LEFT)
+
+        self.option_dic[lybconstant.LYB_DO_STRING_EOSRED_WORK + 'auto_duration'] = tkinter.StringVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_EOSRED_WORK + 'auto_duration'].trace(
+            'w', lambda *args: self.auto_duration(args,
+                                                        lybconstant.LYB_DO_STRING_EOSRED_WORK + 'auto_duration')
+        )
+        combobox_list = []
+        for i in range(0, 86401, 60):
+            combobox_list.append(str(i))
+
+        if not lybconstant.LYB_DO_STRING_EOSRED_WORK + 'auto_duration' in self.configure.common_config[self.game_name]:
+            self.configure.common_config[self.game_name][
+                lybconstant.LYB_DO_STRING_EOSRED_WORK + 'auto_duration'] = 3600
+
+        combobox = ttk.Combobox(
+            master=frame,
+            values=combobox_list,
+            textvariable=self.option_dic[lybconstant.LYB_DO_STRING_EOSRED_WORK + 'auto_duration'],
+            state="readonly",
+            height=10,
+            width=7,
+            font=lybconstant.LYB_FONT
+        )
+        combobox.set(self.configure.common_config[self.game_name][
+                         lybconstant.LYB_DO_STRING_EOSRED_WORK + 'auto_duration'])
+        combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
+        frame_label.pack(anchor=tkinter.NW, padx=5, pady=5)
+
         frame_l.pack(side=tkinter.LEFT, anchor=tkinter.NW)
 
         # 작업 탭 중간
@@ -353,4 +392,7 @@ class LYBEosRedTab(lybgame.LYBGameTab):
         self.set_game_option()
 
     def main_quest_duration(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def auto_duration(self, args, option_name):
         self.set_game_config(option_name, self.option_dic[option_name].get())

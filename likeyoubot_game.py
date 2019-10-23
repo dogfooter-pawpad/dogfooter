@@ -586,8 +586,7 @@ class LYBGame():
             self.telegram_send('창 이름 [' + str(self.window_title) + ']에서 화면 프리징이 감지되어 게임을 강제 종료합니다.')
             png_name = self.save_image('freeze')
             self.telegram_send('', image=png_name)
-            return False
-            # return True
+            return True
         else:
             if elapsed_time > 10:
                 self.logger.warn('화면 프리징 감지됨...(' + str(int(elapsed_time)) + '/' + str(freezing_limit) + '초)')
@@ -615,15 +614,15 @@ class LYBGame():
         if self.player_type == 'nox':
             if self.terminate_status == 0:
                 # self.mouse_click_with_cursor(660, 350)
-                if self.side_hwnd == None:
+                if self.side_hwnd is None:
                     self.logger.warn('녹스 사이드바 검색 실패로 종료 기능 사용 불가')
                     self.request_terminate = False
                     return
                 self.window.mouse_click(self.side_hwnd, 16, likeyoubot_win.LYBWin.HEIGHT - 40)
                 self.terminate_status += 1
-            elif self.terminate_status > 0 and self.terminate_status < max_app_close_count:
+            elif 0 < self.terminate_status < max_app_close_count:
                 self.logger.info('녹스 앱 종료 중..')
-                if self.common_config[lybconstant.LYB_DO_STRING_CLOSE_APP_NOX_NEW] == True:
+                if self.common_config[lybconstant.LYB_DO_STRING_CLOSE_APP_NOX_NEW] is True:
                     self.window.mouse_drag(self.hwnd,
                                            int(likeyoubot_win.LYBWin.WIDTH * 0.5),
                                            likeyoubot_win.LYBWin.HEIGHT - 90, 0,
@@ -647,9 +646,15 @@ class LYBGame():
                 self.request_terminate = False
         elif self.player_type == 'momo':
             if self.terminate_status == 0:
-                self.window.mouse_click(self.parent_hwnd,
-                                        likeyoubot_win.LYBWin.WIDTH + 20,
-                                        likeyoubot_win.LYBWin.HEIGHT - 5)
+                resolution = self.window.get_player_resolution(self.hwnd)
+                if resolution == 'fhd':
+                    self.window.mouse_click(self.parent_hwnd,
+                                            likeyoubot_win.LYBWin.WIDTH + 20,
+                                            likeyoubot_win.LYBWin.HEIGHT - 5)
+                else:
+                    self.window.mouse_click(self.parent_hwnd,
+                                            likeyoubot_win.LYBWin.WIDTH + 20,
+                                            likeyoubot_win.LYBWin.HEIGHT - 5)
                 # self.move_mouse_location(660, 355)
                 self.terminate_status += 1
             elif self.terminate_status > 0 and self.terminate_status < max_app_close_count:
