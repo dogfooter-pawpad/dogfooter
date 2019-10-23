@@ -327,12 +327,12 @@ class LYBWin:
         # win32gui.SendMessage(hwnd, win32con.WM_LBUTTONDOWN, win32con.MK_LBUTTON, lParam)
         win32gui.PostMessage(hwnd, win32con.WM_LBUTTONDOWN, win32con.MK_LBUTTON, lParam)
         if delay == 0:
-            delay = 0.2
+            delay = random.random()
 
         if delay > 0:
             time.sleep(delay)
 
-        if release == True:
+        if release is True:
             # win32gui.SendMessage(hwnd, win32con.WM_LBUTTONUP, 0, lParam)
             win32gui.PostMessage(hwnd, win32con.WM_LBUTTONUP, 0, lParam)
 
@@ -486,6 +486,27 @@ class LYBWin:
             h = end_y - anchor_y
 
         return (w, h)
+
+    def get_player_resolution(self, hwnd):
+        (top_left_x, top_left_y, bottom_right_x, bottom_right_y) = win32gui.GetWindowRect(hwnd)
+
+        diff_width = abs(top_left_x - bottom_right_x)
+        diff_height = abs(bottom_right_y - top_left_y)
+
+        if diff_height == LYBWin.HEIGHT + 34 and diff_width == LYBWin.WIDTH + 4:
+            # 녹스 FHD
+            return 'fhd'
+        elif diff_height == LYBWin.HEIGHT + 50 and diff_width == LYBWin.WIDTH + 4:
+            # 녹스 UHD
+            return 'uhd'
+        elif diff_height == LYBWin.HEIGHT + 38 and diff_width == LYBWin.WIDTH + 38:
+            # LDPlayer FHD
+            return 'fhd'
+        elif diff_height == LYBWin.HEIGHT + 56 and diff_width == LYBWin.WIDTH + 56:
+            # LDPlayer UHD
+            return 'uhd'
+        else:
+            return 'fhd'
 
     def get_player_adjust(self, hwnd):
 
