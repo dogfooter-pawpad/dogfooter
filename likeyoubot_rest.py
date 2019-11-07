@@ -25,7 +25,7 @@ class LYBRest:
             json_encode_body=True,
         )
         self.rest.add_resource(resource_name='api')
-        self.adjustTime = 32400
+        self.adjustTime = 0
 
     def login(self):
         payload = {
@@ -327,7 +327,7 @@ class LYBRest:
         except:
             # self.logger.error(traceback.format_exc())
             # self.logger.debug(traceback.format_exc())
-            self.logger.error(str(sys.exc_info()[0]) + '(' + str(sys.exc_info()[1]) + ')')
+            # self.logger.error(str(sys.exc_info()[0]) + '(' + str(sys.exc_info()[1]) + ')')
 
             return update
 

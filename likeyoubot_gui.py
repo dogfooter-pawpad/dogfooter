@@ -10,7 +10,7 @@ import pickle
 import os
 import likeyoubot_message
 
-import likeyoubot_eosred as LYBEOSRED
+import likeyoubot_v4 as LYBV4
 
 from likeyoubot_configure import LYBConstant as lybconstant
 import datetime
@@ -386,7 +386,7 @@ class LYBGUI:
         self.gui_config_dic = {}
 
         self.games = [
-            lybconstant.LYB_GAME_EOSRED,
+            lybconstant.LYB_GAME_V4,
             # lybconstant.LYB_GAME_LIN2REV,
             # lybconstant.LYB_GAME_CLANS,
             # lybconstant.LYB_GAME_YEOLHYUL
@@ -1815,6 +1815,45 @@ class LYBGUI:
         self.random_click_booleanvar.trace('w', lambda *args: self.callback_random_click_booleanvar(args))
 
         frame = ttk.Frame(self.configure_frame, relief=frame_relief)
+
+        self.random_click_delay_stringvar = tkinter.StringVar(frame)
+        label = ttk.Label(
+            master=frame,
+            text="마우스 클릭 지연 시간(범위 내 랜덤값): ",
+            justify=tkinter.LEFT
+        )
+        label.pack(side=tkinter.LEFT)
+
+        combobox_list = []
+        for i in range(1, 11):
+            combobox_list.append(i * 0.01)
+
+        combobox = ttk.Combobox(
+            master=frame,
+            values=combobox_list,
+            textvariable=self.random_click_delay_stringvar,
+            state='readonly',
+            width=5,
+            font=lybconstant.LYB_FONT
+        )
+        combobox.pack(side=tkinter.LEFT)
+
+        label = ttk.Label(
+            master=frame,
+            text="초",
+            justify=tkinter.LEFT
+        )
+        label.pack(side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
+        if not lybconstant.LYB_DO_STRING_RANDOM_CLICK_DELAY in self.configure.common_config:
+            self.configure.common_config[lybconstant.LYB_DO_STRING_RANDOM_CLICK_DELAY] = 0.05
+
+        self.random_click_delay_stringvar.set(
+            self.configure.common_config[lybconstant.LYB_DO_STRING_RANDOM_CLICK_DELAY])
+        self.random_click_delay_stringvar.trace('w', lambda *args: self.callback_random_click_delay_stringvar(args))
+
+        frame = ttk.Frame(self.configure_frame, relief=frame_relief)
         self.thumbnail_shortcut_booleanvar = tkinter.BooleanVar(frame)
         checkbutton = ttk.Checkbutton(
             master=frame,
@@ -1971,7 +2010,7 @@ class LYBGUI:
         frame.pack(anchor=tkinter.W)
 
         if not lybconstant.LYB_DO_STRING_RECOVERY_COUNT + 'freezing_limit' in self.configure.common_config:
-            self.configure.common_config[lybconstant.LYB_DO_STRING_RECOVERY_COUNT + 'freezing_limit'] = 60
+            self.configure.common_config[lybconstant.LYB_DO_STRING_RECOVERY_COUNT + 'freezing_limit'] = 120
 
         self.freezing_limit_stringvar.set(
             self.configure.common_config[lybconstant.LYB_DO_STRING_RECOVERY_COUNT + 'freezing_limit'])
@@ -2225,7 +2264,7 @@ class LYBGUI:
         # 다크에덴M
 
         game_index = 0
-        lyb_game_tab = LYBEOSRED.LYBEosRedTab(
+        lyb_game_tab = LYBV4.LYBV4Tab(
             self.tab_frame[game_index + 1],
             self.configure,
             self.game_options[self.games[game_index]],
@@ -2233,7 +2272,7 @@ class LYBGUI:
             self.width,
             self.height
         )
-        self.game_tab_dic[lybconstant.LYB_GAME_EOSRED] = lyb_game_tab
+        self.game_tab_dic[lybconstant.LYB_GAME_V4] = lyb_game_tab
 
         # # 헌드레드 소울
         # lybhttp = self.login()
@@ -3971,6 +4010,15 @@ class LYBGUI:
             config_value = int(self.random_click_pixel_stringvar.get())
 
         self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_RANDOM_CLICK + 'pixel'] = config_value
+
+    def callback_random_click_delay_stringvar(self, args):
+
+        if len(self.random_click_delay_stringvar.get()) < 1:
+            config_value = 0.05
+        else:
+            config_value = float(self.random_click_delay_stringvar.get())
+
+        self.configure.common_config[lybconstant.LYB_DO_STRING_RANDOM_CLICK_DELAY] = config_value
 
     def callback_thumbnail_width_stringvar(self, args):
 

@@ -134,11 +134,11 @@ class LYBConstant():
 
     LYB_LICENSE_LIMIT = time.mktime((2017, 12, 30, 0, 0, 0, 0, 0, 0))
 
-    LYB_GAME_EOSRED = '에오스레드'
-    LYB_GAME_DATA_EOSRED = 'eosred'
+    LYB_GAME_V4 = 'V4'
+    LYB_GAME_DATA_V4 = 'v4'
 
     LYB_GAMES = {
-        LYB_GAME_EOSRED: LYB_GAME_DATA_EOSRED,
+        LYB_GAME_V4: LYB_GAME_DATA_V4,
     }
 
     LYB_MULTI_APP_PLAYER_NAME_MOMO = '[MOMO]멀티플레이어'
@@ -167,7 +167,7 @@ class LYBConstant():
     LYB_FONT = (LYB_FONT_FAMILY, LYB_FONT_SIZE)
 
     LYB_DO_PREFIX = 'do_'
-    LYB_EOSRED_PREFIX = 'eosred_'
+    LYB_V4_PREFIX = 'v4_'
 
     LYB_STATISTIC_0 = '스케쥴 완료 횟수'
     LYB_STATISTIC_1 = '플레이 시간'
@@ -445,13 +445,14 @@ class LYBConstant():
     LYB_DO_BOOLEAN_MOUSE_POINTER = LYB_DO_PREFIX + 'mouse_pointer_booleanvar'
 
     LYB_DO_BOOLEAN_RANDOM_CLICK = LYB_DO_PREFIX + 'random_click_booleanvar'
+    LYB_DO_STRING_RANDOM_CLICK_DELAY = LYB_DO_PREFIX + 'random_delay'
     LYB_DO_STRING_THUMBNAIL_SIZE = LYB_DO_PREFIX + 'thumbnail_size_stringvar'
     LYB_DO_STRING_CLOSE_APP_NOX_NEW = LYB_DO_PREFIX + 'close_app_nox_new_boolenvar'
     LYB_DO_STRING_TERA_ETC = LYB_DO_PREFIX + 'tera_etc_stringvar_'
 
-    LYB_DO_STRING_EOSRED_WORK = LYB_DO_PREFIX + LYB_EOSRED_PREFIX + 'work_'
-    LYB_DO_STRING_EOSRED_NOTIFY = LYB_DO_PREFIX + LYB_EOSRED_PREFIX + 'notify_'
-    LYB_DO_STRING_EOSRED_ETC = LYB_DO_PREFIX + LYB_EOSRED_PREFIX + 'etc_'
+    LYB_DO_STRING_V4_WORK = LYB_DO_PREFIX + LYB_V4_PREFIX + 'work_'
+    LYB_DO_STRING_V4_NOTIFY = LYB_DO_PREFIX + LYB_V4_PREFIX + 'notify_'
+    LYB_DO_STRING_V4_ETC = LYB_DO_PREFIX + LYB_V4_PREFIX + 'etc_'
 
     def __init__(self):
         pass

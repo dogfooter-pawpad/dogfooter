@@ -271,7 +271,7 @@ class LYBLoginGUI:
             # login_point = self.lybhttp.get_login_point()
             # login_point = self.rest.get_login_point()
             # if int(self.lybhttp.mb_point) < int(login_point):
-            self.logger.info('DEBUG1')
+            # self.logger.info('DEBUG1')
             if self.rest.get_point() < self.rest.get_login_point():
                 self.shake_frame()
                 error_message = '포인트가 부족합니다.(현재: ' + str(self.rest.get_point()) + '점, 필요: ' + str(
@@ -279,7 +279,7 @@ class LYBLoginGUI:
                 self.option_dic[lybconstant.LYB_DO_STRING_LOGIN_MESSAGE].set(error_message)
                 return
 
-            self.logger.info('DEBUG3')
+            # self.logger.info('DEBUG3')
             self.main_frame.pack_forget()
 
             # chat_id = self.lybhttp.get_chat_id()
@@ -341,12 +341,12 @@ class LYBLoginGUI:
 
         # last_version = self.lybhttp.get_version()
         # self.patch_urls = self.lybhttp.get_update_file()
-        self.logger.info('DEBUG-1')
+        # self.logger.info('DEBUG-1')
         last_version = self.rest.get_version()
-        self.logger.info('DEBUG-2')
+        # self.logger.info('DEBUG-2')
         self.logger.info(last_version)
         self.patch_urls = self.rest.get_update_file()
-        self.logger.info('DEBUG-3')
+        # self.logger.info('DEBUG-3')
 
         self.logger.debug('last_version: ' + last_version + ', ' + lybconstant.LYB_VERSION)
 
