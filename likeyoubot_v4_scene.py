@@ -29,6 +29,8 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             rc = self.quest_scene()
         elif self.scene_name == 'quest_main_scene':
             rc = self.quest_main_scene()
+        elif self.scene_name == 'jeoljeon_mode_scene':
+            rc = self.jeoljeon_mode_scene()
         else:
             rc = self.else_scene()
 
@@ -47,6 +49,41 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
 
         return self.status
 
+    def jeoljeon_mode_scene(self):
+
+        if self.status == 0:
+            self.logger.info('scene: ' + self.scene_name)
+            self.game_object.get_scene('main_scene').set_option('go_jeoljeon', 0)
+            self.status += 1
+        elif 1 <= self.status < 30:
+            self.status += 1
+            if self.status % 3 == 0:
+                resource_name = 'jeoljeon_mode_scene_auto_quest_loc'
+                (loc_x, loc_y), match_rate = self.game_object.locationResourceOnWindowPart(
+                    self.window_image,
+                    resource_name,
+                    custom_top_level=(255, 255, 255),
+                    custom_below_level=(100, 100, 100),
+                    custom_rect=(420, 410, 540, 480),
+                    custom_threshold=0.7,
+                    custom_flag=1,
+                    average=True
+                )
+                self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
+                if loc_x == -1:
+                    self.status = 99998
+                    return self.status
+        elif self.status == 99998:
+            self.game_object.get_scene('main_scene').set_option('go_jeoljeon', 10)
+            self.status += 1
+        else:
+            if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
+                self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
+
+            self.status = 0
+
+        return self.status
+
     def quest_main_scene(self):
 
         if self.status == 0:
@@ -54,6 +91,23 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.status += 1
         elif 1 <= self.status < 5:
             self.status += 1
+
+            resource_name = 'quest_main_scene_auto_quest_loc'
+            (loc_x, loc_y), match_rate = self.game_object.locationResourceOnWindowPart(
+                self.window_image,
+                resource_name,
+                custom_top_level=(255, 255, 255),
+                custom_below_level=(100, 100, 100),
+                custom_rect=(400, 50, 540, 100),
+                custom_threshold=0.7,
+                custom_flag=1,
+                average=True
+            )
+            self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
+            if loc_x != -1:
+                self.status = 99999
+                return self.status
+
             pb_name_list = [
                 'quest_main_scene_auto',
                 'quest_main_scene_surak',
@@ -98,8 +152,14 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.logger.info('scene: ' + self.scene_name)
             self.status += 1
         elif 100 <= self.status < 105:
-            self.lyb_mouse_click('menu_scene_quest', custom_threshold=0)
-            self.game_object.get_scene('quest_scene').status = 100
+            if self.status % 2 == 0:
+                self.lyb_mouse_click('menu_scene_quest', custom_threshold=0)
+                self.game_object.get_scene('quest_scene').status = 100
+            self.status += 1
+        elif 200 <= self.status < 205:
+            if self.status % 2 == 0:
+                self.lyb_mouse_click('menu_scene_jeoljeon', custom_threshold=0)
+                self.game_object.get_scene('jeoljeon_mode_scene').status = 0
             self.status += 1
         else:
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
@@ -330,15 +390,29 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
     def process_main_quest(self):
 
         if self.is_main_quest_complete():
+            self.set_option('go_jeoljeon', 0)
             return True
 
         if self.is_main_quest_new():
+            self.set_option('go_jeoljeon', 0)
             return True
 
-        if self.is_auto_quest():
-            self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
-            self.game_object.get_scene('menu_scene').status = 100
+        go_jeoljeon = self.get_option('go_jeoljeon')
+        if go_jeoljeon is None:
+            go_jeoljeon = 0
+
+        self.set_option('go_jeoljeon', go_jeoljeon + 1)
+
+        if go_jeoljeon < 5:
             return True
+        elif go_jeoljeon == 5:
+            self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
+            self.game_object.get_scene('menu_scene').status = 200
+            return True
+
+        self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
+        self.game_object.get_scene('menu_scene').status = 100
+        self.set_option('go_jeoljeon', 0)
 
         return
 
@@ -440,8 +514,8 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
 
     def is_auto_quest(self, limit=3):
         return self.is_status_by_resource('자동 퀘스트 감지 실패', 'auto_quest_loc',
-                                          custom_top_level=(255, 255, 255),
-                                          custom_below_level=(120, 120, 120),
+                                          custom_top_level=-1,
+                                          custom_below_level=-1,
                                           custom_rect=(420, 400, 540, 460),
                                           custom_threshold=0.5,
                                           limit_count=limit,
@@ -455,8 +529,8 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             resource_name,
             custom_top_level=(255, 255, 255),
             custom_below_level=(210, 210, 210),
-            custom_rect=(720, 140, 780, 250),
-            custom_threshold=0.7,
+            custom_rect=(720, 140, 780, 300),
+            custom_threshold=0.6,
             custom_flag=1,
             average=True
         )
@@ -474,7 +548,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             resource_name,
             custom_top_level=(255, 255, 255),
             custom_below_level=(120, 120, 120),
-            custom_rect=(750, 140, 940, 190),
+            custom_rect=(750, 140, 940, 300),
             custom_threshold=0.7,
             custom_flag=1,
             average=True
