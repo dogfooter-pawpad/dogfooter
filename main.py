@@ -11,6 +11,7 @@ import likeyoubot_logger
 # from PIL import Image
 
 
+
 def connresize(e):
     global configure
 

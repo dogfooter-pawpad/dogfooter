@@ -310,14 +310,19 @@ class LYBWin:
 
         rand_x = 0
         rand_y = 0
-        if self.configure != None and self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_RANDOM_CLICK] == True:
-            # print('>>>>>>>>>>> DEBUG PIXEL:', self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_RANDOM_CLICK + 'pixel'])
+        if self.configure is not None and self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_RANDOM_CLICK] is True:
             random_error = int(self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_RANDOM_CLICK + 'pixel'])
             rand_x += int(random_error * random.random())
             rand_y += int(random_error * random.random())
 
-        # print('>>>> RANDOM:', (rand_x, rand_y))
+        rand_delay = 0.05
+        if self.configure is not None and self.configure.common_config[lybconstant.LYB_DO_STRING_RANDOM_CLICK_DELAY] is not None:
+            rand_delay = float(self.configure.common_config[lybconstant.LYB_DO_STRING_RANDOM_CLICK_DELAY])
+            if rand_delay == 0:
+                rand_delay = 0.05
 
+        # print('>>>> RANDOM:', (rand_x, rand_y))
+        # print('>>> RANDOM DELAY:', rand_delay)
         # (anchor_x, anchor_y, end_x, end_y) = win32gui.GetWindowRect(hwnd)
 
         lParam = win32api.MAKELONG(int(x + rand_x), int(y + rand_y))
@@ -327,7 +332,7 @@ class LYBWin:
         # win32gui.SendMessage(hwnd, win32con.WM_LBUTTONDOWN, win32con.MK_LBUTTON, lParam)
         win32gui.PostMessage(hwnd, win32con.WM_LBUTTONDOWN, win32con.MK_LBUTTON, lParam)
         if delay == 0:
-            delay = random.random()
+            delay = rand_delay
 
         if delay > 0:
             time.sleep(delay)
