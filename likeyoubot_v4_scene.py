@@ -248,8 +248,10 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
         if self.status == 0:
             self.logger.info('scene: ' + self.scene_name)
             self.set_option('is_end', False)
+            self.set_option('select_index', 0)
+            self.set_option('init_status', 1)
             self.status += 1
-        elif 1 <= self.status < 50:
+        elif 1 <= self.status < 5:
             self.status += 1
             resource_name = 'monster_josa_scene_new_loc'
             resource = self.game_object.resource_manager.resource_dic[resource_name]
@@ -281,6 +283,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
                 if loc_x != -1:
                     self.lyb_mouse_click_location(loc_x, loc_y)
+                    self.set_option('init_status', self.status)
                     self.status = 100
                     return self.status
 
@@ -389,7 +392,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                     is_end = False
             if is_end is True:
                 self.set_option('is_end', True)
-                self.status = 1
+                self.status = self.get_option('init_status')
             else:
                 self.status = self.get_option('last_status')
         elif 400 <= self.status < 410:
@@ -405,13 +408,13 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.status += 1
             select_index = self.get_option('select_index')
             pb_name = 'monster_josa_scene_select_' + str(select_index)
-            self.lyb_mouse_click(pb_name, custom_threshold=0)
             select_index = select_index + 1
-            if select_index >= 9:
+            if select_index >= 10:
                 self.set_option('select_index', 0)
                 self.set_option('last_status', self.status)
                 self.status = 700
             else:
+                self.lyb_mouse_click(pb_name, custom_threshold=0)
                 self.set_option('select_index', select_index)
                 self.set_option('last_status', self.status)
                 self.status = 600
@@ -708,8 +711,17 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
 
         if self.status == 0:
             self.logger.info('scene: ' + self.scene_name)
+            self.set_option('done', False)
             self.status += 1
         elif self.status == 1:
+            resource_name = 'named_tobeol_scene_done_loc'
+            match_rate = self.game_object.rateMatchedResource(self.window_pixels, resource_name)
+            self.logger.debug(resource_name + ' ' + str(round(match_rate, 2)))
+            if match_rate > 0.9:
+                self.status = 99999
+                self.game_object.get_scene('main_scene').set_option('네임드 토벌' + '_end_flag', True)
+                return self.status
+
             pb_name = 'named_tobeol_scene_quest_surak'
             match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
             self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
@@ -719,6 +731,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.status += 1
         elif 2 <= self.status < 5:
             self.lyb_mouse_click('named_tobeol_scene_auto', custom_threshold=0)
+            self.set_option('done', True)
             self.status += 1
         else:
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
@@ -838,6 +851,11 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.lyb_mouse_click('quest_scene_main', custom_threshold=0)
                 self.game_object.get_scene('quest_main_scene').status = 0
             self.status += 1
+        elif 200 <= self.status < 210:
+            if self.status % 5 == 0:
+                self.lyb_mouse_click('quest_scene_named_tobeol', custom_threshold=0)
+                self.game_object.get_scene('named_tobeol_scene').status = 0
+            self.status += 1
         else:
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
                 self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
@@ -875,6 +893,11 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             if self.status % 2 == 0:
                 self.lyb_mouse_click('menu_scene_immu', custom_threshold=0)
                 self.game_object.get_scene('immu_scene').status = 0
+            self.status += 1
+        elif 600 <= self.status < 605:
+            if self.status % 2 == 0:
+                self.lyb_mouse_click('menu_scene_quest', custom_threshold=0)
+                self.game_object.get_scene('quest_scene').status = 200
             self.status += 1
         else:
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
@@ -1111,6 +1134,50 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
             self.game_object.get_scene('menu_scene').status = 500
 
+        elif self.status == self.get_work_status('네임드 토벌'):
+            elapsed_time = self.get_elapsed_time()
+
+            if elapsed_time > self.period_bot(3600):
+                self.set_option(self.current_work + '_end_flag', True)
+
+            self.loggingElapsedTime('[' + str(self.current_work) + '] 경과 시간', elapsed_time, 3600, period=60)
+
+            if self.get_option(self.current_work + '_end_flag'):
+                self.set_option(self.current_work + '_end_flag', False)
+                self.set_option(self.current_work + '_inner_status', None)
+                self.status = self.last_status[self.current_work] + 1
+                return self.status
+
+            inner_status = self.get_option(self.current_work + '_inner_status')
+            if inner_status is None:
+                inner_status = 0
+
+            self.logger.debug('inner_status ' + str(inner_status))
+
+            if 0 <= inner_status < 10:
+                if self.game_object.get_scene('named_tobeol_scene').get_option('done') is True:
+                    self.game_object.get_scene('named_tobeol_scene').set_option('done', False)
+                    inner_status = 10
+                else:
+                    self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
+                    self.game_object.get_scene('menu_scene').status = 600
+                    self.set_option('go_jeoljeon', 0)
+            elif 10 <= inner_status < 60:
+                go_jeoljeon = self.get_option('go_jeoljeon')
+                if go_jeoljeon == 5:
+                    self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
+                    self.game_object.get_scene('menu_scene').status = 200
+                    self.set_option('go_jeoljeon', 0)
+
+                if self.get_option('go_jeoljeon') == 10:
+                    inner_status = 0
+                else:
+                    self.set_option('go_jeoljeon', go_jeoljeon + 1)
+            else:
+                inner_status = 0
+
+            self.set_option(self.current_work + '_inner_status', inner_status + 1)
+
         elif self.status == self.get_work_status('알림'):
 
             try:
@@ -1182,6 +1249,9 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
 
     def pre_process_main_scene(self):
 
+        if self.get_option('is_moving') is True:
+            return True
+
         if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'hp_potion_move') is True:
             if self.is_hp_potion_empty() is True or self.get_option('hp_potion_empty') is True:
                 if self.click_potion_menu():
@@ -1220,6 +1290,10 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             if self.click_recover_menu():
                 self.game_object.get_scene('local_map_scene').status = 100
                 return True
+
+        if self.is_charged():
+            self.lyb_mouse_click('main_scene_devil', custom_threshold=0)
+            return True
 
         return False
 
@@ -1360,6 +1434,16 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             return True
 
         return False
+
+    def is_charged(self, limit=3):
+        return self.is_status_by_resource('데빌 체이서 감지', 'main_scene_charged_loc',
+                                          custom_top_level=(255, 80, 80),
+                                          custom_below_level=(145, 0, 0),
+                                          custom_rect=(310, 460, 370, 530),
+                                          custom_threshold=0.4,
+                                          limit_count=limit,
+                                          reverse=True,
+                                          )
 
     def is_auto_quest(self, limit=3):
         return self.is_status_by_resource('자동 퀘스트 감지 실패', 'auto_quest_loc',
