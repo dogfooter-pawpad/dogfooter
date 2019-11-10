@@ -588,7 +588,7 @@ class LYBGame():
             self.telegram_send('', image=png_name)
             return True
         else:
-            if elapsed_time > 10:
+            if elapsed_time > 120:
                 self.logger.warn('화면 프리징 감지됨...(' + str(int(elapsed_time)) + '/' + str(freezing_limit) + '초)')
 
         return False
