@@ -51,7 +51,7 @@ class LYBV4(lybgame.LYBGame):
             # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
             if loc_x != -1:
                 self.get_scene('main_scene').set_checkpoint(resource_name)
-                self.logger.info('건너뛰기: ' + str(match_rate))
+                self.logger.info('건너뛰기: ' + str(round(match_rate, 2)))
                 self.get_scene('main_scene').lyb_mouse_click_location(loc_x, loc_y)
                 return resource_name
 
@@ -71,7 +71,7 @@ class LYBV4(lybgame.LYBGame):
             self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
             if loc_x != -1:
                 self.get_scene('main_scene').set_checkpoint(resource_name)
-                self.logger.info('화면 터치: ' + str(match_rate))
+                self.logger.info('화면 터치: ' + str(round(match_rate, 2)))
                 self.get_scene('main_scene').lyb_mouse_click_location(loc_x, loc_y)
                 return resource_name
 
@@ -91,7 +91,7 @@ class LYBV4(lybgame.LYBGame):
             self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
             if loc_x != -1:
                 self.get_scene('main_scene').set_checkpoint(resource_name)
-                self.logger.info('화면 터치: ' + str(match_rate))
+                self.logger.info('화면 터치: ' + str(round(match_rate, 2)))
                 self.get_scene('main_scene').lyb_mouse_click_location(loc_x, loc_y)
                 return resource_name
 
@@ -111,7 +111,7 @@ class LYBV4(lybgame.LYBGame):
             self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
             if loc_x != -1:
                 self.get_scene('main_scene').set_checkpoint(resource_name)
-                self.logger.info('팝업: ' + str(match_rate))
+                self.logger.info('팝업: ' + str(round(match_rate, 2)))
                 self.get_scene('main_scene').lyb_mouse_click_location(loc_x, loc_y)
                 return resource_name
 
@@ -128,9 +128,44 @@ class LYBV4(lybgame.LYBGame):
             self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
             if loc_x != -1:
                 self.get_scene('main_scene').set_checkpoint(resource_name)
-                self.logger.info('확인' + str(match_rate))
+                self.logger.info('확인: ' + str(round(match_rate, 2)))
                 self.get_scene('main_scene').lyb_mouse_click_location(loc_x, loc_y)
                 return resource_name
+
+        resource_name = 'resend_loc'
+        elapsed_time = time.time() - self.get_scene('main_scene').get_checkpoint(resource_name)
+        if elapsed_time > self.period_bot(2):
+            (loc_x, loc_y), match_rate = self.locationResourceOnWindowPart(
+                self.window_image,
+                resource_name,
+                custom_threshold=0.8,
+                custom_flag=1,
+                custom_rect=(340, 340, 470, 500)
+            )
+            self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
+            if loc_x != -1:
+                self.get_scene('main_scene').set_checkpoint(resource_name)
+                self.logger.info('다시 보내기: ' + str(round(match_rate, 2)))
+                self.get_scene('main_scene').lyb_mouse_click_location(loc_x, loc_y)
+                return resource_name
+
+        resource_name = 'receive_item_loc'
+        elapsed_time = time.time() - self.get_scene('main_scene').get_checkpoint(resource_name)
+        if elapsed_time > self.period_bot(2):
+            (loc_x, loc_y), match_rate = self.locationResourceOnWindowPart(
+                self.window_image,
+                resource_name,
+                custom_threshold=0.8,
+                custom_flag=1,
+                custom_rect=(430, 370, 530, 450)
+            )
+            self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
+            if loc_x != -1:
+                self.get_scene('main_scene').set_checkpoint(resource_name)
+                self.logger.info('필수품 받기: ' + str(round(match_rate, 2)))
+                self.get_scene('main_scene').lyb_mouse_click_location(loc_x, loc_y)
+                return resource_name
+
         # resource_name = 'equip_loc'
         # elapsed_time = time.time() - self.get_scene('main_scene').get_checkpoint(resource_name)
         # if elapsed_time > self.period_bot(2):
@@ -356,7 +391,13 @@ class LYBV4Tab(lybgame.LYBGameTab):
 
         frame_label.pack(anchor=tkinter.NW, padx=5, pady=5)
 
-        frame_label = ttk.LabelFrame(frame_l, text='물약 구매')
+
+        frame_l.pack(side=tkinter.LEFT, anchor=tkinter.NW)
+
+        # 일반 탭 중간
+        frame_m = ttk.Frame(self.inner_frame_dic['common_tab_frame'])
+
+        frame_label = ttk.LabelFrame(frame_m, text='물약 구매')
         frame = ttk.Frame(frame_label)
         self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'hp_potion_move'] = tkinter.BooleanVar(frame)
         self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'hp_potion_move'].trace(
@@ -435,7 +476,7 @@ class LYBV4Tab(lybgame.LYBGameTab):
 
         if not lybconstant.LYB_DO_STRING_V4_ETC + 'potion_name' in self.configure.common_config[self.game_name]:
             self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_ETC + 'potion_name'] = \
-            combobox_list[2]
+                combobox_list[2]
 
         combobox = ttk.Combobox(
             master=frame,
@@ -473,7 +514,7 @@ class LYBV4Tab(lybgame.LYBGameTab):
 
         if not lybconstant.LYB_DO_STRING_V4_ETC + 'potion_count' in self.configure.common_config[self.game_name]:
             self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_ETC + 'potion_count'] = \
-            combobox_list[2]
+                combobox_list[2]
 
         combobox = ttk.Combobox(
             master=frame,
@@ -506,7 +547,7 @@ class LYBV4Tab(lybgame.LYBGameTab):
 
         if not lybconstant.LYB_DO_STRING_V4_ETC + 'potion_name2' in self.configure.common_config[self.game_name]:
             self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_ETC + 'potion_name2'] = \
-            combobox_list[1]
+                combobox_list[1]
 
         combobox = ttk.Combobox(
             master=frame,
@@ -544,7 +585,7 @@ class LYBV4Tab(lybgame.LYBGameTab):
 
         if not lybconstant.LYB_DO_STRING_V4_ETC + 'potion_count2' in self.configure.common_config[self.game_name]:
             self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_ETC + 'potion_count2'] = \
-            combobox_list[2]
+                combobox_list[2]
 
         combobox = ttk.Combobox(
             master=frame,
@@ -561,10 +602,76 @@ class LYBV4Tab(lybgame.LYBGameTab):
 
         frame_label.pack(anchor=tkinter.NW, padx=5, pady=5)
 
-        frame_l.pack(side=tkinter.LEFT, anchor=tkinter.NW)
+        frame_label = ttk.LabelFrame(frame_m, text='이벤트')
+        frame = ttk.Frame(frame_label)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'event_devil'] = tkinter.BooleanVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'event_devil'].trace(
+            'w', lambda *args: self.event_devil(args, lybconstant.LYB_DO_STRING_V4_ETC + 'event_devil'))
+        if not lybconstant.LYB_DO_STRING_V4_ETC + 'event_devil' in self.configure.common_config[self.game_name]:
+            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_ETC + 'event_devil'] = True
 
-        # 일반 탭 중간
-        frame_m = ttk.Frame(self.inner_frame_dic['common_tab_frame'])
+        check_box = ttk.Checkbutton(
+            master=frame,
+            text=self.get_option_text('데빌 체이서 변신하기', width=27),
+            variable=self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'event_devil'],
+            onvalue=True,
+            offvalue=False
+        )
+        check_box.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
+        frame = ttk.Frame(frame_label)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'event_check'] = tkinter.BooleanVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'event_check'].trace(
+            'w', lambda *args: self.event_check(args, lybconstant.LYB_DO_STRING_V4_ETC + 'event_check'))
+        if not lybconstant.LYB_DO_STRING_V4_ETC + 'event_check' in self.configure.common_config[self.game_name]:
+            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_ETC + 'event_check'] = True
+
+        check_box = ttk.Checkbutton(
+            master=frame,
+            text=self.get_option_text('미니맵 우측 이벤트 알림 감지하기', width=27),
+            variable=self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'event_check'],
+            onvalue=True,
+            offvalue=False
+        )
+        check_box.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
+        frame = ttk.Frame(frame_label)
+        label = ttk.Label(
+            master=frame,
+            text=self.get_option_text('휴식 보상', width=19)
+        )
+        label.pack(side=tkinter.LEFT)
+
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'hyusik_bosang'] = tkinter.StringVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'hyusik_bosang'].trace(
+            'w', lambda *args: self.hyusik_bosang(args, lybconstant.LYB_DO_STRING_V4_ETC + 'hyusik_bosang')
+        )
+        combobox_list = [
+            '경험치',
+            '골드',
+            '각인석',
+        ]
+
+        if not lybconstant.LYB_DO_STRING_V4_ETC + 'hyusik_bosang' in self.configure.common_config[self.game_name]:
+            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_ETC + 'hyusik_bosang'] = \
+            combobox_list[0]
+
+        combobox = ttk.Combobox(
+            master=frame,
+            values=combobox_list,
+            textvariable=self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'hyusik_bosang'],
+            state="readonly",
+            height=10,
+            width=15,
+            font=lybconstant.LYB_FONT
+        )
+        combobox.set(self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_ETC + 'hyusik_bosang'])
+        combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+        frame_label.pack(anchor=tkinter.NW, padx=5, pady=5)
+
         frame_m.pack(side=tkinter.LEFT, anchor=tkinter.NW)
 
         # 일반 탭 우측
@@ -661,10 +768,13 @@ class LYBV4Tab(lybgame.LYBGameTab):
         frame = ttk.Frame(frame_label)
         self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monster_change_channel'] = tkinter.BooleanVar(frame)
         self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monster_change_channel'].trace(
-            'w', lambda *args: self.monster_change_channel(args, lybconstant.LYB_DO_STRING_V4_WORK + 'monster_change_channel'
+            'w',
+            lambda *args: self.monster_change_channel(args, lybconstant.LYB_DO_STRING_V4_WORK + 'monster_change_channel'
                                                       ))
-        if not lybconstant.LYB_DO_STRING_V4_WORK + 'monster_change_channel' in self.configure.common_config[self.game_name]:
-            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_WORK + 'monster_change_channel'] = True
+        if not lybconstant.LYB_DO_STRING_V4_WORK + 'monster_change_channel' in self.configure.common_config[
+            self.game_name]:
+            self.configure.common_config[self.game_name][
+                lybconstant.LYB_DO_STRING_V4_WORK + 'monster_change_channel'] = True
 
         check_box = ttk.Checkbutton(
 
@@ -687,13 +797,14 @@ class LYBV4Tab(lybgame.LYBGameTab):
         self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monster_josa_duration'] = tkinter.StringVar(frame)
         self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monster_josa_duration'].trace(
             'w', lambda *args: self.monster_josa_duration(args,
-                                                        lybconstant.LYB_DO_STRING_V4_WORK + 'monster_josa_duration')
+                                                          lybconstant.LYB_DO_STRING_V4_WORK + 'monster_josa_duration')
         )
         combobox_list = []
         for i in range(0, 86401, 60):
             combobox_list.append(str(i))
 
-        if not lybconstant.LYB_DO_STRING_V4_WORK + 'monster_josa_duration' in self.configure.common_config[self.game_name]:
+        if not lybconstant.LYB_DO_STRING_V4_WORK + 'monster_josa_duration' in self.configure.common_config[
+            self.game_name]:
             self.configure.common_config[self.game_name][
                 lybconstant.LYB_DO_STRING_V4_WORK + 'monster_josa_duration'] = 600
 
@@ -741,7 +852,8 @@ class LYBV4Tab(lybgame.LYBGameTab):
         ]
 
         if not lybconstant.LYB_DO_STRING_V4_WORK + 'monster_josa_area' in self.configure.common_config[self.game_name]:
-            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_WORK + 'monster_josa_area'] = combobox_list[0]
+            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_WORK + 'monster_josa_area'] = \
+            combobox_list[0]
 
         combobox = ttk.Combobox(
             master=frame,
@@ -752,7 +864,8 @@ class LYBV4Tab(lybgame.LYBGameTab):
             width=18,
             font=lybconstant.LYB_FONT
         )
-        combobox.set(self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_WORK + 'monster_josa_area'])
+        combobox.set(
+            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_WORK + 'monster_josa_area'])
         combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
         frame.pack(anchor=tkinter.W)
 
@@ -786,7 +899,16 @@ class LYBV4Tab(lybgame.LYBGameTab):
     def monster_josa_duration(self, args, option_name):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
+    def hyusik_bosang(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
     def recover_move(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def event_check(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def event_devil(self, args, option_name):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
     def recover_free(self, args, option_name):

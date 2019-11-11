@@ -55,6 +55,10 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             rc = self.immu_scene()
         elif self.scene_name == 'channel_scene':
             rc = self.channel_scene()
+        elif self.scene_name == 'hyusik_bosang_scene':
+            rc = self.hyusik_bosang_scene()
+        elif self.scene_name == 'event_scene':
+            rc = self.event_scene()
 
         else:
             rc = self.else_scene()
@@ -66,6 +70,86 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
         if self.status == 0:
             self.logger.info('unknown scene: ' + self.scene_name)
             self.status += 1
+        else:
+            if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
+                self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
+
+            self.status = 0
+
+        return self.status
+
+    def event_scene(self):
+
+        if self.status == 0:
+            self.logger.info('scene: ' + self.scene_name)
+            self.status += 1
+        elif 1 <= self.status < 10:
+            self.status += 1
+            resource_name = 'event_scene_new_loc'
+            resource = self.game_object.resource_manager.resource_dic[resource_name]
+            for each in resource:
+                (loc_x, loc_y), match_rate = self.game_object.locationOnWindowPart(
+                    self.window_image,
+                    self.game_object.resource_manager.pixel_box_dic[each],
+                    custom_threshold=0.6,
+                    custom_flag=1,
+                    custom_top_level=(220, 60, 60),
+                    custom_below_level=(130, 40, 40),
+                    custom_rect=(100, 80, 165, 555)
+                )
+                self.logger.debug(each + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+                if loc_x != -1:
+                    self.lyb_mouse_click_location(loc_x - 5, loc_y + 5)
+                    self.set_option('last_status', self.status)
+                    self.status = 100
+                    return self.status
+
+            self.status = 99999
+        elif self.status == 100:
+            self.status += 1
+        elif 101 <= self.status < 110:
+            self.status += 1
+            resource_name = 'event_scene_new_loc'
+            resource = self.game_object.resource_manager.resource_dic[resource_name]
+            for each in resource:
+                (loc_x, loc_y), match_rate = self.game_object.locationOnWindowPart(
+                    self.window_image,
+                    self.game_object.resource_manager.pixel_box_dic[each],
+                    custom_threshold=0.6,
+                    custom_flag=1,
+                    custom_top_level=(220, 60, 60),
+                    custom_below_level=(130, 40, 40),
+                    custom_rect=(180, 90, 955, 555)
+                )
+                self.logger.debug(each + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+                if loc_x != -1:
+                    self.lyb_mouse_click_location(loc_x - 5, loc_y + 5)
+                    self.status = 100
+                    return self.status
+            self.status = self.get_option('last_status')
+        else:
+            if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
+                self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
+
+            self.status = 0
+
+        return self.status
+
+    def hyusik_bosang_scene(self):
+
+        if self.status == 0:
+            self.logger.info('scene: ' + self.scene_name)
+            self.status += 1
+        elif 1 <= self.status < 5:
+            pb_name = 'hyusik_bosang_select_' + self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'hyusik_bosang')
+            self.lyb_mouse_click(pb_name, custom_threshold=0)
+            self.status += 1
+            self.set_option('last_status', self.status)
+            self.status = 10
+        elif self.status == 10:
+            pb_name = 'hyusik_bosang_receive'
+            self.lyb_mouse_click(pb_name, custom_threshold=0)
+            self.status = self.get_option('last_status')
         else:
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
                 self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
@@ -1108,7 +1192,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
 
         elif self.status == self.get_work_status('잠재력 개방'):
             elapsed_time = self.get_elapsed_time()
-            if elapsed_time > self.period_bot(5):
+            if elapsed_time > self.period_bot(10):
                 self.set_option(self.current_work + '_end_flag', True)
 
             if self.get_option(self.current_work + '_end_flag'):
@@ -1122,7 +1206,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
 
         elif self.status == self.get_work_status('임무'):
             elapsed_time = self.get_elapsed_time()
-            if elapsed_time > self.period_bot(5):
+            if elapsed_time > self.period_bot(10):
                 self.set_option(self.current_work + '_end_flag', True)
 
             if self.get_option(self.current_work + '_end_flag'):
@@ -1291,9 +1375,20 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.game_object.get_scene('local_map_scene').status = 100
                 return True
 
-        if self.is_charged():
-            self.lyb_mouse_click('main_scene_devil', custom_threshold=0)
-            return True
+        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'event_devil') is True:
+            elapsed_time = time.time() - self.get_checkpoint('event_devil')
+            if elapsed_time > self.period_bot(300) and self.is_charged():
+                self.lyb_mouse_click('main_scene_devil', custom_threshold=0)
+                self.set_checkpoint('event_devil')
+                return True
+
+        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'event_check') is True:
+            elapsed_time = time.time() - self.get_checkpoint('event_check')
+            if elapsed_time > self.period_bot(30) and self.click_event():
+                self.game_object.get_scene('hyusik_bosang_scene').status = 0
+                self.game_object.get_scene('event_scene').status = 0
+                self.set_checkpoint('event_check')
+                return True
 
         return False
 
@@ -1431,6 +1526,38 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
         self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
         if loc_x != -1:
             self.lyb_mouse_click_location(loc_x, loc_y)
+            return True
+
+        return False
+
+    def click_event(self):
+        pb_name = 'main_scene_event_new'
+        (loc_x, loc_y), match_rate = self.game_object.locationOnWindowPart(
+            self.window_image,
+            self.game_object.resource_manager.pixel_box_dic[pb_name],
+            custom_threshold=0.6,
+            custom_flag=1,
+            custom_top_level=(210, 60, 60),
+            custom_below_level=(180, 40, 40),
+            custom_rect=(210, 80, 330, 240),
+        )
+        self.logger.debug(pb_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+        if loc_x != -1:
+            self.lyb_mouse_click_location(loc_x - 5, loc_y + 5)
+            return True
+
+        (loc_x, loc_y), match_rate = self.game_object.locationOnWindowPart(
+            self.window_image,
+            self.game_object.resource_manager.pixel_box_dic[pb_name],
+            custom_threshold=0.6,
+            custom_flag=1,
+            custom_top_level=(210, 60, 60),
+            custom_below_level=(180, 40, 40),
+            custom_rect=(10, 80, 130, 240),
+        )
+        self.logger.debug(pb_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+        if loc_x != -1:
+            self.lyb_mouse_click_location(loc_x - 5, loc_y + 5)
             return True
 
         return False
