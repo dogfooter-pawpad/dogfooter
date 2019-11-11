@@ -59,6 +59,8 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             rc = self.hyusik_bosang_scene()
         elif self.scene_name == 'event_scene':
             rc = self.event_scene()
+        elif self.scene_name == 'chulseok_scene':
+            rc = self.chulseok_scene()
 
         else:
             rc = self.else_scene()
@@ -70,6 +72,40 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
         if self.status == 0:
             self.logger.info('unknown scene: ' + self.scene_name)
             self.status += 1
+        else:
+            if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
+                self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
+
+            self.status = 0
+
+        return self.status
+
+    def chulseok_scene(self):
+
+        if self.status == 0:
+            self.logger.info('scene: ' + self.scene_name)
+            self.status += 1
+        elif 1 <= self.status < 10:
+            self.status += 1
+            resource_name = 'chulseok_scene_new_loc'
+            resource = self.game_object.resource_manager.resource_dic[resource_name]
+            for each in resource:
+                (loc_x, loc_y), match_rate = self.game_object.locationOnWindowPart(
+                    self.window_image,
+                    self.game_object.resource_manager.pixel_box_dic[each],
+                    custom_threshold=0.6,
+                    custom_flag=1,
+                    custom_top_level=(220, 60, 60),
+                    custom_below_level=(130, 40, 40),
+                    custom_rect=(230, 80, 740, 485)
+                )
+                self.logger.debug(each + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+                if loc_x != -1:
+                    self.lyb_mouse_click_location(loc_x - 5, loc_y + 5)
+                    self.status = 0
+                    return self.status
+
+            self.status = 99999
         else:
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
                 self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
@@ -983,6 +1019,11 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.lyb_mouse_click('menu_scene_quest', custom_threshold=0)
                 self.game_object.get_scene('quest_scene').status = 200
             self.status += 1
+        elif 700 <= self.status < 705:
+            if self.status % 2 == 0:
+                self.lyb_mouse_click('menu_scene_chulseok', custom_threshold=0)
+                self.game_object.get_scene('chulseok_scene').status = 0
+            self.status += 1
         else:
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
                 self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
@@ -1335,6 +1376,15 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
 
         if self.get_option('is_moving') is True:
             return True
+
+        # 일일 체크리스트
+        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'chulseok_check') is True:
+            elapsed_time = time.time() - self.get_checkpoint('chulseok_check')
+            if elapsed_time > self.period_bot(81640):
+                self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
+                self.game_object.get_scene('menu_scene').status = 700
+                self.set_checkpoint('chulseok_check')
+                return True
 
         if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'hp_potion_move') is True:
             if self.is_hp_potion_empty() is True or self.get_option('hp_potion_empty') is True:
