@@ -354,6 +354,25 @@ class LYBV4Tab(lybgame.LYBGameTab):
         # 일반 탭 좌측
         frame_l = ttk.Frame(self.inner_frame_dic['common_tab_frame'])
 
+        frame_label = ttk.LabelFrame(frame_l, text='체크 리스트')
+        frame = ttk.Frame(frame_label)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'chulseok_check'] = tkinter.BooleanVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'chulseok_check'].trace(
+            'w', lambda *args: self.chulseok_check(args, lybconstant.LYB_DO_STRING_V4_ETC + 'chulseok_check'))
+        if not lybconstant.LYB_DO_STRING_V4_ETC + 'chulseok_check' in self.configure.common_config[self.game_name]:
+            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_ETC + 'chulseok_check'] = True
+
+        check_box = ttk.Checkbutton(
+            master=frame,
+            text=self.get_option_text('출석 체크', width=27),
+            variable=self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'chulseok_check'],
+            onvalue=True,
+            offvalue=False
+        )
+        check_box.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+        frame_label.pack(anchor=tkinter.NW, padx=5, pady=5)
+
         frame_label = ttk.LabelFrame(frame_l, text='회복')
         frame = ttk.Frame(frame_label)
         self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'recover_move'] = tkinter.BooleanVar(frame)
@@ -390,7 +409,6 @@ class LYBV4Tab(lybgame.LYBGameTab):
         frame.pack(anchor=tkinter.W)
 
         frame_label.pack(anchor=tkinter.NW, padx=5, pady=5)
-
 
         frame_l.pack(side=tkinter.LEFT, anchor=tkinter.NW)
 
@@ -940,5 +958,9 @@ class LYBV4Tab(lybgame.LYBGameTab):
 
     def monster_josa_area(self, args, option_name):
         self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def chulseok_check(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
     # def auto_duration(self, args, option_name):
     #     self.set_game_config(option_name, self.option_dic[option_name].get())
