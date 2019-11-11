@@ -117,7 +117,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                     self.game_object.resource_manager.pixel_box_dic[each],
                     custom_threshold=0.6,
                     custom_flag=1,
-                    custom_top_level=(220, 60, 60),
+                    custom_top_level=(220, 90, 90),
                     custom_below_level=(130, 40, 40),
                     custom_rect=(180, 90, 955, 555)
                 )
