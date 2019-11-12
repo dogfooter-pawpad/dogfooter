@@ -17,7 +17,10 @@ class LYBV4(lybgame.LYBGame):
         '몬스터 조사',
         '잠재력 개방',
         '임무',
+        '업적',
+        '우편함',
         '네임드 토벌',
+        '몽환의 틈',
 
         '알림',
         '[반복 시작]',
@@ -65,10 +68,9 @@ class LYBV4(lybgame.LYBGame):
                 custom_flag=1,
                 custom_top_level=(255, 255, 255),
                 custom_below_level=(120, 120, 120),
-                custom_rect=(350, 300, 500, 420),
-                debug=True,
+                custom_rect=(350, 300, 500, 460),
             )
-            self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
+            # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
             if loc_x != -1:
                 self.get_scene('main_scene').set_checkpoint(resource_name)
                 self.logger.info('화면 터치: ' + str(round(match_rate, 2)))
@@ -85,10 +87,9 @@ class LYBV4(lybgame.LYBGame):
                 custom_flag=1,
                 custom_top_level=(255, 255, 255),
                 custom_below_level=(120, 120, 120),
-                custom_rect=(350, 300, 500, 420),
-                debug=True,
+                custom_rect=(350, 300, 500, 460),
             )
-            self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
+            # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
             if loc_x != -1:
                 self.get_scene('main_scene').set_checkpoint(resource_name)
                 self.logger.info('화면 터치: ' + str(round(match_rate, 2)))
@@ -106,9 +107,8 @@ class LYBV4(lybgame.LYBGame):
                 custom_top_level=(230, 230, 230),
                 custom_below_level=(190, 190, 190),
                 custom_rect=(800, 40, 870, 120),
-                debug=True
             )
-            self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
+            # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
             if loc_x != -1:
                 self.get_scene('main_scene').set_checkpoint(resource_name)
                 self.logger.info('팝업: ' + str(round(match_rate, 2)))
@@ -117,7 +117,7 @@ class LYBV4(lybgame.LYBGame):
 
         resource_name = 'confirm_loc'
         elapsed_time = time.time() - self.get_scene('main_scene').get_checkpoint(resource_name)
-        if elapsed_time > self.period_bot(2):
+        if elapsed_time > self.period_bot(10):
             (loc_x, loc_y), match_rate = self.locationResourceOnWindowPart(
                 self.window_image,
                 resource_name,
@@ -125,7 +125,7 @@ class LYBV4(lybgame.LYBGame):
                 custom_flag=1,
                 custom_rect=(440, 340, 520, 500)
             )
-            self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
+            # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
             if loc_x != -1:
                 self.get_scene('main_scene').set_checkpoint(resource_name)
                 self.logger.info('확인: ' + str(round(match_rate, 2)))
@@ -140,9 +140,10 @@ class LYBV4(lybgame.LYBGame):
                 resource_name,
                 custom_threshold=0.8,
                 custom_flag=1,
-                custom_rect=(340, 340, 470, 500)
+                custom_rect=(340, 340, 470, 500),
+                average=False,
             )
-            self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
+            # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
             if loc_x != -1:
                 self.get_scene('main_scene').set_checkpoint(resource_name)
                 self.logger.info('다시 보내기: ' + str(round(match_rate, 2)))
@@ -159,11 +160,28 @@ class LYBV4(lybgame.LYBGame):
                 custom_flag=1,
                 custom_rect=(430, 370, 530, 450)
             )
-            self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
+            # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
             if loc_x != -1:
                 self.get_scene('main_scene').set_checkpoint(resource_name)
                 self.logger.info('필수품 받기: ' + str(round(match_rate, 2)))
                 self.get_scene('main_scene').lyb_mouse_click_location(loc_x, loc_y)
+                return resource_name
+
+        resource_name = 'item_link_loc'
+        elapsed_time = time.time() - self.get_scene('main_scene').get_checkpoint(resource_name)
+        if elapsed_time > self.period_bot(10):
+            (loc_x, loc_y), match_rate = self.locationResourceOnWindowPart(
+                self.window_image,
+                resource_name,
+                custom_threshold=0.8,
+                custom_flag=1,
+                custom_rect=(345, 90, 390, 130)
+            )
+            # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
+            if loc_x != -1:
+                self.get_scene('main_scene').set_checkpoint(resource_name)
+                self.logger.info('아이템 상세정보: ' + str(round(match_rate, 2)))
+                self.get_scene('main_scene').lyb_mouse_click_location(loc_x - 20, loc_y)
                 return resource_name
 
         # resource_name = 'equip_loc'
@@ -355,6 +373,7 @@ class LYBV4Tab(lybgame.LYBGameTab):
         frame_l = ttk.Frame(self.inner_frame_dic['common_tab_frame'])
 
         frame_label = ttk.LabelFrame(frame_l, text='체크 리스트')
+
         frame = ttk.Frame(frame_label)
         self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'chulseok_check'] = tkinter.BooleanVar(frame)
         self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'chulseok_check'].trace(
@@ -364,13 +383,116 @@ class LYBV4Tab(lybgame.LYBGameTab):
 
         check_box = ttk.Checkbutton(
             master=frame,
-            text=self.get_option_text('출석 체크', width=27),
+            text='출석 체크',
             variable=self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'chulseok_check'],
             onvalue=True,
             offvalue=False
         )
         check_box.pack(anchor=tkinter.W, side=tkinter.LEFT)
         frame.pack(anchor=tkinter.W)
+
+        frame = ttk.Frame(frame_label)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_tal_gotcha'] = tkinter.BooleanVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_tal_gotcha'].trace(
+            'w', lambda *args: self.shop_gold_tal_gotcha(args, lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_tal_gotcha'))
+        if not lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_tal_gotcha' in self.configure.common_config[self.game_name]:
+            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_tal_gotcha'] = True
+
+        check_box = ttk.Checkbutton(
+            master=frame,
+            text='탈것 소환 구매(골드)',
+            variable=self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_tal_gotcha'],
+            onvalue=True,
+            offvalue=False
+        )
+        check_box.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
+        frame = ttk.Frame(frame_label)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_pet_gotcha'] = tkinter.BooleanVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_pet_gotcha'].trace(
+            'w', lambda *args: self.shop_gold_pet_gotcha(args, lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_pet_gotcha'))
+        if not lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_pet_gotcha' in self.configure.common_config[self.game_name]:
+            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_pet_gotcha'] = True
+
+        check_box = ttk.Checkbutton(
+            master=frame,
+            text='소환수 부화 구매(골드)',
+            variable=self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_pet_gotcha'],
+            onvalue=True,
+            offvalue=False
+        )
+        check_box.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
+        frame = ttk.Frame(frame_label)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'shop_fellow_gotcha'] = tkinter.BooleanVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'shop_fellow_gotcha'].trace(
+            'w', lambda *args: self.shop_fellow_gotcha(args, lybconstant.LYB_DO_STRING_V4_ETC + 'shop_fellow_gotcha'))
+        if not lybconstant.LYB_DO_STRING_V4_ETC + 'shop_fellow_gotcha' in self.configure.common_config[self.game_name]:
+            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_ETC + 'shop_fellow_gotcha'] = True
+
+        check_box = ttk.Checkbutton(
+            master=frame,
+            text='화려한 동료계약서 구매',
+            variable=self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'shop_fellow_gotcha'],
+            onvalue=True,
+            offvalue=False
+        )
+        check_box.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
+        frame = ttk.Frame(frame_label)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'shop_w_box_gotcha'] = tkinter.BooleanVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'shop_w_box_gotcha'].trace(
+            'w', lambda *args: self.shop_w_box_gotcha(args, lybconstant.LYB_DO_STRING_V4_ETC + 'shop_w_box_gotcha'))
+        if not lybconstant.LYB_DO_STRING_V4_ETC + 'shop_w_box_gotcha' in self.configure.common_config[self.game_name]:
+            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_ETC + 'shop_w_box_gotcha'] = True
+
+        check_box = ttk.Checkbutton(
+            master=frame,
+            text='무기 강화 주문서 상자 구매',
+            variable=self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'shop_w_box_gotcha'],
+            onvalue=True,
+            offvalue=False
+        )
+        check_box.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
+        frame = ttk.Frame(frame_label)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'shop_s_box_gotcha'] = tkinter.BooleanVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'shop_s_box_gotcha'].trace(
+            'w', lambda *args: self.shop_s_box_gotcha(args, lybconstant.LYB_DO_STRING_V4_ETC + 'shop_s_box_gotcha'))
+        if not lybconstant.LYB_DO_STRING_V4_ETC + 'shop_s_box_gotcha' in self.configure.common_config[self.game_name]:
+            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_ETC + 'shop_s_box_gotcha'] = True
+
+        check_box = ttk.Checkbutton(
+            master=frame,
+            text='방어구 강화 주문서 상자 구매',
+            variable=self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'shop_s_box_gotcha'],
+            onvalue=True,
+            offvalue=False
+        )
+        check_box.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
+        frame = ttk.Frame(frame_label)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'shop_a_box_gotcha'] = tkinter.BooleanVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'shop_a_box_gotcha'].trace(
+            'w', lambda *args: self.shop_a_box_gotcha(args, lybconstant.LYB_DO_STRING_V4_ETC + 'shop_a_box_gotcha'))
+        if not lybconstant.LYB_DO_STRING_V4_ETC + 'shop_a_box_gotcha' in self.configure.common_config[self.game_name]:
+            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_ETC + 'shop_a_box_gotcha'] = True
+
+        check_box = ttk.Checkbutton(
+            master=frame,
+            text='장신구 강화 주문서 상자 구매',
+            variable=self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'shop_a_box_gotcha'],
+            onvalue=True,
+            offvalue=False
+        )
+        check_box.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
         frame_label.pack(anchor=tkinter.NW, padx=5, pady=5)
 
         frame_label = ttk.LabelFrame(frame_l, text='회복')
@@ -621,6 +743,24 @@ class LYBV4Tab(lybgame.LYBGameTab):
         frame_label.pack(anchor=tkinter.NW, padx=5, pady=5)
 
         frame_label = ttk.LabelFrame(frame_m, text='이벤트')
+
+        frame = ttk.Frame(frame_label)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'party_invite'] = tkinter.BooleanVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'party_invite'].trace(
+            'w', lambda *args: self.party_invite(args, lybconstant.LYB_DO_STRING_V4_ETC + 'party_invite'))
+        if not lybconstant.LYB_DO_STRING_V4_ETC + 'party_invite' in self.configure.common_config[self.game_name]:
+            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_ETC + 'party_invite'] = True
+
+        check_box = ttk.Checkbutton(
+            master=frame,
+            text='파티 초대 수락하기',
+            variable=self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'party_invite'],
+            onvalue=True,
+            offvalue=False
+        )
+        check_box.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
         frame = ttk.Frame(frame_label)
         self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'event_devil'] = tkinter.BooleanVar(frame)
         self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'event_devil'].trace(
@@ -630,7 +770,7 @@ class LYBV4Tab(lybgame.LYBGameTab):
 
         check_box = ttk.Checkbutton(
             master=frame,
-            text=self.get_option_text('데빌 체이서 변신하기', width=27),
+            text='데빌 체이서 변신하기',
             variable=self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'event_devil'],
             onvalue=True,
             offvalue=False
@@ -674,7 +814,7 @@ class LYBV4Tab(lybgame.LYBGameTab):
 
         if not lybconstant.LYB_DO_STRING_V4_ETC + 'hyusik_bosang' in self.configure.common_config[self.game_name]:
             self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_ETC + 'hyusik_bosang'] = \
-            combobox_list[0]
+                combobox_list[0]
 
         combobox = ttk.Combobox(
             master=frame,
@@ -871,7 +1011,7 @@ class LYBV4Tab(lybgame.LYBGameTab):
 
         if not lybconstant.LYB_DO_STRING_V4_WORK + 'monster_josa_area' in self.configure.common_config[self.game_name]:
             self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_WORK + 'monster_josa_area'] = \
-            combobox_list[0]
+                combobox_list[0]
 
         combobox = ttk.Combobox(
             master=frame,
@@ -888,6 +1028,362 @@ class LYBV4Tab(lybgame.LYBGameTab):
         frame.pack(anchor=tkinter.W)
 
         frame_label.pack(anchor=tkinter.NW, padx=5, pady=5)
+
+        frame_label = ttk.LabelFrame(frame_m, text='몽환의 틈')
+        frame = ttk.Frame(frame_label)
+        s = ttk.Style()
+        s.configure('Warning.TLabel', foreground='#ff0000')
+        label = ttk.Label(
+            master=frame,
+            text=self.get_option_text('주의: 발견한 사냥터만 탐색합니다', width=12),
+            style='Warning.TLabel',
+        )
+        label.pack(side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+        # 1
+        frame = ttk.Frame(frame_label)
+        label = ttk.Label(
+            master=frame,
+            text=self.get_option_text('기사의 후회 I', width=15),
+        )
+        label.pack(side=tkinter.LEFT)
+
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_0'] = tkinter.StringVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_0'].trace(
+            'w', lambda *args: self.monghwan_sanyang_order_0(args,
+                                                           lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_0')
+        )
+        combobox_list = [
+            '위에서',
+            '아래에서'
+        ]
+
+        if not lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_0' in self.configure.common_config[
+            self.game_name]:
+            self.configure.common_config[self.game_name][
+                lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_0'] = combobox_list[1]
+
+        combobox = ttk.Combobox(
+            master=frame,
+            values=combobox_list,
+            textvariable=self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_0'],
+            state="readonly",
+            height=10,
+            width=8,
+            font=lybconstant.LYB_FONT
+        )
+        combobox.set(self.configure.common_config[self.game_name][
+                         lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_0'])
+        combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
+
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_0'] = tkinter.StringVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_0'].trace(
+            'w', lambda *args: self.monghwan_sanyang_number_0(args,
+                                                            lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_0')
+        )
+        combobox_list = []
+        for i in range(1, 6):
+            combobox_list.append(str(i))
+
+        if not lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_0' in self.configure.common_config[
+            self.game_name]:
+            self.configure.common_config[self.game_name][
+                lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_0'] = combobox_list[0]
+
+        combobox = ttk.Combobox(
+            master=frame,
+            values=combobox_list,
+            textvariable=self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_0'],
+            state="readonly",
+            height=10,
+            width=2,
+            font=lybconstant.LYB_FONT
+        )
+        combobox.set(self.configure.common_config[self.game_name][
+                         lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_0'])
+        combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        label = ttk.Label(
+            master=frame,
+            text='번째'
+        )
+        label.pack(side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+        # 2
+        frame = ttk.Frame(frame_label)
+        label = ttk.Label(
+            master=frame,
+            text=self.get_option_text('기사의 후회 II', width=15),
+        )
+        label.pack(side=tkinter.LEFT)
+
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_1'] = tkinter.StringVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_1'].trace(
+            'w', lambda *args: self.monghwan_sanyang_order_1(args,
+                                                           lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_1')
+        )
+        combobox_list = [
+            '위에서',
+            '아래에서'
+        ]
+
+        if not lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_1' in self.configure.common_config[
+            self.game_name]:
+            self.configure.common_config[self.game_name][
+                lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_1'] = combobox_list[0]
+
+        combobox = ttk.Combobox(
+            master=frame,
+            values=combobox_list,
+            textvariable=self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_1'],
+            state="readonly",
+            height=10,
+            width=8,
+            font=lybconstant.LYB_FONT
+        )
+        combobox.set(self.configure.common_config[self.game_name][
+                         lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_1'])
+        combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
+
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_1'] = tkinter.StringVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_1'].trace(
+            'w', lambda *args: self.monghwan_sanyang_number_1(args,
+                                                            lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_1')
+        )
+        combobox_list = []
+        for i in range(1, 6):
+            combobox_list.append(str(i))
+
+        if not lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_1' in self.configure.common_config[
+            self.game_name]:
+            self.configure.common_config[self.game_name][
+                lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_1'] = combobox_list[0]
+
+        combobox = ttk.Combobox(
+            master=frame,
+            values=combobox_list,
+            textvariable=self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_1'],
+            state="readonly",
+            height=10,
+            width=2,
+            font=lybconstant.LYB_FONT
+        )
+        combobox.set(self.configure.common_config[self.game_name][
+                         lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_1'])
+        combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        label = ttk.Label(
+            master=frame,
+            text='번째'
+        )
+        label.pack(side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+        # 3
+
+        frame = ttk.Frame(frame_label)
+        label = ttk.Label(
+            master=frame,
+            text=self.get_option_text('소녀의 악몽 I', width=15),
+        )
+        label.pack(side=tkinter.LEFT)
+
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_2'] = tkinter.StringVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_2'].trace(
+            'w', lambda *args: self.monghwan_sanyang_order_2(args,
+                                                           lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_2')
+        )
+        combobox_list = [
+            '위에서',
+            '아래에서'
+        ]
+
+        if not lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_2' in self.configure.common_config[
+            self.game_name]:
+            self.configure.common_config[self.game_name][
+                lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_2'] = combobox_list[0]
+
+        combobox = ttk.Combobox(
+            master=frame,
+            values=combobox_list,
+            textvariable=self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_2'],
+            state="readonly",
+            height=10,
+            width=8,
+            font=lybconstant.LYB_FONT
+        )
+        combobox.set(self.configure.common_config[self.game_name][
+                         lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_2'])
+        combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
+
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_2'] = tkinter.StringVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_2'].trace(
+            'w', lambda *args: self.monghwan_sanyang_number_2(args,
+                                                            lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_2')
+        )
+        combobox_list = []
+        for i in range(1, 6):
+            combobox_list.append(str(i))
+
+        if not lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_2' in self.configure.common_config[
+            self.game_name]:
+            self.configure.common_config[self.game_name][
+                lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_2'] = combobox_list[0]
+
+        combobox = ttk.Combobox(
+            master=frame,
+            values=combobox_list,
+            textvariable=self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_2'],
+            state="readonly",
+            height=10,
+            width=2,
+            font=lybconstant.LYB_FONT
+        )
+        combobox.set(self.configure.common_config[self.game_name][
+                         lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_2'])
+        combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        label = ttk.Label(
+            master=frame,
+            text='번째'
+        )
+        label.pack(side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+        # 4
+        frame = ttk.Frame(frame_label)
+        label = ttk.Label(
+            master=frame,
+            text=self.get_option_text('소녀의 악몽 II', width=15),
+        )
+        label.pack(side=tkinter.LEFT)
+
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_3'] = tkinter.StringVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_3'].trace(
+            'w', lambda *args: self.monghwan_sanyang_order_3(args,
+                                                           lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_3')
+        )
+        combobox_list = [
+            '위에서',
+            '아래에서'
+        ]
+
+        if not lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_3' in self.configure.common_config[
+            self.game_name]:
+            self.configure.common_config[self.game_name][
+                lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_3'] = combobox_list[0]
+
+        combobox = ttk.Combobox(
+            master=frame,
+            values=combobox_list,
+            textvariable=self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_3'],
+            state="readonly",
+            height=10,
+            width=8,
+            font=lybconstant.LYB_FONT
+        )
+        combobox.set(self.configure.common_config[self.game_name][
+                         lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_3'])
+        combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
+
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_3'] = tkinter.StringVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_3'].trace(
+            'w', lambda *args: self.monghwan_sanyang_number_3(args,
+                                                            lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_3')
+        )
+        combobox_list = []
+        for i in range(1, 6):
+            combobox_list.append(str(i))
+
+        if not lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_3' in self.configure.common_config[
+            self.game_name]:
+            self.configure.common_config[self.game_name][
+                lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_3'] = combobox_list[0]
+
+        combobox = ttk.Combobox(
+            master=frame,
+            values=combobox_list,
+            textvariable=self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_3'],
+            state="readonly",
+            height=10,
+            width=2,
+            font=lybconstant.LYB_FONT
+        )
+        combobox.set(self.configure.common_config[self.game_name][
+                         lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_3'])
+        combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        label = ttk.Label(
+            master=frame,
+            text='번째'
+        )
+        label.pack(side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+        # 5
+        frame = ttk.Frame(frame_label)
+        label = ttk.Label(
+            master=frame,
+            text=self.get_option_text('소녀의 악몽 III', width=15),
+        )
+        label.pack(side=tkinter.LEFT)
+
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_4'] = tkinter.StringVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_4'].trace(
+            'w', lambda *args: self.monghwan_sanyang_order_4(args,
+                                                           lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_4')
+        )
+        combobox_list = [
+            '위에서',
+            '아래에서'
+        ]
+
+        if not lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_4' in self.configure.common_config[
+            self.game_name]:
+            self.configure.common_config[self.game_name][
+                lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_4'] = combobox_list[0]
+
+        combobox = ttk.Combobox(
+            master=frame,
+            values=combobox_list,
+            textvariable=self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_4'],
+            state="readonly",
+            height=10,
+            width=8,
+            font=lybconstant.LYB_FONT
+        )
+        combobox.set(self.configure.common_config[self.game_name][
+                         lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_4'])
+        combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
+
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_4'] = tkinter.StringVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_4'].trace(
+            'w', lambda *args: self.monghwan_sanyang_number_4(args,
+                                                            lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_4')
+        )
+        combobox_list = []
+        for i in range(1, 6):
+            combobox_list.append(str(i))
+
+        if not lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_4' in self.configure.common_config[
+            self.game_name]:
+            self.configure.common_config[self.game_name][
+                lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_4'] = combobox_list[0]
+
+        combobox = ttk.Combobox(
+            master=frame,
+            values=combobox_list,
+            textvariable=self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_4'],
+            state="readonly",
+            height=10,
+            width=2,
+            font=lybconstant.LYB_FONT
+        )
+        combobox.set(self.configure.common_config[self.game_name][
+                         lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_4'])
+        combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        label = ttk.Label(
+            master=frame,
+            text='번째'
+        )
+        label.pack(side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
+        frame_label.pack(anchor=tkinter.NW, padx=5, pady=5)
+
         frame_m.pack(side=tkinter.LEFT, anchor=tkinter.NW)
 
         # 작업 탭 우측
@@ -917,6 +1413,36 @@ class LYBV4Tab(lybgame.LYBGameTab):
     def monster_josa_duration(self, args, option_name):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
+    def monghwan_sanyang_order_0(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def monghwan_sanyang_number_0(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def monghwan_sanyang_order_1(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def monghwan_sanyang_number_1(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def monghwan_sanyang_order_2(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def monghwan_sanyang_number_2(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def monghwan_sanyang_order_3(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def monghwan_sanyang_number_3(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def monghwan_sanyang_order_4(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def monghwan_sanyang_number_4(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
     def hyusik_bosang(self, args, option_name):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
@@ -927,6 +1453,9 @@ class LYBV4Tab(lybgame.LYBGameTab):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
     def event_devil(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def party_invite(self, args, option_name):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
     def recover_free(self, args, option_name):
@@ -960,6 +1489,24 @@ class LYBV4Tab(lybgame.LYBGameTab):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
     def chulseok_check(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def shop_gold_tal_gotcha(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def shop_gold_pet_gotcha(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def shop_fellow_gotcha(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def shop_w_box_gotcha(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def shop_s_box_gotcha(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def shop_a_box_gotcha(self, args, option_name):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
     # def auto_duration(self, args, option_name):
