@@ -184,6 +184,40 @@ class LYBV4(lybgame.LYBGame):
                 self.get_scene('main_scene').lyb_mouse_click_location(loc_x - 20, loc_y)
                 return resource_name
 
+        resource_name = 'show_result_loc'
+        elapsed_time = time.time() - self.get_scene('main_scene').get_checkpoint(resource_name)
+        if elapsed_time > self.period_bot(3):
+            (loc_x, loc_y), match_rate = self.locationResourceOnWindowPart(
+                self.window_image,
+                resource_name,
+                custom_threshold=0.8,
+                custom_flag=1,
+                custom_rect=(430, 500, 560, 550)
+            )
+            # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
+            if loc_x != -1:
+                self.get_scene('main_scene').set_checkpoint(resource_name)
+                self.logger.info('결과 보기: ' + str(round(match_rate, 2)))
+                self.get_scene('main_scene').lyb_mouse_click_location(loc_x - 20, loc_y)
+                return resource_name
+
+        resource_name = 'nagagi_loc'
+        elapsed_time = time.time() - self.get_scene('main_scene').get_checkpoint(resource_name)
+        if elapsed_time > self.period_bot(3):
+            (loc_x, loc_y), match_rate = self.locationResourceOnWindowPart(
+                self.window_image,
+                resource_name,
+                custom_threshold=0.8,
+                custom_flag=1,
+                custom_rect=(430, 500, 560, 550)
+            )
+            # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
+            if loc_x != -1:
+                self.get_scene('main_scene').set_checkpoint(resource_name)
+                self.logger.info('나가기: ' + str(round(match_rate, 2)))
+                self.get_scene('main_scene').lyb_mouse_click_location(loc_x - 20, loc_y)
+                return resource_name
+
         # resource_name = 'equip_loc'
         # elapsed_time = time.time() - self.get_scene('main_scene').get_checkpoint(resource_name)
         # if elapsed_time > self.period_bot(2):
@@ -419,6 +453,23 @@ class LYBV4Tab(lybgame.LYBGameTab):
             master=frame,
             text='소환수 부화 구매(골드)',
             variable=self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_pet_gotcha'],
+            onvalue=True,
+            offvalue=False
+        )
+        check_box.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
+        frame = ttk.Frame(frame_label)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'shop_sang_potion'] = tkinter.BooleanVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'shop_sang_potion'].trace(
+            'w', lambda *args: self.shop_sang_potion(args, lybconstant.LYB_DO_STRING_V4_ETC + 'shop_sang_potion'))
+        if not lybconstant.LYB_DO_STRING_V4_ETC + 'shop_sang_potion' in self.configure.common_config[self.game_name]:
+            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_ETC + 'shop_sang_potion'] = True
+
+        check_box = ttk.Checkbutton(
+            master=frame,
+            text='상급 축복의 물약 구매',
+            variable=self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'shop_sang_potion'],
             onvalue=True,
             offvalue=False
         )
@@ -1495,6 +1546,9 @@ class LYBV4Tab(lybgame.LYBGameTab):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
     def shop_gold_pet_gotcha(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def shop_sang_potion(self, args, option_name):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
     def shop_fellow_gotcha(self, args, option_name):
