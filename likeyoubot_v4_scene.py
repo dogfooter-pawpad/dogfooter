@@ -669,6 +669,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 if loc_x != -1:
                     self.lyb_mouse_click_location(loc_x, loc_y)
                     self.status = 100
+                    return self.status
         elif self.status == 4:
             if self.get_option('has_drag') is False:
                 self.lyb_mouse_drag('channel_scene_drag_bot', 'channel_scene_drag_top', stop_delay=0.0)
@@ -1416,6 +1417,29 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
         return self.status
 
     def jeoljeon_mode_scene(self):
+        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'hp_potion_move') is True:
+            resource_name = 'jeoljeon_mode_scene_potion_empty_loc'
+            (loc_x, loc_y), match_rate = self.game_object.locationResourceOnWindowPart(
+                self.window_image,
+                resource_name,
+                custom_rect=(700, 90, 950, 150),
+                custom_threshold=0.7,
+                custom_flag=1,
+                average=True
+            )
+            self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
+            if loc_x != -1:
+                self.status = 99997
+
+            if self.is_hp_potion_low():
+                self.status = 99997
+
+            if self.is_hp_potion_empty():
+                self.status = 99997
+
+            if self.status == 99997:
+                self.game_object.get_scene('main_scene').set_option('from_jeoljeon_hp_empty', True)
+                self.status = 99999
 
         if self.status == 0:
             self.logger.info('scene: ' + self.scene_name)
@@ -2049,30 +2073,28 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
         if self.get_option('is_moving') is True:
             return True
 
-        # 일일 체크리스트
-        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'chulseok_check') is True:
-            elapsed_time = time.time() - self.get_checkpoint('chulseok_check')
-            if elapsed_time > self.period_bot(81640):
-                self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
-                self.game_object.get_scene('menu_scene').status = 700
-                self.set_checkpoint('chulseok_check')
-                return True
-
-        elapsed_time = time.time() - self.get_checkpoint('shop_check')
-        if elapsed_time > self.period_bot(81640):
-            self.lyb_mouse_click('main_scene_shop', custom_threshold=0)
-            self.game_object.get_scene('shop_scene').status = 0
-            self.set_checkpoint('shop_check')
-            return True
-
-        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'party_invite') is True:
-            if self.click_party_accept():
-                return True
-        else:
-            if self.click_party_decline():
-                return True
-
         if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'hp_potion_move') is True:
+            elapsed_time = time.time() - self.get_checkpoint('hp_potion_low')
+            if elapsed_time > self.period_bot(5):
+                self.set_checkpoint('hp_potion_low')
+                if self.is_hp_potion_low() is True or self.get_option('hp_potion_low') or self.get_option(
+                        'from_jeoljeon_hp_empty'):
+                    self.set_option('from_jeoljeon_hp_empty', False)
+                    if self.click_potion_menu():
+                        self.game_object.get_scene('move_potion_npc_scene').status = 100
+                        self.game_object.get_scene('potion_npc_scene').status = 0
+                        self.game_object.get_scene('potion_npc_scene').set_option('potion', 'hp')
+                        self.set_option('hp_potion_low', False)
+                        self.set_option('go_home', False)
+                        return True
+                    else:
+                        if self.get_option('go_home') is not True:
+                            self.click_resource('main_scene_menu_home_loc')
+                            self.game_object.get_scene('go_home_scene').status = 100
+                            self.set_option('hp_potion_low', True)
+                            self.set_option('go_home', True)
+                        return True
+
             elapsed_time = time.time() - self.get_checkpoint('hp_potion_empty')
             if elapsed_time > self.period_bot(5):
                 self.set_checkpoint('hp_potion_empty')
@@ -2133,6 +2155,29 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.game_object.get_scene('event_scene').status = 0
                 self.set_checkpoint('event_check')
                 return True
+
+        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'party_invite') is True:
+            if self.click_party_accept():
+                return True
+        else:
+            if self.click_party_decline():
+                return True
+
+        # 일일 체크리스트
+        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'chulseok_check') is True:
+            elapsed_time = time.time() - self.get_checkpoint('chulseok_check')
+            if elapsed_time > self.period_bot(81640):
+                self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
+                self.game_object.get_scene('menu_scene').status = 700
+                self.set_checkpoint('chulseok_check')
+                return True
+
+        elapsed_time = time.time() - self.get_checkpoint('shop_check')
+        if elapsed_time > self.period_bot(81640):
+            self.lyb_mouse_click('main_scene_shop', custom_threshold=0)
+            self.game_object.get_scene('shop_scene').status = 0
+            self.set_checkpoint('shop_check')
+            return True
 
         return False
 
@@ -2200,6 +2245,43 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                                           limit_count=limit,
                                           reverse=False,
                                           )
+
+    def is_hp_potion_low(self, limit_count=1):
+        resource_name = 'hp_potion_count_loc'
+        resource = self.game_object.resource_manager.resource_dic[resource_name]
+        custom_threshold = 0.95
+        reverse = True
+        log_message = 'HP 물약 부족 감지'
+        match_rate = 0.00
+
+        for pb_name in resource:
+            rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name, custom_top_level=255,
+                                                        custom_below_level=130)
+            if match_rate < rate:
+                match_rate = rate
+
+        # self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
+        if match_rate > custom_threshold and reverse is False:
+            self.set_option(resource_name + 'check_count', 0)
+            return False
+
+        if match_rate < custom_threshold and reverse is True:
+            self.set_option(resource_name + 'check_count', 0)
+            return False
+
+        check_count = self.get_option(resource_name + 'check_count')
+        if check_count is None:
+            check_count = 0
+
+        if check_count > limit_count:
+            self.set_option(resource_name + 'check_count', 0)
+            return True
+
+        if check_count > 0:
+            self.logger.debug(log_message + '..(' + str(check_count) + '/' + str(limit_count) + ')')
+        self.set_option(resource_name + 'check_count', check_count + 1)
+
+        return False
 
     def is_mp_potion_empty(self, limit=3):
         return self.is_status_by_resource('MP 물약 없음 감지', 'main_scene_mp_potion_ok_loc',
@@ -2459,8 +2541,11 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
 
         return False
 
-    def is_status_by_resource2(self, log_message, resource_name, custom_threshold, limit_count=-1, reverse=False):
-        match_rate = self.game_object.rateMatchedResource(self.window_pixels, resource_name)
+    def is_status_by_resource2(self, log_message, resource_name, custom_threshold, custom_top_level=-1,
+                               custom_below_level=-1, limit_count=-1, reverse=False):
+        match_rate = self.game_object.rateMatchedResource(self.window_pixels, resource_name,
+                                                          custom_top_level=custom_top_level,
+                                                          custom_below_level=custom_below_level)
         self.logger.debug(resource_name + ' ' + str(round(match_rate, 2)))
         if match_rate > custom_threshold and reverse is False:
             self.set_option(resource_name + 'check_count', 0)
