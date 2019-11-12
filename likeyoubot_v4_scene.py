@@ -73,6 +73,12 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             rc = self.shop_scene()
         elif self.scene_name == 'sangpum_gume_scene':
             rc = self.sangpum_gume_scene()
+        elif self.scene_name == 'guild_scene':
+            rc = self.guild_scene()
+        elif self.scene_name == 'guild_give_scene':
+            rc = self.guild_give_scene()
+        elif self.scene_name == 'guild_chulseok_bosang_scene':
+            rc = self.guild_chulseok_bosang_scene()
 
         else:
             rc = self.else_scene()
@@ -84,6 +90,102 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
         if self.status == 0:
             self.logger.info('unknown scene: ' + self.scene_name)
             self.status += 1
+        else:
+            if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
+                self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
+
+            self.status = 0
+
+        return self.status
+
+    def guild_chulseok_bosang_scene(self):
+
+        if self.status == 0:
+            self.logger.info('scene: ' + self.scene_name)
+            self.status += 1
+        elif 1 <= self.status < 10:
+            self.status += 1
+            resource_name = 'guild_chulseok_bosang_scene_new_loc'
+            resource = self.game_object.resource_manager.resource_dic[resource_name]
+            for each in resource:
+                (loc_x, loc_y), match_rate = self.game_object.locationOnWindowPart(
+                    self.window_image,
+                    self.game_object.resource_manager.pixel_box_dic[each],
+                    custom_threshold=0.6,
+                    custom_flag=1,
+                    custom_top_level=(220, 90, 90),
+                    custom_below_level=(130, 40, 40),
+                    custom_rect=(510, 360, 580, 430)
+                )
+                self.logger.debug(each + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+                if loc_x != -1:
+                    self.lyb_mouse_click_location(loc_x - 5, loc_y + 5)
+                    return self.status
+
+            self.status = 99999
+        else:
+            if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
+                self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
+
+            self.status = 0
+
+        return self.status
+
+    def guild_give_scene(self):
+
+        if self.status == 0:
+            self.logger.info('scene: ' + self.scene_name)
+            self.status += 1
+        elif 1 <= self.status < 10:
+            self.status += 1
+            pb_name = 'guild_give_scene_gold_limit'
+            match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
+            self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
+            if match_rate > 0.95:
+                self.status = 99999
+            else:
+                self.lyb_mouse_click('guild_give_scene_gold', custom_threshold=0)
+        else:
+            self.game_object.get_scene('guild_scene').set_option('give_ok', True)
+            if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
+                self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
+
+            self.status = 0
+
+        return self.status
+
+    def guild_scene(self):
+
+        if self.status == 0:
+            self.logger.info('scene: ' + self.scene_name)
+            self.set_option('give_ok', False)
+            self.status += 1
+        elif 1 <= self.status < 10:
+            if self.get_option('give_ok'):
+                self.status = 10
+            else:
+                self.lyb_mouse_click('guild_scene_give', custom_threshold=0)
+                self.game_object.get_scene('guild_give_scene').status = 0
+                self.status += 1
+        elif 10 <= self.status < 20:
+            self.status += 1
+            resource_name = 'guild_scene_new_loc'
+            resource = self.game_object.resource_manager.resource_dic[resource_name]
+            for each in resource:
+                (loc_x, loc_y), match_rate = self.game_object.locationOnWindowPart(
+                    self.window_image,
+                    self.game_object.resource_manager.pixel_box_dic[each],
+                    custom_threshold=0.6,
+                    custom_flag=1,
+                    custom_top_level=(220, 90, 90),
+                    custom_below_level=(130, 40, 40),
+                    custom_rect=(120, 500, 170, 550)
+                )
+                self.logger.debug(each + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+                if loc_x != -1:
+                    self.lyb_mouse_click_location(loc_x - 5, loc_y + 5)
+                    return self.status
+            self.status = 99999
         else:
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
                 self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
@@ -1548,6 +1650,21 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
         elif 1 <= self.status < 5:
             self.status += 1
 
+            resource_name = 'quest_main_scene_limit_loc'
+            (loc_x, loc_y), match_rate = self.game_object.locationResourceOnWindowPart(
+                self.window_image,
+                resource_name,
+                custom_rect=(900, 240, 950, 280),
+                custom_threshold=0.7,
+                custom_flag=1,
+                average=True
+            )
+            self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
+            if loc_x != -1:
+                self.status = 99999
+                self.game_object.get_scene('main_scene').set_option('메인 퀘스트' + '_end_flag', True)
+                return self.status
+
             resource_name = 'quest_main_scene_auto_quest_loc'
             (loc_x, loc_y), match_rate = self.game_object.locationResourceOnWindowPart(
                 self.window_image,
@@ -1670,10 +1787,15 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.lyb_mouse_click('menu_scene_jido', custom_threshold=0)
                 self.game_object.get_scene('local_map_scene').status = 3000
             self.status += 1
-        elif 1000 <= self.status < 1000:
+        elif 1000 <= self.status < 1005:
             if self.status % 5 == 0:
                 self.lyb_mouse_click('menu_scene_jido', custom_threshold=0)
                 self.game_object.get_scene('local_map_scene').status = 4000
+            self.status += 1
+        elif 1100 <= self.status < 1105:
+            if self.status % 5 == 0:
+                self.lyb_mouse_click('menu_scene_guild', custom_threshold=0)
+                self.game_object.get_scene('guild_scene').status = 0
             self.status += 1
         else:
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
@@ -2005,6 +2127,20 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
             self.game_object.get_scene('menu_scene').status = 520
 
+        elif self.status == self.get_work_status('길드'):
+            elapsed_time = self.get_elapsed_time()
+            if elapsed_time > self.period_bot(10):
+                self.set_option(self.current_work + '_end_flag', True)
+
+            if self.get_option(self.current_work + '_end_flag'):
+                self.set_option(self.current_work + '_end_flag', False)
+                self.set_option(self.current_work + '_inner_status', None)
+                self.status = self.last_status[self.current_work] + 1
+                return self.status
+
+            self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
+            self.game_object.get_scene('menu_scene').status = 1100
+
         elif self.status == self.get_work_status('네임드 토벌'):
             elapsed_time = self.get_elapsed_time()
 
@@ -2213,6 +2349,17 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             if self.click_party_decline():
                 return True
 
+        if self.is_main_quest_complete():
+            self.set_option('go_jeoljeon', 0)
+            return True
+
+        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC+ 'quest_tobeol'):
+            elapsed_time = time.time() - self.get_checkpoint('quest_tobeol')
+            if elapsed_time > self.period_bot(120) and self.is_new_tobeol_quest():
+                self.set_checkpoint('quest_tobeol')
+                self.set_option('go_jeoljeon', 0)
+                return True
+
         # 일일 체크리스트
         if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'chulseok_check') is True:
             elapsed_time = time.time() - self.get_checkpoint('chulseok_check')
@@ -2233,15 +2380,11 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
 
     def process_main_quest(self):
 
-        if self.is_main_quest_complete():
-            self.set_option('go_jeoljeon', 0)
-            return True
-
         if self.is_main_quest_new():
             self.set_option('go_jeoljeon', 0)
             return True
 
-        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'main_quest_tobeol') is True:
+        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'quest_tobeol') is True:
             if self.get_elapsed_time() > self.period_bot(60):
                 elapsed_time = time.time() - self.get_checkpoint(self.current_work + '_tobeol_check')
                 if elapsed_time > self.period_bot(120):
@@ -2556,6 +2699,23 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             custom_below_level=(120, 120, 120),
             custom_rect=(750, 140, 940, 300),
             custom_threshold=0.7,
+            custom_flag=1,
+            average=True
+        )
+        self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+        if loc_x != -1:
+            self.lyb_mouse_click_location(loc_x, loc_y)
+            return True
+
+        return False
+
+    def is_new_tobeol_quest(self):
+        resource_name = 'main_scene_quest_tobeol_new_loc'
+        (loc_x, loc_y), match_rate = self.game_object.locationResourceOnWindowPart(
+            self.window_image,
+            resource_name,
+            custom_rect=(750, 140, 940, 300),
+            custom_threshold=0.85,
             custom_flag=1,
             average=True
         )
