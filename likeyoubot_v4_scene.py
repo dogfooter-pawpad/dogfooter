@@ -1615,6 +1615,11 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                         self.set_option('go_jeoljeon', 0)
                         return True
 
+                    if inner_status % 5 == 0:
+                        self.lyb_mouse_click('main_scene_gabang', custom_threshold=0)
+                        self.game_object.get_scene('gabang_scene').status = 0
+                        return True
+
                     if go_jeoljeon == 5:
                         self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
                         self.game_object.get_scene('menu_scene').status = 400
