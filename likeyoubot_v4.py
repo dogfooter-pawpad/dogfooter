@@ -68,7 +68,7 @@ class LYBV4(lybgame.LYBGame):
                 custom_flag=1,
                 custom_top_level=(255, 255, 255),
                 custom_below_level=(120, 120, 120),
-                custom_rect=(350, 300, 500, 460),
+                custom_rect=(350, 200, 500, 460),
             )
             # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
             if loc_x != -1:
@@ -87,7 +87,7 @@ class LYBV4(lybgame.LYBGame):
                 custom_flag=1,
                 custom_top_level=(255, 255, 255),
                 custom_below_level=(120, 120, 120),
-                custom_rect=(350, 300, 500, 460),
+                custom_rect=(350, 200, 500, 460),
             )
             # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
             if loc_x != -1:
