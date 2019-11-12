@@ -1180,6 +1180,51 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.status += 1
         elif self.status == 3701:
             self.status = self.get_option('last_status')
+        elif self.status == 4000:
+            self.set_option('tobeol_bosang', False)
+            self.status += 1
+        elif 4001 <= self.status < 4005:
+            self.status += 1
+            if self.get_option('tobeol_bosang') is False:
+                resource_name = 'local_map_scene_detail_new_loc'
+                resource = self.game_object.resource_manager.resource_dic[resource_name]
+                for each in resource:
+                    (loc_x, loc_y), match_rate = self.game_object.locationOnWindowPart(
+                        self.window_image,
+                        self.game_object.resource_manager.pixel_box_dic[each],
+                        custom_threshold=0.7,
+                        custom_flag=1,
+                        custom_top_level=(220, 90, 90),
+                        custom_below_level=(130, 40, 40),
+                        custom_rect=(640, 120, 150, 380)
+                    )
+                    self.logger.debug(each + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+                    if loc_x != -1:
+                        self.lyb_mouse_click_location(loc_x - 5, loc_y + 5)
+                        self.set_option('tobeol_bosang', True)
+                        return self.status
+
+            resource_name = 'local_map_scene_detail_surak_loc'
+            (loc_x, loc_y), match_rate = self.game_object.locationResourceOnWindowPart(
+                self.window_image,
+                resource_name,
+                custom_rect=(820, 120, 920, 380),
+                custom_threshold=0.7,
+                custom_flag=1,
+                average=True
+            )
+            self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
+            if loc_x != -1:
+                self.lyb_mouse_click_location(loc_x, loc_y)
+                self.status = 99999
+            else:
+                self.set_option('last_status', self.status)
+                self.status = 4010
+        elif self.status == 4010:
+            self.lyb_mouse_drag('local_map_scene_detail_drag_top', 'local_map_scene_detail_drag_bot', stop_delay=0.0)
+            self.status += 1
+        elif self.status == 4011:
+            self.status = self.get_option('last_status')
         else:
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
                 self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
@@ -1624,6 +1669,11 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             if self.status % 5 == 0:
                 self.lyb_mouse_click('menu_scene_jido', custom_threshold=0)
                 self.game_object.get_scene('local_map_scene').status = 3000
+            self.status += 1
+        elif 1000 <= self.status < 1000:
+            if self.status % 5 == 0:
+                self.lyb_mouse_click('menu_scene_jido', custom_threshold=0)
+                self.game_object.get_scene('local_map_scene').status = 4000
             self.status += 1
         else:
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
@@ -2190,6 +2240,16 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
         if self.is_main_quest_new():
             self.set_option('go_jeoljeon', 0)
             return True
+
+        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'main_quest_tobeol') is True:
+            if self.get_elapsed_time() > self.period_bot(60):
+                elapsed_time = time.time() - self.get_checkpoint(self.current_work + '_tobeol_check')
+                if elapsed_time > self.period_bot(120):
+                    self.set_checkpoint(self.current_work + '_tobeol_check')
+                    self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
+                    self.game_object.get_scene('menu_scene').status = 1000
+                    self.set_option('go_jeoljeon', 0)
+                    return True
 
         go_jeoljeon = self.get_option('go_jeoljeon')
         if go_jeoljeon is None:

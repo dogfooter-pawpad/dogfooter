@@ -927,6 +927,28 @@ class LYBV4Tab(lybgame.LYBGameTab):
         combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
         frame.pack(anchor=tkinter.W)
 
+        frame = ttk.Frame(frame_label)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'main_quest_tobeol'] = tkinter.BooleanVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'main_quest_tobeol'].trace(
+            'w',
+            lambda *args: self.main_quest_tobeol(args, lybconstant.LYB_DO_STRING_V4_WORK + 'main_quest_tobeol'
+                                                      ))
+        if not lybconstant.LYB_DO_STRING_V4_WORK + 'main_quest_tobeol' in self.configure.common_config[
+            self.game_name]:
+            self.configure.common_config[self.game_name][
+                lybconstant.LYB_DO_STRING_V4_WORK + 'main_quest_tobeol'] = True
+
+        check_box = ttk.Checkbutton(
+
+            master=frame,
+            text=self.get_option_text('현재 지역 토벌 진행하기', width=27),
+            variable=self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'main_quest_tobeol'],
+            onvalue=True,
+            offvalue=False
+        )
+        check_box.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
         frame_label.pack(anchor=tkinter.NW, padx=5, pady=5)
 
         # frame_label = ttk.LabelFrame(frame_l, text='자동 사냥')
@@ -1562,6 +1584,10 @@ class LYBV4Tab(lybgame.LYBGameTab):
 
     def shop_a_box_gotcha(self, args, option_name):
         self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def main_quest_tobeol(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
 
     # def auto_duration(self, args, option_name):
     #     self.set_game_config(option_name, self.option_dic[option_name].get())
