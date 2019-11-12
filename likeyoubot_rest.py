@@ -133,7 +133,7 @@ class LYBRest:
             self.logger.error(traceback.format_exc())
 
     def get_chat_id(self):
-        if self.chat_id > 0:
+        if self.chat_id is not None and self.chat_id > 0:
             return self.chat_id
 
         payload = {
@@ -153,9 +153,9 @@ class LYBRest:
                     if self.chat_id > 0:
                         return self.chat_id
         except:
-            return None
+            return -1
 
-        return None
+        return -1
 
     def get_version(self):
         payload = {
