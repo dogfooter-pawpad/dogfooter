@@ -1409,7 +1409,7 @@ class LYBGUI:
             text="시작",
             width=14,
             style='button_1.TButton',
-            command=lambda: self.startWorker(None)
+            command=lambda: self.startWorkerWrapper(None)
         )
 
         self.pause_button = ttk.Button(
@@ -2250,7 +2250,7 @@ class LYBGUI:
                                             height=self.height - lybconstant.LYB_PADDING,
                                             relief='groove'
                                             ))
-            self.note.add(self.tab_frame[i + 1], text=self.games[i])
+            self.note.add(self.tab_frame[i + 1], text='  ' + self.games[i] + '  ')
 
         # self.configure.common_config[self.games[0]] = {}
         # self.configure.common_config[self.games[0]]['work_list'] = []
@@ -3105,6 +3105,10 @@ class LYBGUI:
 
         return worker_thread
 
+    def startWorkerWrapper(self, e):
+        self.logger = likeyoubot_logger.LYBLogger.getLogger(refresh=True)
+        self.startWorker(None)
+
     def startWorker(self, e):
 
         # if self.ready_to_start == False:
@@ -3120,6 +3124,7 @@ class LYBGUI:
         # 	for each_config, each_value in self.configure.common_config.items():
         # 		if not each_config in self.configure.window_config[self.search_window.get(i)]:
         # 			self.configure.window_config[self.search_window.get(i)][each_config] = self.configure.common_config[each_config]
+
 
         for each_app_player in self.app_player_process_list['values']:
             if not each_app_player in self.configure.window_config:

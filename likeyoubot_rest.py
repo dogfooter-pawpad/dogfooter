@@ -290,9 +290,9 @@ class LYBRest:
         update_id = 0
         try:
             m_token = self.get_token()
-
+            # self.logger.debug(m_token)
             bot = telegram.Bot(token=m_token)
-            lUpdateLog = bot.getUpdates(limit=99)
+            lUpdateLog = bot.getUpdates(limit=99, timeout=5)
             # self.logger.debug(lUpdateLog)
             # self.logger.debug('-----------------' + str(len(lUpdateLog)))
             for eachLog in lUpdateLog:

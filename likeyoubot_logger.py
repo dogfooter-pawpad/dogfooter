@@ -11,9 +11,9 @@ class LYBLogger:
 	logPath = ''
 
 	@classmethod
-	def getLogger(self):
+	def getLogger(self, refresh=False):
 
-		if LYBLogger.dogfooter_logger != None:
+		if LYBLogger.dogfooter_logger != None and refresh is False:
 			return LYBLogger.dogfooter_logger
 
 		formatter = logging.Formatter('%(asctime)s.%(msecs)03d %(levelname).1s %(threadName)s: %(message)s FileInfo: %(module)s:%(lineno)d', '%H:%M:%S')

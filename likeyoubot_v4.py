@@ -22,6 +22,8 @@ class LYBV4(lybgame.LYBGame):
         '잠재력 개방',
         '네임드 토벌',
         '몽환의 틈',
+        '지도 좌표 확인',
+        '지도 이동',
 
         '알림',
         '[반복 시작]',
@@ -29,6 +31,47 @@ class LYBV4(lybgame.LYBGame):
         '[작업 대기]',
         '[작업 예약]',
         '']
+
+    area_list = [
+        '실루나스',
+        '루나트라',
+        '몽환의 틈',
+        '바트라',
+    ]
+
+    sub_area_list = [
+        [
+            '트랑제 숲',
+            '오든 평야',
+            '델라노르 숲',
+            '유카비 사막',
+            '데커스 화산',
+        ],
+        [
+            '광란의 숲',
+            '저주의 평야',
+            '상실의 숲',
+            '환각의 사막',
+            '파멸의 화산',
+        ],
+        [
+            '기사의 후회 I',
+            '기사의 후회 II',
+            '소녀의 악몽 I',
+            '소녀의 악몽 II',
+            '소녀의 악몽 II',
+        ],
+        [
+            '업데이트 예정',
+        ]
+    ]
+
+    sub_area_dic = {
+        area_list[0]: sub_area_list[0],
+        area_list[1]: sub_area_list[1],
+        area_list[2]: sub_area_list[2],
+        area_list[3]: sub_area_list[3],
+    }
 
     def __init__(self, game_name, game_data_name, window):
         lybgame.LYBGame.__init__(self, lybconstant.LYB_GAME_V4, lybconstant.LYB_GAME_DATA_V4, window)
@@ -105,7 +148,7 @@ class LYBV4(lybgame.LYBGame):
                 resource_name,
                 custom_threshold=0.65,
                 custom_flag=1,
-                custom_top_level=(230, 230, 230),
+                custom_top_level=(255, 255, 255),
                 custom_below_level=(190, 190, 190),
                 custom_rect=(800, 40, 870, 120),
             )
@@ -429,9 +472,12 @@ class LYBV4Tab(lybgame.LYBGameTab):
         frame = ttk.Frame(frame_label)
         self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_tal_gotcha'] = tkinter.BooleanVar(frame)
         self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_tal_gotcha'].trace(
-            'w', lambda *args: self.shop_gold_tal_gotcha(args, lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_tal_gotcha'))
-        if not lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_tal_gotcha' in self.configure.common_config[self.game_name]:
-            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_tal_gotcha'] = True
+            'w',
+            lambda *args: self.shop_gold_tal_gotcha(args, lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_tal_gotcha'))
+        if not lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_tal_gotcha' in self.configure.common_config[
+            self.game_name]:
+            self.configure.common_config[self.game_name][
+                lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_tal_gotcha'] = True
 
         check_box = ttk.Checkbutton(
             master=frame,
@@ -446,9 +492,12 @@ class LYBV4Tab(lybgame.LYBGameTab):
         frame = ttk.Frame(frame_label)
         self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_pet_gotcha'] = tkinter.BooleanVar(frame)
         self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_pet_gotcha'].trace(
-            'w', lambda *args: self.shop_gold_pet_gotcha(args, lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_pet_gotcha'))
-        if not lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_pet_gotcha' in self.configure.common_config[self.game_name]:
-            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_pet_gotcha'] = True
+            'w',
+            lambda *args: self.shop_gold_pet_gotcha(args, lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_pet_gotcha'))
+        if not lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_pet_gotcha' in self.configure.common_config[
+            self.game_name]:
+            self.configure.common_config[self.game_name][
+                lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_pet_gotcha'] = True
 
         check_box = ttk.Checkbutton(
             master=frame,
@@ -587,7 +636,7 @@ class LYBV4Tab(lybgame.LYBGameTab):
         self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'quest_tobeol'].trace(
             'w',
             lambda *args: self.quest_tobeol(args, lybconstant.LYB_DO_STRING_V4_ETC + 'quest_tobeol'
-                                                      ))
+                                            ))
         if not lybconstant.LYB_DO_STRING_V4_ETC + 'quest_tobeol' in self.configure.common_config[
             self.game_name]:
             self.configure.common_config[self.game_name][
@@ -949,6 +998,292 @@ class LYBV4Tab(lybgame.LYBGameTab):
                          lybconstant.LYB_DO_STRING_V4_WORK + 'main_quest_duration'])
         combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
         frame.pack(anchor=tkinter.W)
+        frame_label.pack(anchor=tkinter.NW, padx=5, pady=5)
+
+        frame_label = ttk.LabelFrame(frame_l, text='지도 이동')
+
+        frame = ttk.Frame(frame_label)
+        label = ttk.Label(
+            master=frame,
+            text=self.get_option_text('월드', width=19)
+        )
+        label.pack(side=tkinter.LEFT)
+
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_area'] = tkinter.StringVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_area'].trace(
+            'w', lambda *args: self.jido_move_area(args, lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_area')
+        )
+        combobox_list = LYBV4.area_list
+
+        if not lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_area' in self.configure.common_config[self.game_name]:
+            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_area'] = \
+                combobox_list[0]
+
+        combobox = ttk.Combobox(
+            master=frame,
+            values=combobox_list,
+            textvariable=self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_area'],
+            state="readonly",
+            height=10,
+            width=15,
+            font=lybconstant.LYB_FONT
+        )
+        combobox.set(
+            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_area'])
+        combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
+        frame = ttk.Frame(frame_label)
+        label = ttk.Label(
+            master=frame,
+            text=self.get_option_text('지역', width=19)
+        )
+        label.pack(side=tkinter.LEFT)
+
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sub_area'] = tkinter.StringVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sub_area'].trace(
+            'w', lambda *args: self.jido_move_sub_area(args,
+                                                           lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sub_area')
+        )
+
+        try:
+            area_index = LYBV4.area_list.index(
+                self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_area'])
+            combobox_list = LYBV4.sub_area_list[area_index]
+            if not lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sub_area' in self.configure.common_config[
+                self.game_name]:
+                self.configure.common_config[self.game_name][
+                    lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sub_area'] = combobox_list[0]
+        except ValueError:
+            area_index = 0
+            combobox_list = LYBV4.sub_area_list[area_index]
+            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sub_area'] = \
+                combobox_list[0]
+
+        self.jido_move_sub_area_combobox = ttk.Combobox(
+            master=frame,
+            values=combobox_list,
+            textvariable=self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sub_area'],
+            state="readonly",
+            height=10,
+            width=15,
+            font=lybconstant.LYB_FONT
+        )
+        self.jido_move_sub_area_combobox.set(
+            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sub_area'])
+        self.jido_move_sub_area_combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
+        frame = ttk.Frame(frame_label)
+        label = ttk.Label(
+            master=frame,
+            text=self.get_option_text('', width=31)
+        )
+        label.pack(side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
+        frame = ttk.Frame(frame_label)
+        s = ttk.Style()
+        s.configure('Warning.TLabel', foreground='#ff0000')
+        label = ttk.Label(
+            master=frame,
+            text='※ 0: 무작위 번호로 설정됨',
+            style='Warning.TLabel',
+        )
+        label.pack(side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
+        frame = ttk.Frame(frame_label)
+        label = ttk.Label(
+            master=frame,
+            text=self.get_option_text('루나트라 차원문 번호', width=31)
+        )
+        label.pack(side=tkinter.LEFT)
+
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_chawon_number'] = tkinter.StringVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_chawon_number'].trace(
+            'w', lambda *args: self.jido_move_chawon_number(args,
+                                                    lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_chawon_number')
+        )
+        combobox_list = []
+        for i in range(0, 6):
+            combobox_list.append(str(i))
+
+        if not lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_chawon_number' in self.configure.common_config[self.game_name]:
+            self.configure.common_config[self.game_name][
+                lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_chawon_number'] = \
+                combobox_list[2]
+
+        combobox = ttk.Combobox(
+            master=frame,
+            values=combobox_list,
+            textvariable=self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_chawon_number'],
+            state="readonly",
+            height=10,
+            width=3,
+            font=lybconstant.LYB_FONT
+        )
+        combobox.set(
+            self.configure.common_config[self.game_name][
+                lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_chawon_number'])
+        combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
+        frame = ttk.Frame(frame_label)
+        s = ttk.Style()
+        s.configure('Warning.TLabel', foreground='#ff0000')
+        label = ttk.Label(
+            master=frame,
+            text=self.get_option_text('※ 주의: 발견한 사냥터만 탐색합니다', width=12),
+            style='Warning.TLabel',
+        )
+        label.pack(side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
+        frame = ttk.Frame(frame_label)
+        label = ttk.Label(
+            master=frame,
+            text=self.get_option_text('사냥터 번호(아래에서부터)', width=31)
+        )
+        label.pack(side=tkinter.LEFT)
+
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sanyang_number'] = tkinter.StringVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sanyang_number'].trace(
+            'w', lambda *args: self.jido_move_sanyang_number(args,
+                                                    lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sanyang_number')
+        )
+        combobox_list = []
+        for i in range(0, 16):
+            combobox_list.append(str(i))
+
+        if not lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sanyang_number' in self.configure.common_config[self.game_name]:
+            self.configure.common_config[self.game_name][
+                lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sanyang_number'] = \
+                combobox_list[2]
+
+        combobox = ttk.Combobox(
+            master=frame,
+            values=combobox_list,
+            textvariable=self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sanyang_number'],
+            state="readonly",
+            height=10,
+            width=3,
+            font=lybconstant.LYB_FONT
+        )
+        combobox.set(
+            self.configure.common_config[self.game_name][
+                lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sanyang_number'])
+        combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
+        frame = ttk.Frame(frame_label)
+        label = ttk.Label(
+            master=frame,
+            text=self.get_option_text('', width=31)
+        )
+        label.pack(side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
+        frame = ttk.Frame(frame_label)
+        s = ttk.Style()
+        s.configure('Warning.TLabel', foreground='#ff0000')
+        label = ttk.Label(
+            master=frame,
+            text='※ [지도 좌표 확인]작업으로 좌표 확인',
+            style='Warning.TLabel',
+        )
+        label.pack(side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
+        frame = ttk.Frame(frame_label)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_location'] = tkinter.BooleanVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_location'].trace(
+            'w',
+            lambda *args: self.jido_move_location(args, lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_location'
+                                                      ))
+        if not lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_location' in self.configure.common_config[
+            self.game_name]:
+            self.configure.common_config[self.game_name][
+                lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_location'] = False
+
+        check_box = ttk.Checkbutton(
+
+            master=frame,
+            text=self.get_option_text('좌표로 이동하기', width=27),
+            variable=self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_location'],
+            onvalue=True,
+            offvalue=False
+        )
+        check_box.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
+        frame = ttk.Frame(frame_label)
+        label = ttk.Label(
+            master=frame,
+            text=self.get_option_text('이동할 좌표:', width=19)
+        )
+        label.pack(side=tkinter.LEFT)
+
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_x'] = tkinter.StringVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_x'].trace(
+            'w', lambda *args: self.jido_move_x(args,
+                                                         lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_x')
+        )
+        combobox_list = []
+        for i in range(10, 636):
+            combobox_list.append(str(i))
+
+        if not lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_x' in self.configure.common_config[
+            self.game_name]:
+            self.configure.common_config[self.game_name][
+                lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_x'] = 300
+
+        combobox = ttk.Combobox(
+            master=frame,
+            values=combobox_list,
+            textvariable=self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_x'],
+            state="readonly",
+            height=10,
+            width=4,
+            font=lybconstant.LYB_FONT
+        )
+        combobox.set(self.configure.common_config[self.game_name][
+                         lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_x'])
+        combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
+
+        label = ttk.Label(
+            master=frame,
+            text=self.get_option_text(',', width=1)
+        )
+        label.pack(side=tkinter.LEFT)
+
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_y'] = tkinter.StringVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_y'].trace(
+            'w', lambda *args: self.jido_move_y(args,
+                                                         lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_y')
+        )
+        combobox_list = []
+        for i in range(90, 556):
+            combobox_list.append(str(i))
+
+        if not lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_y' in self.configure.common_config[
+            self.game_name]:
+            self.configure.common_config[self.game_name][
+                lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_y'] = 300
+
+        combobox = ttk.Combobox(
+            master=frame,
+            values=combobox_list,
+            textvariable=self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_y'],
+            state="readonly",
+            height=10,
+            width=4,
+            font=lybconstant.LYB_FONT
+        )
+        combobox.set(self.configure.common_config[self.game_name][
+                         lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_y'])
+        combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
 
         frame_label.pack(anchor=tkinter.NW, padx=5, pady=5)
 
@@ -1109,7 +1444,7 @@ class LYBV4Tab(lybgame.LYBGameTab):
         s.configure('Warning.TLabel', foreground='#ff0000')
         label = ttk.Label(
             master=frame,
-            text=self.get_option_text('주의: 발견한 사냥터만 탐색합니다', width=12),
+            text=self.get_option_text('※ 주의: 발견한 사냥터만 탐색합니다', width=12),
             style='Warning.TLabel',
         )
         label.pack(side=tkinter.LEFT)
@@ -1125,7 +1460,7 @@ class LYBV4Tab(lybgame.LYBGameTab):
         self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_0'] = tkinter.StringVar(frame)
         self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_0'].trace(
             'w', lambda *args: self.monghwan_sanyang_order_0(args,
-                                                           lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_0')
+                                                             lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_0')
         )
         combobox_list = [
             '위에서',
@@ -1153,7 +1488,7 @@ class LYBV4Tab(lybgame.LYBGameTab):
         self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_0'] = tkinter.StringVar(frame)
         self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_0'].trace(
             'w', lambda *args: self.monghwan_sanyang_number_0(args,
-                                                            lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_0')
+                                                              lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_0')
         )
         combobox_list = []
         for i in range(1, 6):
@@ -1193,7 +1528,7 @@ class LYBV4Tab(lybgame.LYBGameTab):
         self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_1'] = tkinter.StringVar(frame)
         self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_1'].trace(
             'w', lambda *args: self.monghwan_sanyang_order_1(args,
-                                                           lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_1')
+                                                             lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_1')
         )
         combobox_list = [
             '위에서',
@@ -1221,7 +1556,7 @@ class LYBV4Tab(lybgame.LYBGameTab):
         self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_1'] = tkinter.StringVar(frame)
         self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_1'].trace(
             'w', lambda *args: self.monghwan_sanyang_number_1(args,
-                                                            lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_1')
+                                                              lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_1')
         )
         combobox_list = []
         for i in range(1, 6):
@@ -1262,7 +1597,7 @@ class LYBV4Tab(lybgame.LYBGameTab):
         self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_2'] = tkinter.StringVar(frame)
         self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_2'].trace(
             'w', lambda *args: self.monghwan_sanyang_order_2(args,
-                                                           lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_2')
+                                                             lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_2')
         )
         combobox_list = [
             '위에서',
@@ -1290,7 +1625,7 @@ class LYBV4Tab(lybgame.LYBGameTab):
         self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_2'] = tkinter.StringVar(frame)
         self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_2'].trace(
             'w', lambda *args: self.monghwan_sanyang_number_2(args,
-                                                            lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_2')
+                                                              lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_2')
         )
         combobox_list = []
         for i in range(1, 6):
@@ -1330,7 +1665,7 @@ class LYBV4Tab(lybgame.LYBGameTab):
         self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_3'] = tkinter.StringVar(frame)
         self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_3'].trace(
             'w', lambda *args: self.monghwan_sanyang_order_3(args,
-                                                           lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_3')
+                                                             lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_3')
         )
         combobox_list = [
             '위에서',
@@ -1358,7 +1693,7 @@ class LYBV4Tab(lybgame.LYBGameTab):
         self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_3'] = tkinter.StringVar(frame)
         self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_3'].trace(
             'w', lambda *args: self.monghwan_sanyang_number_3(args,
-                                                            lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_3')
+                                                              lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_3')
         )
         combobox_list = []
         for i in range(1, 6):
@@ -1398,7 +1733,7 @@ class LYBV4Tab(lybgame.LYBGameTab):
         self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_4'] = tkinter.StringVar(frame)
         self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_4'].trace(
             'w', lambda *args: self.monghwan_sanyang_order_4(args,
-                                                           lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_4')
+                                                             lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_4')
         )
         combobox_list = [
             '위에서',
@@ -1426,7 +1761,7 @@ class LYBV4Tab(lybgame.LYBGameTab):
         self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_4'] = tkinter.StringVar(frame)
         self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_4'].trace(
             'w', lambda *args: self.monghwan_sanyang_number_4(args,
-                                                            lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_4')
+                                                              lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_number_4')
         )
         combobox_list = []
         for i in range(1, 6):
@@ -1482,6 +1817,12 @@ class LYBV4Tab(lybgame.LYBGameTab):
         self.set_game_option()
 
     def main_quest_duration(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def jido_move_x(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def jido_move_y(self, args, option_name):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
     def monster_josa_duration(self, args, option_name):
@@ -1589,6 +1930,27 @@ class LYBV4Tab(lybgame.LYBGameTab):
     def quest_tobeol(self, args, option_name):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
+    def jido_move_area(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+        new_list = LYBV4.sub_area_dic[self.option_dic[option_name].get()]
 
-    # def auto_duration(self, args, option_name):
-    #     self.set_game_config(option_name, self.option_dic[option_name].get())
+        self.jido_move_sub_area_combobox['values'] = new_list
+        try:
+            if not self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sub_area') in new_list:
+                self.jido_move_sub_area_combobox.set(new_list[0])
+        except KeyError:
+            pass
+
+    def jido_move_sub_area(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def jido_move_chawon_number(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def jido_move_sanyang_number(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+        
+    def jido_move_location(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+        
