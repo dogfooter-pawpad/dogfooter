@@ -795,19 +795,31 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
 
         if self.status == 0:
             self.logger.info('scene: ' + self.scene_name)
-            self.set_option('resource_name', '쾌적')
+            if self.get_option('resource_name') is None:
+                self.set_option('resource_name', '쾌적')
             self.set_option('has_drag', False)
             self.set_option('done', False)
-            self.status += 1
+            if self.get_option('resource_name') == '파티' or self.get_option('resource_name') == '쾌적' or \
+                self.get_option('resource_name') == '원활' or self.get_option('resource_name') == '혼잡':
+                self.status += 1
+            else:
+                self.set_option('has_drag', True)
+                self.set_option('done', True)
+                number = int(self.get_option('resource_name'))
+                self.set_option('number', str(number - 1))
+                if number < 6:
+                    self.status = 20
+                else:
+                    self.status = 30
         elif 1 <= self.status < 4:
             self.status += 1
             resource_name = 'channel_scene_' + self.get_option('resource_name') + '_loc'
             rect_list = [
-                (480, 220, 520, 270),
-                (480, 250, 520, 310),
-                (480, 290, 520, 340),
-                (480, 320, 520, 370),
-                (480, 350, 520, 400),
+                (430, 220, 630, 270),
+                (430, 250, 630, 310),
+                (430, 290, 630, 340),
+                (430, 320, 630, 370),
+                (430, 350, 630, 400),
             ]
             for each in rect_list:
                 (loc_x, loc_y), match_rate = self.game_object.locationResourceOnWindowPart(
@@ -839,14 +851,33 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             if self.get_option('done') is True:
                 self.status = 99999
             else:
-                self.set_option('resource_name', '원활')
-                self.set_option('has_drag', False)
-                self.set_option('done', True)
+                if self.get_option('resource_name') == '파티':
+                    self.set_option('resource_name', '쾌적')
+                    self.set_option('has_drag', False)
+                else:
+                    self.set_option('resource_name', '원활')
+                    self.set_option('has_drag', False)
+                    self.set_option('done', True)
                 self.status = 1
+        elif 20 <= self.status < 25:
+            self.status += 1
+            self.lyb_mouse_drag('channel_scene_drag_top', 'channel_scene_drag_bot', stop_delay=0.0)
+        elif self.status == 25:
+            self.status = 50
+        elif 30 <= self.status < 35:
+            self.status += 1
+            self.lyb_mouse_drag('channel_scene_drag_bot', 'channel_scene_drag_top', stop_delay=0.0)
+        elif self.status == 35:
+            self.status = 50
+        elif self.status == 50:
+            pb_name = 'channel_scene_list_' + self.get_option('number')
+            self.lyb_mouse_click(pb_name, custom_threshold=0)
+            self.status = 99999
         elif self.status == 100:
             self.lyb_mouse_click('channel_scene_move', custom_threshold=0)
             self.status += 1
         else:
+            self.set_option('resource_name', None)
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
                 self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
 
@@ -1137,9 +1168,9 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.set_option('select_index', select_index)
                 self.set_option('last_status', self.status)
                 self.status = 600
-        elif 600 <= self.status < 603:
+        elif self.status == 600:
             self.status += 1
-        elif self.status == 603:
+        elif self.status == 601:
             pb_name = 'monster_josa_scene_max'
             pb_name2 = 'monster_josa_scene_search'
             match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
@@ -1152,7 +1183,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.status += 1
             else:
                 self.status = self.get_option('last_status')
-        elif 604 <= self.status < 620:
+        elif 602 <= self.status < 620:
             self.status += 1
         elif self.status == 700:
             self.status += 1
@@ -1199,7 +1230,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.status += 1
         elif 101 <= self.status < 300:
             self.status += 1
-            if self.fail_to_detect_m() is True:
+            if self.fail_to_detect_m(limit=2) is True:
                 pb_name = 'local_map_scene_follow'
                 (loc_x, loc_y), match_rate = self.game_object.locationOnWindowPart(
                     self.window_image,
@@ -1217,7 +1248,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.status += 1
         elif 1001 <= self.status < 1010:
             self.status += 1
-            if self.fail_to_detect_m() is True:
+            if self.fail_to_detect_m(limit=2) is True:
                 pb_name = 'local_map_scene_move'
                 self.lyb_mouse_click(pb_name, custom_threshold=0)
         elif 1010 <= self.status < 1500:
@@ -1231,7 +1262,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.status += 1
         elif 2001 <= self.status < 2300:
             self.status += 1
-            if self.fail_to_detect_m() is True:
+            if self.fail_to_detect_m(limit=2) is True:
                 pb_name = 'local_map_scene_follow'
                 (loc_x, loc_y), match_rate = self.game_object.locationOnWindowPart(
                     self.window_image,
@@ -1422,7 +1453,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.status += 1
             cfg_loc_x = int(self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_x'))
             cfg_loc_y = int(self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_y'))
-            if self.fail_to_detect_m() is True:
+            if self.fail_to_detect_m(limit=2) is True:
                 self.lyb_mouse_click_location2(cfg_loc_x, cfg_loc_y)
         elif 11120 <= self.status < 11410:
             self.status += 1
@@ -2222,12 +2253,15 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
 
                 self.logger.debug('inner_status ' + str(inner_status))
                 if 0 <= inner_status < 5:
-                    if self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'monster_change_channel') is True:
+
+                    cfg_channel = self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'monster_josa_change_channel')
+                    if cfg_channel != '안함':
                         if inner_status == 0:
                             self.lyb_mouse_click('main_scene_party', custom_threshold=0)
                         elif inner_status == 1:
                             self.lyb_mouse_click('main_scene_map', custom_threshold=0)
                         elif inner_status == 2:
+                            self.game_object.get_scene('channel_scene').set_option('resource_name', cfg_channel)
                             self.game_object.get_scene('channel_scene').status = 0
                             self.lyb_mouse_click('main_scene_channel', custom_threshold=0)
 
@@ -2477,6 +2511,16 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
 
                 self.logger.debug('inner_status ' + str(inner_status))
                 if 0 <= inner_status < 5:
+                    cfg_channel = self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_change_channel')
+                    if cfg_channel != '안함':
+                        if inner_status == 0:
+                            self.lyb_mouse_click('main_scene_party', custom_threshold=0)
+                        elif inner_status == 1:
+                            self.lyb_mouse_click('main_scene_map', custom_threshold=0)
+                        elif inner_status == 2:
+                            self.game_object.get_scene('channel_scene').set_option('resource_name', cfg_channel)
+                            self.game_object.get_scene('channel_scene').status = 0
+                            self.lyb_mouse_click('main_scene_channel', custom_threshold=0)
                     self.set_option('go_jeoljeon', 0)
                 elif inner_status == 5:
                     self.lyb_mouse_click('main_scene_auto', custom_threshold=0)
@@ -2823,7 +2867,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                                           reverse=True,
                                           )
 
-    def fail_to_detect_m(self, limit=5):
+    def fail_to_detect_m(self, limit=10):
         return self.is_status_by_resource('거리 감지 실패', 'local_map_scene_m_loc',
                                           custom_top_level=-1,
                                           custom_below_level=-1,
