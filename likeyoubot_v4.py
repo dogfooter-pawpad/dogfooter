@@ -1285,6 +1285,54 @@ class LYBV4Tab(lybgame.LYBGameTab):
         combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
         frame.pack(anchor=tkinter.W)
 
+        frame = ttk.Frame(frame_label)
+        label = ttk.Label(
+            master=frame,
+            text=self.get_option_text('도착 후 채널 변경', width=27)
+        )
+        label.pack(side=tkinter.LEFT)
+
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_change_channel'] = tkinter.StringVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_change_channel'].trace(
+            'w', lambda *args: self.jido_move_change_channel(args,
+                                                          lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_change_channel')
+        )
+        combobox_list = [
+            '안함',
+            '쾌적',
+            '원활',
+            '혼잡',
+            '파티',
+            '1',
+            '2',
+            '3',
+            '4',
+            '5',
+            '6',
+            '7',
+            '8',
+            '9',
+            '10',
+        ]
+
+        if not lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_change_channel' in self.configure.common_config[self.game_name]:
+            self.configure.common_config[self.game_name][
+                lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_change_channel'] = combobox_list[4]
+
+        combobox = ttk.Combobox(
+            master=frame,
+            values=combobox_list,
+            textvariable=self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_change_channel'],
+            state="readonly",
+            height=10,
+            width=7,
+            font=lybconstant.LYB_FONT
+        )
+        combobox.set(self.configure.common_config[self.game_name][
+                         lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_change_channel'])
+        combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
         frame_label.pack(anchor=tkinter.NW, padx=5, pady=5)
 
         # frame_label = ttk.LabelFrame(frame_l, text='자동 사냥')
@@ -1333,25 +1381,51 @@ class LYBV4Tab(lybgame.LYBGameTab):
         frame_label = ttk.LabelFrame(frame_m, text='몬스터 조사')
 
         frame = ttk.Frame(frame_label)
-        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monster_change_channel'] = tkinter.BooleanVar(frame)
-        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monster_change_channel'].trace(
-            'w',
-            lambda *args: self.monster_change_channel(args, lybconstant.LYB_DO_STRING_V4_WORK + 'monster_change_channel'
-                                                      ))
-        if not lybconstant.LYB_DO_STRING_V4_WORK + 'monster_change_channel' in self.configure.common_config[
-            self.game_name]:
-            self.configure.common_config[self.game_name][
-                lybconstant.LYB_DO_STRING_V4_WORK + 'monster_change_channel'] = True
-
-        check_box = ttk.Checkbutton(
-
+        label = ttk.Label(
             master=frame,
-            text=self.get_option_text('도착 후 쾌적 채널 변경', width=27),
-            variable=self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monster_change_channel'],
-            onvalue=True,
-            offvalue=False
+            text=self.get_option_text('도착 후 채널 변경', width=27)
         )
-        check_box.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        label.pack(side=tkinter.LEFT)
+
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monster_josa_change_channel'] = tkinter.StringVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monster_josa_change_channel'].trace(
+            'w', lambda *args: self.monster_josa_change_channel(args,
+                                                          lybconstant.LYB_DO_STRING_V4_WORK + 'monster_josa_change_channel')
+        )
+        combobox_list = [
+            '안함',
+            '쾌적',
+            '원활',
+            '혼잡',
+            '파티',
+            '1',
+            '2',
+            '3',
+            '4',
+            '5',
+            '6',
+            '7',
+            '8',
+            '9',
+            '10',
+        ]
+
+        if not lybconstant.LYB_DO_STRING_V4_WORK + 'monster_josa_change_channel' in self.configure.common_config[self.game_name]:
+            self.configure.common_config[self.game_name][
+                lybconstant.LYB_DO_STRING_V4_WORK + 'monster_josa_change_channel'] = combobox_list[4]
+
+        combobox = ttk.Combobox(
+            master=frame,
+            values=combobox_list,
+            textvariable=self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'monster_josa_change_channel'],
+            state="readonly",
+            height=10,
+            width=7,
+            font=lybconstant.LYB_FONT
+        )
+        combobox.set(self.configure.common_config[self.game_name][
+                         lybconstant.LYB_DO_STRING_V4_WORK + 'monster_josa_change_channel'])
+        combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
         frame.pack(anchor=tkinter.W)
 
         frame = ttk.Frame(frame_label)
@@ -1882,7 +1956,10 @@ class LYBV4Tab(lybgame.LYBGameTab):
     def mp_potion_move(self, args, option_name):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
-    def monster_change_channel(self, args, option_name):
+    def monster_josa_change_channel(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def jido_move_change_channel(self, args, option_name):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
     def remain_max_potion(self, args, option_name):
