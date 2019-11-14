@@ -79,6 +79,10 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             rc = self.guild_give_scene()
         elif self.scene_name == 'guild_chulseok_bosang_scene':
             rc = self.guild_chulseok_bosang_scene()
+        elif self.scene_name == 'jido_scene':
+            rc = self.jido_scene()
+        elif self.scene_name == 'deryuk_jido_scene':
+            rc = self.deryuk_jido_scene()
 
         else:
             rc = self.else_scene()
@@ -90,6 +94,54 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
         if self.status == 0:
             self.logger.info('unknown scene: ' + self.scene_name)
             self.status += 1
+        else:
+            if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
+                self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
+
+            self.status = 0
+
+        return self.status
+
+    def deryuk_jido_scene(self):
+
+        if self.status == 0:
+            self.logger.info('scene: ' + self.scene_name)
+            self.status += 1
+        elif self.status == 100:
+            self.status = 104
+        elif 104 <= self.status < 130:
+            self.status += 1
+            map = self.get_option('map')
+            local_map = self.get_option('local_map')
+            pb_name = 'deryuk_jido_scene_' + map + '_' + local_map
+            if self.status % 5 == 0:
+                self.lyb_mouse_click(pb_name, custom_threshold=0)
+                self.game_object.get_scene('local_map_scene').set_option('changed', True)
+        else:
+            if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
+                self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
+
+            self.status = 0
+
+        return self.status
+
+    def jido_scene(self):
+
+        if self.status == 0:
+            self.logger.info('scene: ' + self.scene_name)
+            self.status += 1
+        elif self.status == 100:
+            self.status = 104
+        elif 104 <= self.status < 130:
+            self.status += 1
+            local_map = self.get_option('local_map')
+            pb_name = 'jido_scene_local_' + local_map
+            if self.status % 5 == 0:
+                self.lyb_mouse_click(pb_name, custom_threshold=0)
+                self.game_object.get_scene('deryuk_jido_scene').status = 100
+                cfg_local_map = self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sub_area')
+                self.game_object.get_scene('deryuk_jido_scene').set_option('map', local_map)
+                self.game_object.get_scene('deryuk_jido_scene').set_option('local_map', cfg_local_map)
         else:
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
                 self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
@@ -1250,6 +1302,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.logger.warn('발견한 사냥터가 없습니다')
                 self.status = 99999
             else:
+                self.lyb_mouse_click_location(last_location[0], last_location[1])
                 self.status = 3500
         elif self.status == 3500:
             self.status += 1
@@ -1260,10 +1313,10 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 (loc_x, loc_y), match_rate = self.game_object.locationResourceOnWindowPart(
                     self.window_image,
                     resource_name,
-                    custom_rect=(820, 410, 950, 570),
+                    custom_rect=(820, 310, 950, 570),
                     custom_threshold=0.7,
                     custom_flag=1,
-                    average=True
+                    average=False
                 )
                 self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
                 if loc_x != -1:
@@ -1327,6 +1380,147 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.status += 1
         elif self.status == 4011:
             self.status = self.get_option('last_status')
+        elif self.status == 10000:
+            self.logger.info('지도의 돋보기를 사용해서 축소시켜주세요.')
+            self.logger.info('지도의 특정 위치를 클릭해서 캐릭터를 이동시키기 위함입니다.')
+            self.logger.info('지도에 마우스 포인터를 올리고 좌표를 확인하세요.')
+            self.logger.info('좌표는 통계 정보 버튼[스케쥴 완료 횟수]에 나옵니다.')
+            self.logger.info('통계 정보 버튼은 매크로 홈 화면의 중앙에 있습니다.')
+            self.logger.info('주의: 이동할 수 없는 지역인지 반드시 먼저 확인하세요!')
+            self.logger.info('[지도 좌표] 작업은 5분 후에 종료됩니다.')
+            self.status += 1
+        elif 10001 <= self.status < 10300:
+            self.status += 1
+        elif self.status == 11000:
+            self.set_option('changed', False)
+            self.status += 1
+        elif 11001 <= self.status < 11005:
+            self.status += 1
+            if self.get_option('changed'):
+                self.status = 11010
+            else:
+                cfg_local_map = self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_area')
+                self.game_object.get_scene('jido_scene').status = 100
+                self.game_object.get_scene('jido_scene').set_option('local_map', cfg_local_map)
+                self.lyb_mouse_click('local_map_scene_world', custom_threshold=0)
+        elif self.status == 11010:
+            cfg_location = self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_location')
+            if cfg_location:
+                self.status = 11100
+            else:
+                self.status = 11500
+        elif 11100 <= self.status < 11110:
+            pb_name = 'local_map_scene_zoom_plus'
+            match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
+            self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
+            if match_rate < 0.95:
+                self.lyb_mouse_click(pb_name, custom_threshold=0)
+                self.status += 1
+            else:
+                self.status = 11110
+        elif 11110 <= self.status < 11120:
+            self.status += 1
+            cfg_loc_x = int(self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_x'))
+            cfg_loc_y = int(self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_y'))
+            if self.fail_to_detect_m() is True:
+                self.lyb_mouse_click_location2(cfg_loc_x, cfg_loc_y)
+        elif 11120 <= self.status < 11410:
+            self.status += 1
+            if self.fail_to_detect_m() is True:
+                self.game_object.get_scene('main_scene').set_option('지도 이동' + '_move_ok', True)
+                self.status = 99999
+        elif 11500 <= self.status < 11519:
+            self.status += 1
+            pb_name = 'local_map_scene_close_detail'
+            match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
+            self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
+            if match_rate > 0.9:
+                self.lyb_mouse_click(pb_name, custom_threshold=0)
+                return self.status
+
+            rect_list = [
+                (650, 120, 690, 170),
+                (650, 150, 690, 210),
+                (650, 190, 690, 250),
+                (650, 230, 690, 290),
+                (650, 270, 690, 340),
+                (650, 320, 690, 380),
+                (650, 360, 690, 420),
+                (650, 400, 690, 460),
+                (650, 440, 690, 500),
+                (650, 480, 690, 550),
+            ]
+            rect_list.reverse()
+            cfg_sanyang_number = int(self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sanyang_number'))
+
+            resource_name = 'local_map_scene_detail_sanyang_loc'
+            sanyang_index = 1
+            last_location = (-1, -1)
+            for each in rect_list:
+                (loc_x, loc_y), match_rate = self.game_object.locationResourceOnWindowPart(
+                    self.window_image,
+                    resource_name,
+                    custom_rect=each,
+                    custom_threshold=0.7,
+                    custom_top_level=(255, 255, 255),
+                    custom_below_level=(160, 160, 160),
+                    custom_flag=1,
+                    average=True
+                )
+                self.logger.debug(
+                    resource_name + ' ' + str(each) + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
+                if loc_x != -1:
+                    last_location = (loc_x, loc_y)
+                    if sanyang_index == cfg_sanyang_number:
+                        self.lyb_mouse_click_location(loc_x, loc_y)
+                        self.status = 11520
+                        return self.status
+                    else:
+                        sanyang_index = sanyang_index + 1
+
+            if last_location == (-1. - 1):
+                self.logger.warn('발견한 사냥터가 없습니다')
+                self.status = 99999
+            else:
+                self.lyb_mouse_click_location(last_location[0], last_location[1])
+                self.status = 11520
+        elif self.status == 11520:
+            self.status += 1
+        elif 11521 <= self.status < 11540:
+            self.status += 1
+            if self.fail_to_detect_m() is True:
+                resource_name = 'local_map_scene_detail_auto_loc'
+                (loc_x, loc_y), match_rate = self.game_object.locationResourceOnWindowPart(
+                    self.window_image,
+                    resource_name,
+                    custom_rect=(820, 310, 950, 570),
+                    custom_threshold=0.7,
+                    custom_flag=1,
+                    average=False
+                )
+                self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
+                if loc_x != -1:
+                    self.lyb_mouse_click_location(loc_x, loc_y)
+                    self.status = 11120
+                else:
+                    self.lyb_mouse_drag('local_map_scene_detail_drag_bot', 'local_map_scene_detail_drag_top',
+                                        stop_delay=0.0)
+                    self.set_option('last_status', self.status)
+                    self.status = 11600
+        elif self.status == 11600:
+            self.status += 1
+        elif self.status == 11601:
+            self.status = self.get_option('last_status')
+        elif self.status == 12000:
+            self.status += 1
+        elif 12001 <= self.status < 12300:
+            cfg_local_map = self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sub_area')
+            self.status += 1
+        elif self.status == 13000:
+            self.status += 1
+        elif 13001 <= self.status < 13300:
+            cfg_local_map = self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sub_area')
+            self.status += 1
         else:
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
                 self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
@@ -1631,6 +1825,31 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 if loc_x == -1:
                     self.status = 99998
                     return self.status
+        elif self.status == 500:
+            self.game_object.get_scene('main_scene').set_option('go_jeoljeon', 0)
+            self.status += 1
+        elif 501 <= self.status < 511:
+            self.status += 1
+            if self.status % 5 == 0:
+                resource_name = 'jeoljeon_mode_scene_auto_combat_loc'
+                (loc_x, loc_y), match_rate = self.game_object.locationResourceOnWindowPart(
+                    self.window_image,
+                    resource_name,
+                    custom_top_level=(255, 255, 255),
+                    custom_below_level=(100, 100, 100),
+                    custom_rect=(420, 410, 540, 480),
+                    custom_threshold=0.7,
+                    custom_flag=1,
+                    average=True
+                )
+                self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
+                if loc_x == -1:
+                    self.status = 99998
+                else:
+                    self.status = 99990
+        elif self.status == 99990:
+            self.game_object.get_scene('main_scene').set_option('go_jeoljeon', 99)
+            self.status += 1
         elif self.status == 99998:
             self.game_object.get_scene('main_scene').set_option('go_jeoljeon', 10)
             self.status += 1
@@ -1796,6 +2015,31 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             if self.status % 5 == 0:
                 self.lyb_mouse_click('menu_scene_guild', custom_threshold=0)
                 self.game_object.get_scene('guild_scene').status = 0
+            self.status += 1
+        elif 1200 <= self.status < 1205:
+            if self.status % 5 == 0:
+                self.lyb_mouse_click('menu_scene_jido', custom_threshold=0)
+                self.game_object.get_scene('local_map_scene').status = 10000
+            self.status += 1
+        elif 1210 <= self.status < 1215:
+            if self.status % 5 == 0:
+                self.lyb_mouse_click('menu_scene_jido', custom_threshold=0)
+                self.game_object.get_scene('local_map_scene').status = 11000
+            self.status += 1
+        elif 1220 <= self.status < 1225:
+            if self.status % 5 == 0:
+                self.lyb_mouse_click('menu_scene_jido', custom_threshold=0)
+                self.game_object.get_scene('local_map_scene').status = 12000
+            self.status += 1
+        elif 1230 <= self.status < 1235:
+            if self.status % 5 == 0:
+                self.lyb_mouse_click('menu_scene_jido', custom_threshold=0)
+                self.game_object.get_scene('local_map_scene').status = 13000
+            self.status += 1
+        elif 2000 <= self.status < 2005:
+            if self.status % 2 == 0:
+                self.lyb_mouse_click('menu_scene_jeoljeon', custom_threshold=0)
+                self.game_object.get_scene('jeoljeon_mode_scene').status = 500
             self.status += 1
         else:
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
@@ -2185,6 +2429,73 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
 
             self.set_option(self.current_work + '_inner_status', inner_status + 1)
 
+        elif self.status == self.get_work_status('지도 좌표 확인'):
+            elapsed_time = self.get_elapsed_time()
+            if elapsed_time > self.period_bot(10):
+                self.set_option(self.current_work + '_end_flag', True)
+
+            if self.get_option(self.current_work + '_end_flag'):
+                self.set_option(self.current_work + '_end_flag', False)
+                self.set_option(self.current_work + '_inner_status', None)
+                self.status = self.last_status[self.current_work] + 1
+                return self.status
+
+            self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
+            self.game_object.get_scene('menu_scene').status = 1200
+
+        elif self.status == self.get_work_status('지도 이동'):
+            elapsed_time = self.get_elapsed_time()
+            if elapsed_time > self.period_bot(3600):
+                self.set_option(self.current_work + '_end_flag', True)
+
+            if self.get_option(self.current_work + '_end_flag'):
+                self.set_option(self.current_work + '_end_flag', False)
+                self.set_option(self.current_work + '_inner_status', None)
+                self.set_option(self.current_work + '_move_ok', False)
+                self.status = self.last_status[self.current_work] + 1
+                return self.status
+
+            if self.get_option(self.current_work + '_move_ok') is not True:
+                self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
+                cfg_world_map = self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_area')
+
+                if cfg_world_map == '실루나스':
+                    self.game_object.get_scene('menu_scene').status = 1210
+                elif cfg_world_map == '루나트라':
+                    self.game_object.get_scene('menu_scene').status = 1220
+                elif cfg_world_map == '몽환의 틈':
+                    self.game_object.get_scene('menu_scene').status = 1230
+                elif cfg_world_map == '바트라':
+                    # 업데이트 예정
+                    self.set_option(self.current_work + '_end_flag', True)
+
+                self.set_option(self.current_work + '_inner_status', 0)
+            else:
+                inner_status = self.get_option(self.current_work + '_inner_status')
+                if inner_status is None:
+                    inner_status = 0
+
+                self.logger.debug('inner_status ' + str(inner_status))
+                if 0 <= inner_status < 5:
+                    self.set_option('go_jeoljeon', 0)
+                elif inner_status == 5:
+                    self.lyb_mouse_click('main_scene_auto', custom_threshold=0)
+                elif 6 <= inner_status < 150:
+                    go_jeoljeon = self.get_option('go_jeoljeon')
+                    if go_jeoljeon == 5:
+                        self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
+                        self.game_object.get_scene('menu_scene').status = 2000
+                        self.set_option('go_jeoljeon', 0)
+                    elif go_jeoljeon == 10:
+                        self.set_option(self.current_work + '_move_ok', False)
+                    elif go_jeoljeon == 99:
+                        self.set_option(self.current_work + '_end_flag', True)
+                    self.set_option('go_jeoljeon', go_jeoljeon + 1)
+                else:
+                    self.set_option(self.current_work + '_move_ok', False)
+
+                self.set_option(self.current_work + '_inner_status', inner_status + 1)
+
         elif self.status == self.get_work_status('알림'):
 
             try:
@@ -2325,6 +2636,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             if elapsed_time > self.period_bot(30) and self.click_recover_menu():
                 self.game_object.get_scene('local_map_scene').status = 100
                 self.set_checkpoint('recover_move')
+                self.game_object.interval = self.period_bot(5)
                 return True
 
         if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'event_devil') is True:
@@ -2364,6 +2676,8 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
         if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'chulseok_check') is True:
             elapsed_time = time.time() - self.get_checkpoint('chulseok_check')
             if elapsed_time > self.period_bot(81640):
+                self.set_checkpoint('chulseok_check')
+            elif elapsed_time > self.period_bot(600):
                 self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
                 self.game_object.get_scene('menu_scene').status = 700
                 self.set_checkpoint('chulseok_check')
@@ -2371,10 +2685,13 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
 
         elapsed_time = time.time() - self.get_checkpoint('shop_check')
         if elapsed_time > self.period_bot(81640):
-            self.lyb_mouse_click('main_scene_shop', custom_threshold=0)
-            self.game_object.get_scene('shop_scene').status = 0
-            self.set_checkpoint('shop_check')
-            return True
+            if elapsed_time > self.period_bot(81640):
+                self.set_checkpoint('shop_check')
+            elif elapsed_time > self.period_bot(600):
+                self.lyb_mouse_click('main_scene_shop', custom_threshold=0)
+                self.game_object.get_scene('shop_scene').status = 0
+                self.set_checkpoint('shop_check')
+                return True
 
         return False
 
