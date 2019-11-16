@@ -88,6 +88,10 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             rc = self.lunatra_scene()
         elif self.scene_name == 'lunatra_jido_scene':
             rc = self.lunatra_jido_scene()
+        elif self.scene_name == 'stash_scene':
+            rc = self.stash_scene()
+        elif self.scene_name == 'stash_reserve_scene':
+            rc = self.stash_reserve_scene()
 
         else:
             rc = self.else_scene()
@@ -99,6 +103,87 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
         if self.status == 0:
             self.logger.info('unknown scene: ' + self.scene_name)
             self.status += 1
+        else:
+            if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
+                self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
+
+            self.status = 0
+
+        return self.status
+
+    def stash_reserve_scene(self):
+
+        self.lyb_mouse_click('stash_reserve_scene_ok', custom_threshold=0)
+
+        return self.status
+
+    def stash_scene(self):
+
+        if self.status == 0:
+            self.logger.info('scene: ' + self.scene_name)
+            self.status += 1
+        elif self.status == 1:
+            self.lyb_mouse_click('stash_scene_tab_3', custom_threshold=0)
+            self.status += 1
+        elif 2 <= self.status < 10:
+            self.status += 1
+            resource_name = 'stash_scene_sort_class_loc'
+            match_rate = self.game_object.rateMatchedResource(self.window_pixels, resource_name)
+            self.logger.debug(resource_name + ' ' + str(round(match_rate, 2)))
+            if match_rate > 0.99:
+                self.status = 10
+            else:
+                self.set_option('last_status', self.status)
+                self.status = 100
+                self.lyb_mouse_click('stash_scene_sort_class_0', custom_threshold=0)
+        elif self.status == 10:
+            self.set_option('last_row', 0)
+            self.set_option('last_col', 0)
+            self.status += 1
+        elif 11 <= self.status < 50:
+            self.status += 1
+            last_row = self.get_option('last_row')
+            last_col = self.get_option('last_col')
+
+            pb_name = 'stash_scene_item_' + str(last_col) + str(last_row)
+            self.lyb_mouse_click(pb_name, custom_threshold=0)
+            self.set_option('last_status', self.status)
+            self.status = 60
+        elif self.status == 60:
+            resource_name = 'stash_scene_enable_condition_loc'
+            match_rate = self.game_object.rateMatchedResource(self.window_pixels, resource_name)
+            self.logger.debug(resource_name + ' ' + str(round(match_rate, 2)))
+
+            resource_name = 'stash_scene_reserve_loc'
+            (loc_x, loc_y), match_rate2 = self.game_object.locationResourceOnWindowPart(
+                self.window_image,
+                resource_name,
+                custom_rect=(550, 350, 650, 450),
+                custom_threshold=0.85,
+                custom_flag=1,
+                average=False,
+            )
+            self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate2, 2)))
+            if match_rate > 0.99 and loc_x != -1:
+                self.lyb_mouse_click_location(loc_x, loc_y)
+            else:
+                last_row = self.get_option('last_row')
+                last_col = self.get_option('last_col')
+                if last_col + 1 > 4:
+                    if last_row + 1 > 4:
+                        self.status = 99999
+                        return self.status
+                    else:
+                        self.set_option('last_row', last_row + 1)
+                        self.set_option('last_col', 0)
+                else:
+                    self.set_option('last_col', last_col + 1)
+            self.status = self.get_option('last_status')
+        elif self.status == 100:
+            self.status += 1
+        elif self.status == 101:
+            self.lyb_mouse_click('stash_scene_sort_2', custom_threshold=0)
+            self.status = self.get_option('last_status')
         else:
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
                 self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
@@ -732,8 +817,57 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.status += 1
         elif self.status == 300:
             self.status = 0
+        elif self.status == 1000:
+            self.status += 1
+        elif self.status == 1001:
+            self.status += 1
+            pb_name = 'monghwan_scene_local_' + self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sub_area')
+            self.lyb_mouse_click(pb_name, custom_threshold=0)
+            self.status += 1
+        elif 1001 <= self.status < 1010:
+            self.status += 1
+            resource_name = 'monghwan_scene_disable_loc'
+            (loc_x, loc_y), match_rate = self.game_object.locationResourceOnWindowPart(
+                self.window_image,
+                resource_name,
+                custom_rect=(325, 320, 550, 380),
+                custom_threshold=0.6,
+                custom_flag=1,
+                average=False,
+                debug=True,
+            )
+            self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+            if loc_x != -1:
+                self.status = 99998
+                return self.status
+
+            resource_name = 'monghwan_scene_time_end_loc'
+            match_rate = self.game_object.rateMatchedResource(self.window_pixels, resource_name, custom_top_level=255,
+                                                              custom_below_level=160)
+            self.logger.debug(resource_name + ' ' + str(round(match_rate, 2)))
+            if match_rate > 0.99:
+                self.status = 99998
+                return self.status
+
+            pb_name = 'monghwan_scene_location'
+            match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
+            self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
+            if match_rate > 0.7:
+                self.lyb_mouse_click(pb_name, custom_threshold=0)
+                self.game_object.get_scene('local_map_scene').status = 1900
+                self.status = 200
+                return self.status
+
+            pb_name = 'monghwan_scene_ipjang'
+            match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
+            self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
+            if match_rate > 0.7:
+                self.lyb_mouse_click(pb_name, custom_threshold=0)
+                self.game_object.get_scene('main_scene').set_option('지도 이동' + '_monghwan_ipjang_ok', True)
+                self.status = 99999
         elif self.status == 99998:
             self.game_object.get_scene('main_scene').set_option('몽환의 틈' + '_end_flag', True)
+            self.game_object.get_scene('main_scene').set_option('지도 이동' + '_end_flag', True)
             self.status += 1
         else:
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
@@ -1322,6 +1456,9 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             if self.fail_to_detect_m() is True:
                 self.game_object.get_scene('main_scene').set_option('몬스터 조사' + '_move_ok', True)
                 self.status = 99999
+        elif self.status == 1900:
+            self.game_object.get_scene('monghwan_scene').status = 1000
+            self.status = 2001
         elif self.status == 2000:
             self.game_object.get_scene('recover_scene').status = 0
             self.game_object.get_scene('monghwan_scene').status = 0
@@ -1688,8 +1825,67 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             if self.fail_to_detect_m() is True:
                 self.status = 99999
         elif self.status == 13000:
+            self.set_option('changed', True)
+            self.status = 11001
+        elif self.status == 20000:
+            self.status += 1
+        elif 20001 <= self.status < 20005:
             self.status += 1
 
+            rect_list = [
+                (650, 120, 690, 170),
+                (650, 150, 690, 210),
+                (650, 190, 690, 250),
+                (650, 230, 690, 290),
+                (650, 270, 690, 340),
+                (650, 320, 690, 380),
+                (650, 360, 690, 420),
+                (650, 400, 690, 460),
+                (650, 440, 690, 500),
+                (650, 480, 690, 550),
+            ]
+
+            resource_name = 'local_map_scene_detail_stash_loc'
+            last_location = (-1, -1)
+            for each in rect_list:
+                (loc_x, loc_y), match_rate = self.game_object.locationResourceOnWindowPart(
+                    self.window_image,
+                    resource_name,
+                    custom_rect=each,
+                    custom_threshold=0.85,
+                    custom_flag=1,
+                    average=True
+                )
+                self.logger.debug(
+                    resource_name + ' ' + str(each) + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
+                if loc_x != -1:
+                    self.lyb_mouse_click_location(loc_x, loc_y)
+                    self.status = 20020
+                    return self.status
+        elif self.status == 20005:
+            self.logger.warn('발견한 사냥터가 없습니다')
+            self.status = 99999
+        elif 20020 <= self.status < 20030:
+            self.status += 1
+            if self.fail_to_detect_m(limit=2) is True:
+                pb_name = 'local_map_scene_follow'
+                (loc_x, loc_y), match_rate = self.game_object.locationOnWindowPart(
+                    self.window_image,
+                    self.game_object.resource_manager.pixel_box_dic[pb_name],
+                    custom_threshold=0.8,
+                    custom_flag=1,
+                    custom_rect=(890, 110, 950, 550)
+                )
+                self.logger.debug(pb_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+                if loc_x != -1:
+                    self.lyb_mouse_click_location(loc_x, loc_y)
+                    self.status = 20100
+                else:
+                    self.status = 99999
+        elif 20100 <= self.status < 20200:
+            self.status += 1
+            if self.fail_to_detect_m() is True:
+                self.status = 99999
         else:
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
                 self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
@@ -1874,7 +2070,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.status = 1
                 self.set_option('potion_index', potion_index + 1)
         else:
-            self.game_object.get_scene('main_scene').set_option('go_to_stash', True)
+            self.game_object.get_scene('main_scene').set_option('go_stash', True)
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
                 self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
 
@@ -1899,6 +2095,23 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
         return self.status
 
     def named_tobeol_scene(self):
+
+        resource_name = 'named_tobeol_scene_new_loc'
+        resource = self.game_object.resource_manager.resource_dic[resource_name]
+        for each in resource:
+            (loc_x, loc_y), match_rate = self.game_object.locationOnWindowPart(
+                self.window_image,
+                self.game_object.resource_manager.pixel_box_dic[each],
+                custom_threshold=0.7,
+                custom_flag=1,
+                custom_top_level=(220, 90, 90),
+                custom_below_level=(130, 40, 40),
+                custom_rect=(470, 460, 950, 550)
+            )
+            self.logger.debug(each + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+            if loc_x != -1:
+                self.lyb_mouse_click_location(loc_x - 5, loc_y + 5)
+                return self.status
 
         if self.status == 0:
             self.logger.info('scene: ' + self.scene_name)
@@ -2208,6 +2421,11 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.status += 1
         elif 1230 <= self.status < 1235:
             if self.status % 5 == 0:
+                self.lyb_mouse_click('menu_scene_monghwan', custom_threshold=0)
+                self.game_object.get_scene('monghwan_scene').status = 1000
+            self.status += 1
+        elif 1240 <= self.status < 1245:
+            if self.status % 5 == 0:
                 self.lyb_mouse_click('menu_scene_jido', custom_threshold=0)
                 self.game_object.get_scene('local_map_scene').status = 13000
             self.status += 1
@@ -2215,6 +2433,10 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             if self.status % 2 == 0:
                 self.lyb_mouse_click('menu_scene_jeoljeon', custom_threshold=0)
                 self.game_object.get_scene('jeoljeon_mode_scene').status = 500
+        elif 2100 <= self.status < 2105:
+            if self.status % 2 == 0:
+                self.lyb_mouse_click('menu_scene_jido', custom_threshold=0)
+                self.game_object.get_scene('local_map_scene').status = 20000
             self.status += 1
         else:
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
@@ -2658,7 +2880,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                     if self.get_option(self.current_work + '_monghwan_ipjang_ok') is not True:
                         self.game_object.get_scene('menu_scene').status = 1230
                     else:
-                        self.game_object.get_scene('menu_scene').status = 1210
+                        self.game_object.get_scene('menu_scene').status = 1240
                 elif cfg_world_map == '바트라':
                     # 업데이트 예정
                     self.set_option(self.current_work + '_end_flag', True)
@@ -2818,8 +3040,17 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
 
     def pre_process_main_scene(self):
 
-        if self.get_option('is_moving') is True:
+        if self.get_option('is_moving'):
             return True
+
+        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'go_stash') is True:
+            if self.get_option('go_stash'):
+                self.logger.info('물약 상점 인식됨 -> 창고 탐색 시작.')
+                self.set_option('go_stash', False)
+                self.game_object.get_scene('stash_scene').status = 0
+                self.game_object.get_scene('menu_scene').status = 2100
+                self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
+                return True
 
         if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'hp_potion_move') is True:
             elapsed_time = time.time() - self.get_checkpoint('hp_potion_low')

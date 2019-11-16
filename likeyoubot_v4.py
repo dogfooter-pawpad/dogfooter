@@ -737,6 +737,26 @@ class LYBV4Tab(lybgame.LYBGameTab):
         frame.pack(anchor=tkinter.W)
 
         frame = ttk.Frame(frame_label)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'go_stash'] = tkinter.BooleanVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'go_stash'].trace(
+            'w',
+            lambda *args: self.go_stash(args, lybconstant.LYB_DO_STRING_V4_ETC + 'go_stash'))
+        if not lybconstant.LYB_DO_STRING_V4_ETC + 'go_stash' in self.configure.common_config[
+            self.game_name]:
+            self.configure.common_config[self.game_name][
+                lybconstant.LYB_DO_STRING_V4_ETC + 'go_stash'] = True
+
+        check_box = ttk.Checkbutton(
+            master=frame,
+            text='물약 구매 후 창고 가기',
+            variable=self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'go_stash'],
+            onvalue=True,
+            offvalue=False
+        )
+        check_box.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
+        frame = ttk.Frame(frame_label)
         label = ttk.Label(
             master=frame,
             text=self.get_option_text('구매할 HP 물약', width=16)
@@ -1986,6 +2006,9 @@ class LYBV4Tab(lybgame.LYBGameTab):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
     def shop_gold_pet_gotcha(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def go_stash(self, args, option_name):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
     def shop_sang_potion(self, args, option_name):
