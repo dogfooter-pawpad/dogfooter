@@ -18,6 +18,7 @@ class LYBV4(lybgame.LYBGame):
         '길드',
         '우편함',
         '메인 퀘스트',
+        '의뢰 일지',
         '몬스터 조사',
         '잠재력 개방',
         '네임드 토벌',
@@ -1038,6 +1039,44 @@ class LYBV4Tab(lybgame.LYBGameTab):
         frame.pack(anchor=tkinter.W)
         frame_label.pack(anchor=tkinter.NW, padx=5, pady=5)
 
+        frame_label = ttk.LabelFrame(frame_l, text='의뢰 일지')
+
+        frame = ttk.Frame(frame_label)
+        label = ttk.Label(
+            master=frame,
+            text=self.get_option_text('진행 시간(초)', width=27)
+        )
+        label.pack(side=tkinter.LEFT)
+
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'ure_quest_duration'] = tkinter.StringVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'ure_quest_duration'].trace(
+            'w', lambda *args: self.ure_quest_duration(args,
+                                                        lybconstant.LYB_DO_STRING_V4_WORK + 'ure_quest_duration')
+        )
+        combobox_list = []
+        for i in range(0, 86401, 60):
+            combobox_list.append(str(i))
+
+        if not lybconstant.LYB_DO_STRING_V4_WORK + 'ure_quest_duration' in self.configure.common_config[
+            self.game_name]:
+            self.configure.common_config[self.game_name][
+                lybconstant.LYB_DO_STRING_V4_WORK + 'ure_quest_duration'] = 600
+
+        combobox = ttk.Combobox(
+            master=frame,
+            values=combobox_list,
+            textvariable=self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'ure_quest_duration'],
+            state="readonly",
+            height=10,
+            width=7,
+            font=lybconstant.LYB_FONT
+        )
+        combobox.set(self.configure.common_config[self.game_name][
+                         lybconstant.LYB_DO_STRING_V4_WORK + 'ure_quest_duration'])
+        combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+        frame_label.pack(anchor=tkinter.NW, padx=5, pady=5)
+
         frame_label = ttk.LabelFrame(frame_l, text='지도 이동')
 
         frame = ttk.Frame(frame_label)
@@ -1125,7 +1164,7 @@ class LYBV4Tab(lybgame.LYBGameTab):
                                                     lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sanyang_number')
         )
         combobox_list = []
-        for i in range(0, 16):
+        for i in range(0, 21):
             combobox_list.append(str(i))
 
         if not lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sanyang_number' in self.configure.common_config[self.game_name]:
@@ -1910,6 +1949,9 @@ class LYBV4Tab(lybgame.LYBGameTab):
         self.set_game_option()
 
     def main_quest_duration(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def ure_quest_duration(self, args, option_name):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
     def jido_move_x(self, args, option_name):
