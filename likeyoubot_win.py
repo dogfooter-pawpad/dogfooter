@@ -462,12 +462,15 @@ class LYBWin:
 
         player_name, resolution = self.get_player(hwnd)
 
-        if player_name == 'nox' and resolution == 'uhd':
-            return anchor_x, anchor_y + (LYBWin.NOX_EXTRA_UHD_HEIGHT - LYBWin.NOX_EXTRA_HEIGHT + LYBWin.NOX_EXTRA_WIDTH*3), end_x, end_y
-        elif player_name == 'nox':
+        if player_name == 'nox':
             return anchor_x, anchor_y, end_x, end_y
         else:
-            return anchor_x - int(LYBWin.NOX_EXTRA_WIDTH * 0.5), anchor_y - (LYBWin.NOX_EXTRA_HEIGHT + LYBWin.NOX_EXTRA_WIDTH*3), end_x, end_y
+            if resolution == 'uhd':
+                # LDPlayer
+                return anchor_x - int(LYBWin.NOX_EXTRA_WIDTH * 0.5), anchor_y - 54, end_x, end_y
+            else:
+                # LDPlayer
+                return anchor_x - int(LYBWin.NOX_EXTRA_WIDTH * 0.5), anchor_y - 36, end_x, end_y
 
     def get_player_size(self, hwnd):
         (anchor_x, anchor_y, end_x, end_y) = win32gui.GetWindowRect(hwnd)
