@@ -527,6 +527,17 @@ class LYBWin:
         else:
             return -LYBWin.NOX_EXTRA_WIDTH, -(LYBWin.NOX_EXTRA_WIDTH + LYBWin.NOX_EXTRA_HEIGHT)
 
+    def get_player_adjust_capture(self, hwnd):
+
+        player_name, resolution = self.get_player(hwnd)
+        if player_name == 'nox':
+            return 0, 0
+        else:
+            if resolution == 'uhd':
+                return -1, -54
+            else:
+                return -1, -36
+
     def get_window_screenshot(self, hwnd, flag):
         # hwnd = win32gui.FindWindow(None, '계산기')
 

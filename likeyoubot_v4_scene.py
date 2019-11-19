@@ -1421,6 +1421,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
 
             if self.status % 3 == 0:
                 self.set_option('last_status', self.status)
+                self.set_option('search_order', 'bot')
                 self.status = 300
 
         elif 200 <= self.status < 210:
@@ -1452,7 +1453,10 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.logger.debug(str((loc_x, loc_y)) + ' ' + str(self.get_option('last_pixel_' + each)) + ' ' + str(
                     self.game_object.window_pixels[loc_x, loc_y]))
 
-            self.lyb_mouse_drag('monster_josa_scene_drag_bot', 'monster_josa_scene_drag_top', stop_delay=0.0)
+            if self.get_option('search_order') == 'bot':
+                self.lyb_mouse_drag('monster_josa_scene_drag_bot', 'monster_josa_scene_drag_top', stop_delay=0.0)
+            else:
+                self.lyb_mouse_drag('monster_josa_scene_drag_top', 'monster_josa_scene_drag_bot', stop_delay=0.0)
             self.status += 1
         elif self.status == 301:
             is_end = True
@@ -1470,7 +1474,16 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.status = self.get_option('init_status')
             else:
                 self.status = self.get_option('last_status')
-        elif 400 <= self.status < 410:
+        elif self.status == 400:
+            self.set_option('is_end', False)
+            cfg_order = self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'monster_josa_area_order')
+            if cfg_order == '아래에서부터 탐색':
+                self.set_option('search_order', 'bot')
+            else:
+                self.set_option('search_order', 'top')
+            self.status += 1
+        elif 401 <= self.status < 410:
+            self.set_option('init_status', self.status)
             self.status += 1
             if self.get_option('is_end') is True:
                 self.set_option('select_index', 0)
@@ -1482,7 +1495,10 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
         elif 500 <= self.status < 550:
             self.status += 1
             select_index = self.get_option('select_index')
-            pb_name = 'monster_josa_scene_select_' + str(select_index)
+            if self.get_option('search_order') == 'bot':
+                pb_name = 'monster_josa_scene_select_' + str(select_index)
+            else:
+                pb_name = 'monster_josa_scene_select_' + str(8 - select_index)
             select_index = select_index + 1
             if select_index >= 10:
                 self.set_option('select_index', 0)
@@ -1502,18 +1518,32 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             match_rate2 = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name2)
             self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
             self.logger.debug(pb_name2 + ' ' + str(round(match_rate2, 2)))
-            if match_rate < 0.6 and 0.9 < match_rate2:
-                self.game_object.get_scene('local_map_scene').status = 1000
-                self.lyb_mouse_click(pb_name2, custom_threshold=0)
-                self.status += 1
-            else:
-                self.status = self.get_option('last_status')
+            if match_rate < 0.6:
+                if match_rate2 > 0.9:
+                    # 보스 아님
+                    is_named = 0.0
+                    if self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'monster_josa_named'):
+                        resource_name = 'monster_josa_scene_named_loc'
+                        is_named = self.game_object.rateMatchedResource(self.window_pixels, resource_name)
+                        self.logger.debug(resource_name + ' ' + str(round(is_named, 2)))
+
+                    if is_named < 0.8:
+                        # 네임드도 아니고
+                        self.game_object.get_scene('local_map_scene').status = 1000
+                        self.lyb_mouse_click(pb_name2, custom_threshold=0)
+                        self.status += 1
+                        return self.status
+
+            self.status = self.get_option('last_status')
         elif 602 <= self.status < 620:
             self.status += 1
         elif self.status == 700:
             self.status += 1
         elif self.status == 701:
-            self.lyb_mouse_drag('monster_josa_scene_drag_top', 'monster_josa_scene_drag_bot', delay=0.1, stop_delay=0.0)
+            if self.get_option('search_order') == 'bot':
+                self.lyb_mouse_drag('monster_josa_scene_drag_top', 'monster_josa_scene_drag_bot', stop_delay=0.0)
+            else:
+                self.lyb_mouse_drag('monster_josa_scene_drag_bot', 'monster_josa_scene_drag_top', stop_delay=0.0)
             self.status = self.get_option('last_status')
         else:
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
@@ -3451,7 +3481,9 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
 
         if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'quest_tobeol'):
             elapsed_time = time.time() - self.get_checkpoint('quest_tobeol')
-            if elapsed_time > self.period_bot(120):
+            if elapsed_time > self.period_bot(81640):
+                self.set_checkpoint('quest_tobeol')
+            elif elapsed_time > self.period_bot(120):
                 if self.is_new_tobeol_quest():
                     self.set_checkpoint('quest_tobeol')
                 else:
