@@ -1502,7 +1502,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             match_rate2 = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name2)
             self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
             self.logger.debug(pb_name2 + ' ' + str(round(match_rate2, 2)))
-            if match_rate < 0.9 < match_rate2:
+            if match_rate < 0.6 and 0.9 < match_rate2:
                 self.game_object.get_scene('local_map_scene').status = 1000
                 self.lyb_mouse_click(pb_name2, custom_threshold=0)
                 self.status += 1
