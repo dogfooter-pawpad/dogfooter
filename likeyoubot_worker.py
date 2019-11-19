@@ -541,7 +541,7 @@ class LYBWorker(threading.Thread):
         logging = '';
 
         (anchor_x, anchor_y, end_x, end_y) = self.win.get_window_location(self.hwnd)
-        adj_x, adj_y = self.win.get_player_adjust(self.hwnd)
+        adj_x, adj_y = self.win.get_player_adjust_capture(self.hwnd)
         cur_x, cur_y = pyautogui.position()
 
         self.game.cursor_loc = (cur_x - anchor_x + adj_x, cur_y - anchor_y + adj_x)
@@ -567,7 +567,7 @@ class LYBWorker(threading.Thread):
         # e = time.time()
         # print('[DEBUG] Grab Screenshot:', round(e-s,2))
         # print('END GRAB', datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])
-        # current_window_image_grab.save("test.png")
+        current_window_image_grab.save("test.png")
 
         # time.sleep(2)
         # sys.exit()
