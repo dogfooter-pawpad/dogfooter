@@ -463,7 +463,7 @@ class LYBWin:
         player_name, resolution = self.get_player(hwnd)
 
         if player_name == 'nox' and resolution == 'uhd':
-            return anchor_x, anchor_y + (LYBWin.NOX_EXTRA_UHD_HEIGHT + LYBWin.NOX_EXTRA_HEIGHT), end_x, end_y
+            return anchor_x, anchor_y + LYBWin.NOX_EXTRA_UHD_HEIGHT, end_x, end_y
         elif player_name == 'nox':
             return anchor_x, anchor_y, end_x, end_y
         else:
