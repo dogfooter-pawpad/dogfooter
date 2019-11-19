@@ -651,28 +651,6 @@ class LYBV4Tab(lybgame.LYBGameTab):
         check_box.pack(anchor=tkinter.W, side=tkinter.LEFT)
         frame.pack(anchor=tkinter.W)
 
-        frame = ttk.Frame(frame_label)
-        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'quest_tobeol'] = tkinter.BooleanVar(frame)
-        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'quest_tobeol'].trace(
-            'w',
-            lambda *args: self.quest_tobeol(args, lybconstant.LYB_DO_STRING_V4_ETC + 'quest_tobeol'
-                                            ))
-        if not lybconstant.LYB_DO_STRING_V4_ETC + 'quest_tobeol' in self.configure.common_config[
-            self.game_name]:
-            self.configure.common_config[self.game_name][
-                lybconstant.LYB_DO_STRING_V4_ETC + 'quest_tobeol'] = True
-
-        check_box = ttk.Checkbutton(
-
-            master=frame,
-            text=self.get_option_text('현재 지역 토벌퀘 수락하기', width=27),
-            variable=self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'quest_tobeol'],
-            onvalue=True,
-            offvalue=False
-        )
-        check_box.pack(anchor=tkinter.W, side=tkinter.LEFT)
-        frame.pack(anchor=tkinter.W)
-
         frame_label.pack(anchor=tkinter.NW, padx=5, pady=5)
 
         frame_l.pack(side=tkinter.LEFT, anchor=tkinter.NW)
@@ -997,6 +975,31 @@ class LYBV4Tab(lybgame.LYBGameTab):
 
         # 일반 탭 우측
         frame_r = ttk.Frame(self.inner_frame_dic['common_tab_frame'])
+
+        frame_label = ttk.LabelFrame(frame_r, text='사냥 관련 설정')
+        frame = ttk.Frame(frame_label)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'quest_tobeol'] = tkinter.BooleanVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'quest_tobeol'].trace(
+            'w',
+            lambda *args: self.quest_tobeol(args, lybconstant.LYB_DO_STRING_V4_ETC + 'quest_tobeol'
+                                            ))
+        if not lybconstant.LYB_DO_STRING_V4_ETC + 'quest_tobeol' in self.configure.common_config[
+            self.game_name]:
+            self.configure.common_config[self.game_name][
+                lybconstant.LYB_DO_STRING_V4_ETC + 'quest_tobeol'] = True
+
+        check_box = ttk.Checkbutton(
+
+            master=frame,
+            text=self.get_option_text('현재 지역 토벌퀘 수락하기', width=27),
+            variable=self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'quest_tobeol'],
+            onvalue=True,
+            offvalue=False
+        )
+        check_box.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+        frame_label.pack(anchor=tkinter.NW, padx=5, pady=5)
+
         frame_r.pack(side=tkinter.LEFT, anchor=tkinter.NW)
 
         # 작업 탭 좌측
