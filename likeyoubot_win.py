@@ -436,16 +436,17 @@ class LYBWin:
         extra_width = LYBWin.NOX_EXTRA_WIDTH * 2
         extra_height = LYBWin.NOX_EXTRA_HEIGHT + extra_width
         extra_uhd_height = LYBWin.NOX_EXTRA_UHD_HEIGHT + extra_width
+        resolution = self.get_player_resolution(hwnd)
         if w_width == (LYBWin.WIDTH + extra_width) and w_height == (LYBWin.HEIGHT + extra_height):
-            return 'nox', ''
+            return 'nox', resolution
         elif w_width == (LYBWin.WIDTH + extra_width) and w_height == (LYBWin.HEIGHT + extra_uhd_height):
-            return 'nox', 'uhd'
+            return 'nox', resolution
         elif w_width == LYBWin.WIDTH and w_height == LYBWin.HEIGHT and process_name == 'TheRender':
-            return 'momo', ''
+            return 'momo', resolution
         elif w_width == LYBWin.WIDTH and w_height == LYBWin.HEIGHT and process_name == 'RenderWindowWindow':
-            return 'momo', ''
+            return 'momo', resolution
 
-        return '', ''
+        return '', resolution
 
     def get_player_screen_rect(self, hwnd):
         player_name, resolution = self.get_player(hwnd)
