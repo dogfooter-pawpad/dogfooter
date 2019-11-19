@@ -198,7 +198,7 @@ class LYBWin:
                 if hwnd not in self.side_window_handle_list:
                     (top_left_x, top_left_y, bottom_right_x, bottom_right_y) = win32gui.GetWindowRect(hwnd)
                     print('--------------------> !!! found window DEBUG5 Nox : ', (top_left_x, top_left_y, bottom_right_x, bottom_right_y))
-                    if abs(bottom_right_x - top_left_x) - 36 < 80 and abs(
+                    if abs(bottom_right_x - top_left_x) - 36 < 100 and abs(
                                             bottom_right_y - top_left_y - LYBWin.HEIGHT) < 80:
                         self.side_window_handle_list.append(hwnd)
                         #
