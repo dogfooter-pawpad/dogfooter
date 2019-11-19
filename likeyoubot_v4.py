@@ -27,6 +27,7 @@ class LYBV4(lybgame.LYBGame):
         '지도 좌표 확인',
         '지도 이동',
         '자동 사냥',
+        '마을 이동',
 
         '알림',
         '[반복 시작]',
@@ -1140,6 +1141,44 @@ class LYBV4Tab(lybgame.LYBGameTab):
         frame.pack(anchor=tkinter.W)
         frame_label.pack(anchor=tkinter.NW, padx=5, pady=5)
 
+        frame_label = ttk.LabelFrame(frame_l, text='마을 이동')
+
+        frame = ttk.Frame(frame_label)
+        label = ttk.Label(
+            master=frame,
+            text=self.get_option_text('진행 시간(초)', width=27)
+        )
+        label.pack(side=tkinter.LEFT)
+
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'go_home_duration'] = tkinter.StringVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'go_home_duration'].trace(
+            'w', lambda *args: self.go_home_duration(args,
+                                                       lybconstant.LYB_DO_STRING_V4_WORK + 'go_home_duration')
+        )
+        combobox_list = []
+        for i in range(0, 86401, 60):
+            combobox_list.append(str(i))
+
+        if not lybconstant.LYB_DO_STRING_V4_WORK + 'go_home_duration' in self.configure.common_config[
+            self.game_name]:
+            self.configure.common_config[self.game_name][
+                lybconstant.LYB_DO_STRING_V4_WORK + 'go_home_duration'] = 60
+
+        combobox = ttk.Combobox(
+            master=frame,
+            values=combobox_list,
+            textvariable=self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'go_home_duration'],
+            state="readonly",
+            height=10,
+            width=7,
+            font=lybconstant.LYB_FONT
+        )
+        combobox.set(self.configure.common_config[self.game_name][
+                         lybconstant.LYB_DO_STRING_V4_WORK + 'go_home_duration'])
+        combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+        frame_label.pack(anchor=tkinter.NW, padx=5, pady=5)
+
         frame_label = ttk.LabelFrame(frame_l, text='지도 이동')
 
         frame = ttk.Frame(frame_label)
@@ -2022,6 +2061,9 @@ class LYBV4Tab(lybgame.LYBGameTab):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
     def ure_quest_duration(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def go_home_duration(self, args, option_name):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
     def character_number(self, args, option_name):

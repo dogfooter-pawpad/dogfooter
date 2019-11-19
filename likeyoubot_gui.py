@@ -1847,7 +1847,7 @@ class LYBGUI:
         frame.pack(anchor=tkinter.W)
 
         if not lybconstant.LYB_DO_STRING_RANDOM_CLICK_DELAY in self.configure.common_config:
-            self.configure.common_config[lybconstant.LYB_DO_STRING_RANDOM_CLICK_DELAY] = 0.05
+            self.configure.common_config[lybconstant.LYB_DO_STRING_RANDOM_CLICK_DELAY] = 0.01
 
         self.random_click_delay_stringvar.set(
             self.configure.common_config[lybconstant.LYB_DO_STRING_RANDOM_CLICK_DELAY])
