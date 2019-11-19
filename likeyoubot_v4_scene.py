@@ -3225,6 +3225,50 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
             self.game_object.get_scene('menu_scene').status = 2300
 
+        elif self.status == self.get_work_status('마을 이동'):
+            cfg_duration = int(self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'go_home_duration'))
+            elapsed_time = self.get_elapsed_time()
+
+            if elapsed_time > self.period_bot(cfg_duration):
+                self.set_option(self.current_work + '_end_flag', True)
+
+            self.loggingElapsedTime('[' + str(self.current_work) + '] 경과 시간', elapsed_time, cfg_duration, period=60)
+
+            if self.get_option(self.current_work + '_end_flag'):
+                self.set_option(self.current_work + '_end_flag', False)
+                self.set_option(self.current_work + '_inner_status', None)
+                self.status = self.last_status[self.current_work] + 1
+                return self.status
+
+            inner_status = self.get_option(self.current_work + '_inner_status')
+            if inner_status is None:
+                inner_status = 0
+
+            self.logger.debug('inner_status ' + str(inner_status))
+            if inner_status % 5 == 0:
+                is_clicked = self.click_resource('main_scene_menu_home_loc')
+                if is_clicked is False:
+                    self.set_option(self.current_work + '_end_flag', True)
+                else:
+                    self.game_object.get_scene('go_home_scene').status = 100
+
+            resource_name = 'main_scene_menu_potion_loc'
+            (loc_x, loc_y), match_rate = self.game_object.locationResourceOnWindowPart(
+                self.window_image,
+                resource_name,
+                custom_top_level=(255, 255, 255),
+                custom_below_level=(150, 150, 150),
+                custom_rect=(600, 70, 950, 130),
+                custom_threshold=0.7,
+                custom_flag=1,
+                average=True
+            )
+            self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
+            if loc_x != -1:
+                self.set_option(self.current_work + '_end_flag', True)
+
+            self.set_option(self.current_work + '_inner_status', inner_status + 1)
+
         elif self.status == self.get_work_status('알림'):
 
             try:
@@ -3407,8 +3451,13 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
 
         if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'quest_tobeol'):
             elapsed_time = time.time() - self.get_checkpoint('quest_tobeol')
-            if elapsed_time > self.period_bot(120) and self.is_new_tobeol_quest():
-                self.set_checkpoint('quest_tobeol')
+            if elapsed_time > self.period_bot(120):
+                if self.is_new_tobeol_quest():
+                    self.set_checkpoint('quest_tobeol')
+                else:
+                    self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
+                    self.game_object.get_scene('menu_scene').status = 1000
+                    self.set_checkpoint('quest_tobeol')
                 self.set_option('go_jeoljeon', 0)
                 return True
 
