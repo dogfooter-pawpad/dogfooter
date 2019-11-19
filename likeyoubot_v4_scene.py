@@ -191,6 +191,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             match_rate = self.game_object.rateMatchedResource(self.window_pixels, resource_name)
             self.logger.debug(resource_name + ' ' + str(round(match_rate, 2)))
             if match_rate > 0.98:
+                self.game_object.get_scene('main_scene').set_option('의뢰 일지' + '_end_flag', True)
                 self.status = 99999
                 return self.status
 
@@ -200,6 +201,14 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             if match_rate > 0.98:
                 self.lyb_mouse_click('ure_scene_auto_0', custom_threshold=0)
                 self.game_object.get_scene('main_scene').set_option('의뢰 일지' + '_auto_ok', True)
+                return self.status
+
+            resource_name = 'ure_scene_auto_loc'
+            match_rate = self.game_object.rateMatchedResource(self.window_pixels, resource_name)
+            self.logger.debug(resource_name + ' ' + str(round(match_rate, 2)))
+            if match_rate > 0.98:
+                self.game_object.get_scene('main_scene').set_option('의뢰 일지' + '_end_flag', True)
+                self.status = 99999
                 return self.status
 
         elif 100 <= self.status < 105:
