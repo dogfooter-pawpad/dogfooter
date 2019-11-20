@@ -567,7 +567,7 @@ class LYBWorker(threading.Thread):
         # e = time.time()
         # print('[DEBUG] Grab Screenshot:', round(e-s,2))
         # print('END GRAB', datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])
-        current_window_image_grab.save("test.png")
+        # current_window_image_grab.save("test.png")
 
         # time.sleep(2)
         # sys.exit()
