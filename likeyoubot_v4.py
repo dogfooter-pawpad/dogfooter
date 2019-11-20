@@ -1716,7 +1716,8 @@ class LYBV4Tab(lybgame.LYBGameTab):
         )
         combobox_list = [
             '위에서',
-            '아래에서'
+            '아래에서',
+            '안함',
         ]
 
         if not lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_0' in self.configure.common_config[
@@ -1784,7 +1785,8 @@ class LYBV4Tab(lybgame.LYBGameTab):
         )
         combobox_list = [
             '위에서',
-            '아래에서'
+            '아래에서',
+            '안함',
         ]
 
         if not lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_1' in self.configure.common_config[
@@ -1853,7 +1855,8 @@ class LYBV4Tab(lybgame.LYBGameTab):
         )
         combobox_list = [
             '위에서',
-            '아래에서'
+            '아래에서',
+            '안함',
         ]
 
         if not lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_2' in self.configure.common_config[
@@ -1921,7 +1924,8 @@ class LYBV4Tab(lybgame.LYBGameTab):
         )
         combobox_list = [
             '위에서',
-            '아래에서'
+            '아래에서',
+            '안함',
         ]
 
         if not lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_3' in self.configure.common_config[
@@ -1989,7 +1993,8 @@ class LYBV4Tab(lybgame.LYBGameTab):
         )
         combobox_list = [
             '위에서',
-            '아래에서'
+            '아래에서',
+            '안함',
         ]
 
         if not lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_4' in self.configure.common_config[
