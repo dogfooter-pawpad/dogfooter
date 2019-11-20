@@ -293,13 +293,13 @@ class LYBRest:
             # self.logger.debug(m_token)
             bot = telegram.Bot(token=m_token)
             lUpdateLog = bot.getUpdates(limit=99, timeout=5)
-            # self.logger.debug(lUpdateLog)
-            # self.logger.debug('-----------------' + str(len(lUpdateLog)))
+            self.logger.debug(lUpdateLog)
+            self.logger.debug('-----------------' + str(len(lUpdateLog)))
             for eachLog in lUpdateLog:
-                # self.logger.debug(eachLog)
+                self.logger.debug(eachLog)
                 # 메세지가 입력된 시간이 10초가 경과한 것들은 다 제거한다.
                 issue_time = int(time.mktime(eachLog.message.date.timetuple()))
-                # self.logger.debug(str(int(time.time()) - issue_time - self.adjustTime))
+                self.logger.debug(str(int(time.time()) - issue_time - self.adjustTime))
                 if int(time.time()) - issue_time - self.adjustTime > 10:
                     if update_id < eachLog.update_id:
                         update_id = int(eachLog.update_id)
@@ -321,10 +321,13 @@ class LYBRest:
             if update_id != 0:
                 bot.getUpdates(offset=update_id + 1)
         except telegram.error.TimedOut:
+            # self.logger.error(str(sys.exc_info()[0]) + '(' + str(sys.exc_info()[1]) + ')')
             pass
         except telegram.error.NetworkError:
+            # self.logger.error(str(sys.exc_info()[0]) + '(' + str(sys.exc_info()[1]) + ')')
             pass
         except:
+            # self.logger.error(str(sys.exc_info()[0]) + '(' + str(sys.exc_info()[1]) + ')')
             # self.logger.error(traceback.format_exc())
             # self.logger.debug(traceback.format_exc())
             # self.logger.error(str(sys.exc_info()[0]) + '(' + str(sys.exc_info()[1]) + ')')

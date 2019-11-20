@@ -4867,7 +4867,7 @@ class LYBGUI:
 
                     self.logger.info('DEBUG3')
 
-                    chat_id = rest.get_chat_id(refresh=True)
+                    chat_id = rest.get_chat_id()
                     self.logger.debug('update chatting id: ' + str(chat_id))
                     return
             self.logging_message("FAIL", "텔레그램 연동에 실패했습니다.")
@@ -4881,7 +4881,7 @@ class LYBGUI:
                 self.telegram_button_label.set('연동하기')
                 self.telegram_chat_id_label.set('')
                 self.telegram_entry.set(self.generate_token())
-                chat_id = rest.get_chat_id(refresh=True)
+                chat_id = rest.get_chat_id()
 
     def get_mb_point(self):
         if self.mb_point != None:
