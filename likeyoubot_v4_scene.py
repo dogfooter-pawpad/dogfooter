@@ -874,11 +874,18 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
         elif 1 <= self.status < 10:
             self.status += 1
             list_index = self.get_option('list_index')
-            pb_name = 'monghwan_scene_list_' + str(list_index)
-            self.lyb_mouse_click(pb_name, custom_threshold=0)
-            self.set_option('list_index', list_index + 1)
-            self.set_option('last_status', self.status)
-            self.status = 100
+            if list_index > 4:
+                self.status = 99999
+            else:
+                cfg_order = self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_' + str(list_index))
+                if cfg_order == '안함':
+                    self.set_option('list_index', list_index + 1)
+                else:
+                    pb_name = 'monghwan_scene_list_' + str(list_index)
+                    self.lyb_mouse_click(pb_name, custom_threshold=0)
+                    self.set_option('list_index', list_index + 1)
+                    self.set_option('last_status', self.status)
+                    self.status = 100
         elif self.status == 100:
             self.status += 1
         elif 101 <= self.status < 110:
