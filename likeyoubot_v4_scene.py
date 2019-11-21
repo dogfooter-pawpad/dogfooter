@@ -1895,7 +1895,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 (650, 480, 690, 550),
             ]
             cfg_order = self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_area_order')
-            if cfg_order == '아래에서':
+            if cfg_order != '위에서':
                 rect_list.reverse()
             cfg_sanyang_number = int(self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sanyang_number'))
             if cfg_sanyang_number == 0:
