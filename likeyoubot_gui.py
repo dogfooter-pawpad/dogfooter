@@ -1988,7 +1988,7 @@ class LYBGUI:
         label.pack(side=tkinter.LEFT)
 
         combobox_list = []
-        for i in range(0, 301):
+        for i in range(0, 1801):
             combobox_list.append(i)
 
         combobox = ttk.Combobox(

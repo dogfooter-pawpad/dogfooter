@@ -1839,7 +1839,47 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.status += 1
         elif self.status == 11504:
             self.status += 1
-        elif 11505 <= self.status < 11519:
+            cfg_order = self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_area_order')
+            if cfg_order == '위에서':
+                self.status = 11510
+            else:
+                self.status = 11515
+        elif self.status == 11505:
+            self.status = self.get_option('last_status')
+        elif 11510 <= self.status < 11515:
+            self.status += 1
+            rect_list = [
+                (650, 120, 690, 170),
+                (650, 150, 690, 210),
+                (650, 190, 690, 250),
+                (650, 230, 690, 290),
+                (650, 270, 690, 340),
+                (650, 320, 690, 380),
+                (650, 360, 690, 420),
+                (650, 400, 690, 460),
+                (650, 440, 690, 500),
+                (650, 480, 690, 550),
+            ]
+            resource_name = 'local_map_scene_detail_sanyang_title_loc'
+            for each in rect_list:
+                (loc_x, loc_y), match_rate = self.game_object.locationResourceOnWindowPart(
+                    self.window_image,
+                    resource_name,
+                    custom_rect=each,
+                    custom_threshold=0.6,
+                    custom_top_level=(255, 240, 200),
+                    custom_below_level=(120, 120, 100),
+                    custom_flag=1,
+                    average=False
+                )
+                self.logger.debug(resource_name + ' ' + str(each) + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
+                if loc_x != -1:
+                    self.status = 11515
+                    return self.status
+            self.set_option('last_status', self.status)
+            self.status = 11505
+            self.lyb_mouse_drag('local_map_scene_detail_drag_little_top', 'local_map_scene_detail_drag_little_bot', stop_delay=1.0)
+        elif 11515 <= self.status < 11519:
             self.status += 1
 
             rect_list = [
@@ -1854,13 +1894,13 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 (650, 440, 690, 500),
                 (650, 480, 690, 550),
             ]
-            rect_list.reverse()
-            cfg_sanyang_number = int(
-                self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sanyang_number'))
+            cfg_order = self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_area_order')
+            if cfg_order == '아래에서':
+                rect_list.reverse()
+            cfg_sanyang_number = int(self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sanyang_number'))
             if cfg_sanyang_number == 0:
-                cfg_sanyang_number = int(5 * random.random()) + 1
-
-            self.logger.info('사냥터 번호: 아래에서 ' + str(cfg_sanyang_number))
+                cfg_sanyang_number = int(10 * random.random()) + 1
+            self.logger.info('사냥터 번호: ' + str(cfg_order) + str(cfg_sanyang_number))
 
             resource_name = 'local_map_scene_detail_sanyang_loc'
             sanyang_index = 1
@@ -2403,6 +2443,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                     return self.status
         elif self.status == 100:
             self.game_object.get_scene('main_scene').set_option('go_jeoljeon', 0)
+            self.set_checkpoint('auto_jeoljeon_duration')
             self.status += 1
         elif 101 <= self.status < 360:
             self.status += 1
@@ -2422,6 +2463,12 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 if loc_x == -1:
                     self.status = 99998
                     return self.status
+
+            elapsed_time = time.time() - self.get_checkpoint('auto_jeoljeon_duration')
+            cfg_duration = int(self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'auto_jeoljeon_duration'))
+            if elapsed_time > cfg_duration:
+                self.status = 99998
+                return self.status
         elif self.status == 500:
             self.game_object.get_scene('main_scene').set_option('go_jeoljeon', 0)
             self.status += 1
@@ -3487,10 +3534,11 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             return True
 
         if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'quest_tobeol'):
+            cfg_tobeol_period = int(self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'quest_tobeol_period'))
             elapsed_time = time.time() - self.get_checkpoint('quest_tobeol')
             if elapsed_time > self.period_bot(81640):
                 self.set_checkpoint('quest_tobeol')
-            elif elapsed_time > self.period_bot(120):
+            elif elapsed_time > cfg_tobeol_period:
                 if self.is_new_tobeol_quest():
                     self.set_checkpoint('quest_tobeol')
                 else:
