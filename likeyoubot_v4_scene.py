@@ -1736,6 +1736,22 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.status += 1
         elif 4001 <= self.status < 4005:
             self.status += 1
+            cfg_tobeol_limit = self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'auto_tobeol_limit')
+            if cfg_tobeol_limit:
+                resource_name = 'local_map_scene_detail_tobeol_limit_loc'
+                (loc_x, loc_y), match_rate = self.game_object.locationResourceOnWindowPart(
+                    self.window_image,
+                    resource_name,
+                    custom_rect=(720, 270, 790, 320),
+                    custom_threshold=0.7,
+                    custom_flag=1,
+                    average=True
+                )
+                self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
+                if loc_x != -1:
+                    self.game_object.get_scene('main_scene').set_option('자동 사냥' + '_end_flag', True)
+                    self.status = 99999
+
             if self.get_option('tobeol_bosang') is not True:
                 resource_name = 'local_map_scene_detail_new_loc'
                 resource = self.game_object.resource_manager.resource_dic[resource_name]
@@ -1849,16 +1865,16 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
         elif 11510 <= self.status < 11515:
             self.status += 1
             rect_list = [
-                (650, 120, 690, 170),
-                (650, 150, 690, 210),
-                (650, 190, 690, 250),
-                (650, 230, 690, 290),
-                (650, 270, 690, 340),
-                (650, 320, 690, 380),
-                (650, 360, 690, 420),
-                (650, 400, 690, 460),
-                (650, 440, 690, 500),
-                (650, 480, 690, 550),
+                (650, 120, 700, 170),
+                (650, 150, 700, 210),
+                (650, 190, 700, 250),
+                (650, 230, 700, 290),
+                (650, 270, 700, 340),
+                (650, 320, 700, 380),
+                (650, 360, 700, 420),
+                (650, 400, 700, 460),
+                (650, 440, 700, 500),
+                (650, 480, 700, 550),
             ]
             resource_name = 'local_map_scene_detail_sanyang_title_loc'
             for each in rect_list:
