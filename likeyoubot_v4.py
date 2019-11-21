@@ -2128,6 +2128,23 @@ class LYBV4Tab(lybgame.LYBGameTab):
         frame_label = ttk.LabelFrame(frame_r, text='자동 사냥')
 
         frame = ttk.Frame(frame_label)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'auto_tobeol_limit'] = tkinter.BooleanVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'auto_tobeol_limit'].trace(
+            'w', lambda *args: self.auto_tobeol_limit(args, lybconstant.LYB_DO_STRING_V4_WORK + 'auto_tobeol_limit'))
+        if not lybconstant.LYB_DO_STRING_V4_WORK + 'auto_tobeol_limit' in self.configure.common_config[self.game_name]:
+            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_WORK + 'auto_tobeol_limit'] = True
+
+        check_box = ttk.Checkbutton(
+            master=frame,
+            text='토벌 완료가 감지되면 작업 종료하기',
+            variable=self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'auto_tobeol_limit'],
+            onvalue=True,
+            offvalue=False
+        )
+        check_box.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
+        frame = ttk.Frame(frame_label)
         label = ttk.Label(
             master=frame,
             text=self.get_option_text('진행 시간(초)', width=27)
@@ -2389,6 +2406,9 @@ class LYBV4Tab(lybgame.LYBGameTab):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
     def monster_josa_named(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def auto_tobeol_limit(self, args, option_name):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
 
