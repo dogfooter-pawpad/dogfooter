@@ -1999,7 +1999,7 @@ class LYBGameTab():
             values=[],
             textvariable=self.option_dic['config_list_stringvar'],
             state="readonly",
-            height=40,
+            height=10,
             width=30,
             font=lybconstant.LYB_FONT
         )
