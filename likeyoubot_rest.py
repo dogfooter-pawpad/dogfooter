@@ -26,6 +26,7 @@ class LYBRest:
         )
         self.rest.add_resource(resource_name='api')
         self.adjustTime = 0
+        self.telegram_bot = None
 
     def login(self):
         payload = {
@@ -291,8 +292,10 @@ class LYBRest:
         try:
             m_token = self.get_token()
             # self.logger.debug(m_token)
-            bot = telegram.Bot(token=m_token)
-            lUpdateLog = bot.getUpdates(limit=99, timeout=5)
+            if self.telegram_bot is None:
+                self.telegram_bot = telegram.Bot(token=m_token)
+            bot = self.telegram_bot
+            lUpdateLog = bot.getUpdates(limit=99, timeout=99)
             self.logger.debug(lUpdateLog)
             self.logger.debug('-----------------' + str(len(lUpdateLog)))
             for eachLog in lUpdateLog:
@@ -321,13 +324,13 @@ class LYBRest:
             if update_id != 0:
                 bot.getUpdates(offset=update_id + 1)
         except telegram.error.TimedOut:
-            # self.logger.error(str(sys.exc_info()[0]) + '(' + str(sys.exc_info()[1]) + ')')
+            self.logger.error(str(sys.exc_info()[0]) + '(' + str(sys.exc_info()[1]) + ')')
             pass
         except telegram.error.NetworkError:
-            # self.logger.error(str(sys.exc_info()[0]) + '(' + str(sys.exc_info()[1]) + ')')
+            self.logger.error(str(sys.exc_info()[0]) + '(' + str(sys.exc_info()[1]) + ')')
             pass
         except:
-            # self.logger.error(str(sys.exc_info()[0]) + '(' + str(sys.exc_info()[1]) + ')')
+            self.logger.error(str(sys.exc_info()[0]) + '(' + str(sys.exc_info()[1]) + ')')
             # self.logger.error(traceback.format_exc())
             # self.logger.debug(traceback.format_exc())
             # self.logger.error(str(sys.exc_info()[0]) + '(' + str(sys.exc_info()[1]) + ')')

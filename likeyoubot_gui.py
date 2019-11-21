@@ -2590,7 +2590,7 @@ class LYBGUI:
 
         self.logger.critical('Successfully initialized')
 
-        self.start_long_polling_worker()
+        # self.start_long_polling_worker()
         self.start_websocket_worker()
         self.manage_workers()
 
@@ -4836,6 +4836,8 @@ class LYBGUI:
         tooltip.wraplength = 640
 
     def callback_telegram(self, event):
+        self.logging_message("SUCCESS", "현재 텔레그램 기능을 점검 중입니다.")
+        return
 
         if self.telegram_button_label.get() == '연동하기':
 
