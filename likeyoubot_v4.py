@@ -2145,6 +2145,23 @@ class LYBV4Tab(lybgame.LYBGameTab):
         frame.pack(anchor=tkinter.W)
 
         frame = ttk.Frame(frame_label)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'auto_jeoljeon'] = tkinter.BooleanVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'auto_jeoljeon'].trace(
+            'w', lambda *args: self.auto_jeoljeon(args, lybconstant.LYB_DO_STRING_V4_WORK + 'auto_jeoljeon'))
+        if not lybconstant.LYB_DO_STRING_V4_WORK + 'auto_jeoljeon' in self.configure.common_config[self.game_name]:
+            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_WORK + 'auto_jeoljeon'] = True
+
+        check_box = ttk.Checkbutton(
+            master=frame,
+            text='절전모드 변환하기(추천)',
+            variable=self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'auto_jeoljeon'],
+            onvalue=True,
+            offvalue=False
+        )
+        check_box.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
+        frame = ttk.Frame(frame_label)
         label = ttk.Label(
             master=frame,
             text=self.get_option_text('진행 시간(초)', width=27)
@@ -2409,6 +2426,9 @@ class LYBV4Tab(lybgame.LYBGameTab):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
     def auto_tobeol_limit(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def auto_jeoljeon(self, args, option_name):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
 
