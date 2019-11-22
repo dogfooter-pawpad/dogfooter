@@ -1624,8 +1624,9 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
         elif self.status == 2000:
             self.game_object.get_scene('recover_scene').status = 0
             self.game_object.get_scene('monghwan_scene').status = 0
+            self.set_option('bug_defense', False)
             self.status += 1
-        elif 2001 <= self.status < 2300:
+        elif 2001 <= self.status < 2020:
             self.status += 1
             if self.fail_to_detect_m(limit=2) is True:
                 pb_name = 'local_map_scene_follow'
@@ -1639,8 +1640,23 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.logger.debug(pb_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
                 if loc_x != -1:
                     self.lyb_mouse_click_location(loc_x, loc_y)
+                    if self.get_option('bug_defense'):
+                        self.status = 2030
+                    else:
+                        self.set_option('bug_defense', True)
+                        self.set_option('last_follow_location', (loc_x, loc_y))
+                        self.set_option('last_status', self.status)
+                        self.status = 2025
                 else:
                     self.status = 99999
+        elif self.status == 2025:
+            (loc_x, loc_y) = self.get_option('last_follow_location')
+            self.lyb_mouse_click_location(loc_x, loc_y)
+            self.status = self.get_option('last_status')
+        elif 2030 <= self.status < 2500:
+            self.status += 1
+            if self.fail_to_detect_m() is True:
+                self.status = 99999
         elif self.status == 3000:
             self.status += 1
         elif 3001 <= self.status < 3300:
@@ -2481,8 +2497,9 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                     return self.status
 
             elapsed_time = time.time() - self.get_checkpoint('auto_jeoljeon_duration')
+            current_work = self.game_object.get_scene('main_scene').current_work
             cfg_duration = int(self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'auto_jeoljeon_duration'))
-            if elapsed_time > cfg_duration:
+            if current_work == '자동 사냥' and elapsed_time > cfg_duration:
                 self.status = 99998
                 return self.status
         elif self.status == 500:
@@ -3313,9 +3330,10 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                         return self.status
                     self.set_option('go_jeoljeon', go_jeoljeon + 1)
 
-                if self.is_not_auto():
+                if self.get_option('go_home') is False and self.is_not_auto():
                     self.lyb_mouse_click('main_scene_auto', custom_threshold=0)
                     return self.status
+
         elif self.status == self.get_work_status('캐릭터 선택'):
             elapsed_time = self.get_elapsed_time()
             if elapsed_time > self.period_bot(10):
