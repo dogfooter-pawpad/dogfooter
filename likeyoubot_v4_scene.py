@@ -3289,7 +3289,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             if inner_status == 0:
                 self.set_option('go_jeoljeon', 0)
             elif inner_status >= 1:
-                if inner_status % 10 == 0:
+                if inner_status % 60 == 0:
                     self.lyb_mouse_click('main_scene_gabang', custom_threshold=0)
                     self.game_object.get_scene('gabang_scene').status = 0
                     self.set_option(self.current_work + '_inner_status', inner_status + 1)
@@ -3551,6 +3551,8 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
 
         if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'quest_tobeol'):
             cfg_tobeol_period = int(self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'quest_tobeol_period'))
+            if cfg_tobeol_period < 60:
+                cfg_tobeol_period = 60
             elapsed_time = time.time() - self.get_checkpoint('quest_tobeol')
             if elapsed_time > self.period_bot(81640):
                 self.set_checkpoint('quest_tobeol')

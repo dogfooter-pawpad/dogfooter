@@ -1013,13 +1013,13 @@ class LYBV4Tab(lybgame.LYBGameTab):
                                                      lybconstant.LYB_DO_STRING_V4_ETC + 'quest_tobeol_period')
         )
         combobox_list = []
-        for i in range(10, 300):
+        for i in range(60, 300, 30):
             combobox_list.append(str(i))
 
         if not lybconstant.LYB_DO_STRING_V4_ETC + 'quest_tobeol_period' in self.configure.common_config[
             self.game_name]:
             self.configure.common_config[self.game_name][
-                lybconstant.LYB_DO_STRING_V4_ETC + 'quest_tobeol_period'] = 30
+                lybconstant.LYB_DO_STRING_V4_ETC + 'quest_tobeol_period'] = 60
 
         combobox = ttk.Combobox(
             master=frame,
@@ -2182,7 +2182,7 @@ class LYBV4Tab(lybgame.LYBGameTab):
         frame = ttk.Frame(frame_label)
         label = ttk.Label(
             master=frame,
-            text=self.get_option_text('절전 모드 체크 주기(초)', width=27)
+            text=self.get_option_text('절전 모드 해제 주기(초)', width=27)
         )
         label.pack(side=tkinter.LEFT)
 
