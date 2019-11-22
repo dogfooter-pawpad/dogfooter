@@ -3288,29 +3288,34 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.logger.debug('inner_status ' + str(inner_status))
             if inner_status == 0:
                 self.set_option('go_jeoljeon', 0)
+                self.set_option(self.current_work + '_inner_status', inner_status + 1)
             elif inner_status >= 1:
-                if inner_status % 60 == 0:
+                self.set_option(self.current_work + '_inner_status', inner_status + 1)
+                if inner_status % 120 == 0:
                     self.lyb_mouse_click('main_scene_gabang', custom_threshold=0)
                     self.game_object.get_scene('gabang_scene').status = 0
-                    self.set_option(self.current_work + '_inner_status', inner_status + 1)
                     return True
 
-                go_jeoljeon = self.get_option('go_jeoljeon')
-                self.logger.debug('go_jeoljeon ' + str(go_jeoljeon))
-                if go_jeoljeon == 5:
-                    self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
-                    self.game_object.get_scene('menu_scene').status = 400
-                    go_jeoljeon = 0
-                elif go_jeoljeon == 9:
-                    go_jeoljeon = 0
-                elif go_jeoljeon == 10:
+                cfg_auto_jeoljeon = int(self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'auto_jeoljeon'))
+                if cfg_auto_jeoljeon:
+                    go_jeoljeon = self.get_option('go_jeoljeon')
+                    self.logger.debug('go_jeoljeon ' + str(go_jeoljeon))
+                    if go_jeoljeon == 5:
+                        self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
+                        self.game_object.get_scene('menu_scene').status = 400
+                        self.set_option('go_jeoljeon', 0)
+                        return self.status
+                    elif go_jeoljeon == 9:
+                        self.set_option('go_jeoljeon', 0)
+                    elif go_jeoljeon == 10:
+                        self.lyb_mouse_click('main_scene_auto', custom_threshold=0)
+                        self.set_option('go_jeoljeon', 0)
+                        return self.status
+                    self.set_option('go_jeoljeon', go_jeoljeon + 1)
+
+                if self.is_not_auto():
                     self.lyb_mouse_click('main_scene_auto', custom_threshold=0)
-                    go_jeoljeon = 0
-
-                self.set_option('go_jeoljeon', go_jeoljeon + 1)
-
-            self.set_option(self.current_work + '_inner_status', inner_status + 1)
-
+                    return self.status
         elif self.status == self.get_work_status('캐릭터 선택'):
             elapsed_time = self.get_elapsed_time()
             if elapsed_time > self.period_bot(10):
@@ -3713,6 +3718,16 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                                           custom_below_level=(150, 150, 150),
                                           custom_rect=(690, 520, 745, 560),
                                           custom_threshold=0.4,
+                                          limit_count=limit,
+                                          reverse=False,
+                                          )
+
+    def is_not_auto(self, limit=5):
+        return self.is_status_by_resource('자동 전투 꺼짐 감지', 'auto_loc',
+                                          custom_top_level=(230, 230, 230),
+                                          custom_below_level=(185, 180, 170),
+                                          custom_rect=(900, 280, 960, 340),
+                                          custom_threshold=0.5,
                                           limit_count=limit,
                                           reverse=False,
                                           )
