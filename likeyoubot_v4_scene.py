@@ -2342,6 +2342,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                             resource_name2 + ' ' + str(each) + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
                         if loc_x != -1:
                             self.lyb_mouse_click_location(loc_x, loc_y)
+                            return self.status
         elif self.status == 110:
             potion_list = self.get_option('potion_list')
             potion_index = self.get_option('potion_index')
@@ -2809,46 +2810,55 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
 
     def init_screen_scene(self):
 
-        self.schedule_list = self.get_game_config('schedule_list')
-        if '게임 시작' not in self.schedule_list:
-            return 0
-
-        loc_x = -1
-        loc_y = -1
-
-        resource_name = 'v4_icon_loc'
-        resource = self.game_object.resource_manager.resource_dic[resource_name]
-        if self.game_object.player_type == 'nox':
-            for each_icon in resource:
-                (loc_x, loc_y), match_rate = self.game_object.locationOnWindowPart(
-                    self.window_image,
-                    self.game_object.resource_manager.pixel_box_dic[each_icon],
-                    custom_threshold=0.8,
-                    custom_flag=1,
-                    custom_rect=(80, 110, 920, 500)
-                )
-                # self.logger.debug(match_rate)
-                if loc_x != -1:
-                    self.lyb_mouse_click_location(loc_x, loc_y)
-                    break
+        if self.status == 0:
+            self.set_checkpoint('check_init')
+            self.status += 1
+        elif 1 <= self.status < 3:
+            self.status += 1
+            elapsed_time = time.time() - self.get_checkpoint('check_init')
+            if elapsed_time > 60:
+                self.status = 0
         else:
-            for each_icon in resource:
-                (loc_x, loc_y), match_rate = self.game_object.locationOnWindowPart(
-                    self.window_image,
-                    self.game_object.resource_manager.pixel_box_dic[each_icon],
-                    custom_threshold=0.8,
-                    custom_flag=1,
-                    custom_rect=(50, 110, 920, 440)
-                )
-                # self.logger.debug(match_rate)
-                if loc_x != -1:
-                    self.lyb_mouse_click_location(loc_x, loc_y)
-                    break
+            self.schedule_list = self.get_game_config('schedule_list')
+            if '게임 시작' not in self.schedule_list:
+                return 0
 
-        # if loc_x == -1:
-        # 	self.loggingToGUI('테라 아이콘 발견 못함')
+            loc_x = -1
+            loc_y = -1
 
-        return 0
+            resource_name = 'v4_icon_loc'
+            resource = self.game_object.resource_manager.resource_dic[resource_name]
+            if self.game_object.player_type == 'nox':
+                for each_icon in resource:
+                    (loc_x, loc_y), match_rate = self.game_object.locationOnWindowPart(
+                        self.window_image,
+                        self.game_object.resource_manager.pixel_box_dic[each_icon],
+                        custom_threshold=0.8,
+                        custom_flag=1,
+                        custom_rect=(80, 110, 920, 500)
+                    )
+                    # self.logger.debug(match_rate)
+                    if loc_x != -1:
+                        self.lyb_mouse_click_location(loc_x, loc_y)
+                        break
+            else:
+                for each_icon in resource:
+                    (loc_x, loc_y), match_rate = self.game_object.locationOnWindowPart(
+                        self.window_image,
+                        self.game_object.resource_manager.pixel_box_dic[each_icon],
+                        custom_threshold=0.8,
+                        custom_flag=1,
+                        custom_rect=(50, 110, 920, 440)
+                    )
+                    # self.logger.debug(match_rate)
+                    if loc_x != -1:
+                        self.lyb_mouse_click_location(loc_x, loc_y)
+                        break
+
+            # if loc_x == -1:
+            # 	self.loggingToGUI('테라 아이콘 발견 못함')
+
+        return self.status
 
     #################################
     #                               #
@@ -2993,7 +3003,8 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
 
                     self.set_option('go_jeoljeon', 0)
                 elif inner_status == 5:
-                    self.lyb_mouse_click('main_scene_auto', custom_threshold=0)
+                    if self.get_option('go_home') is False and self.is_town() is False:
+                        self.lyb_mouse_click('main_scene_auto', custom_threshold=0)
                 elif 6 <= inner_status < 150:
                     if inner_status % 10 == 0:
                         self.lyb_mouse_click('main_scene_gabang', custom_threshold=0)
@@ -3265,7 +3276,8 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                     self.set_option('go_jeoljeon', 0)
                 elif inner_status == 5:
                     if self.get_option(self.current_work + '_skip_auto') is not True:
-                        self.lyb_mouse_click('main_scene_auto', custom_threshold=0)
+                        if self.get_option('go_home') is False and self.is_town() is False:
+                            self.lyb_mouse_click('main_scene_auto', custom_threshold=0)
                 elif 6 <= inner_status < 150:
                     go_jeoljeon = self.get_option('go_jeoljeon')
                     if go_jeoljeon == 5:
@@ -3325,13 +3337,20 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                     elif go_jeoljeon == 9:
                         self.set_option('go_jeoljeon', 0)
                     elif go_jeoljeon == 10:
-                        self.lyb_mouse_click('main_scene_auto', custom_threshold=0)
+                        if self.get_option('go_home') is False and self.is_town() is False:
+                            self.lyb_mouse_click('main_scene_auto', custom_threshold=0)
                         self.set_option('go_jeoljeon', 0)
                         return self.status
                     self.set_option('go_jeoljeon', go_jeoljeon + 1)
 
-                if self.get_option('go_home') is False and self.is_not_auto():
-                    self.lyb_mouse_click('main_scene_auto', custom_threshold=0)
+                if self.get_option('go_home') is False and self.is_town() is False:
+                    if self.is_not_auto():
+                        self.lyb_mouse_click('main_scene_auto', custom_threshold=0)
+                        return self.status
+
+                if self.is_town():
+                    self.logger.info('마을 인식됨 -> [자동 사냥] 작업 종료')
+                    self.set_option(self.current_work + '_end_flag', True)
                     return self.status
 
         elif self.status == self.get_work_status('캐릭터 선택'):
@@ -3481,6 +3500,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.set_checkpoint('hp_potion_low')
                 if self.is_hp_potion_low() or self.get_option('hp_potion_low') or self.get_option(
                         'from_jeoljeon_hp_empty'):
+                    self.set_option('go_jeoljeon', 0)
                     self.set_option('from_jeoljeon_hp_empty', False)
                     if self.click_potion_menu():
                         self.game_object.get_scene('move_potion_npc_scene').status = 100
@@ -3502,6 +3522,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.set_checkpoint('hp_potion_empty')
                 if self.is_hp_potion_empty() or self.get_option('hp_potion_empty') or self.get_option(
                         'from_jeoljeon_hp_empty'):
+                    self.set_option('go_jeoljeon', 0)
                     self.set_option('from_jeoljeon_hp_empty', False)
                     if self.click_potion_menu():
                         self.game_object.get_scene('move_potion_npc_scene').status = 100
@@ -3523,6 +3544,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             if elapsed_time > self.period_bot(5):
                 self.set_checkpoint('mp_potion_move')
                 if self.is_mp_potion_empty() is True or self.get_option('mp_potion_empty') is True:
+                    self.set_option('go_jeoljeon', 0)
                     if self.click_potion_menu():
                         self.game_object.get_scene('move_potion_npc_scene').status = 100
                         self.game_object.get_scene('potion_npc_scene').status = 0
@@ -3716,6 +3738,8 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.set_option(resource_name + 'check_count', 0)
             return False
 
+        self.game_object.get_scene('main_scene').set_option('go_jeoljeon', 0)
+
         check_count = self.get_option(resource_name + 'check_count')
         if check_count is None:
             check_count = 0
@@ -3769,6 +3793,23 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                                           limit_count=limit,
                                           reverse=False,
                                           )
+
+    def is_town(self):
+        resource_name = 'main_scene_menu_potion_loc'
+        (loc_x, loc_y), match_rate = self.game_object.locationResourceOnWindowPart(
+            self.window_image,
+            resource_name,
+            custom_top_level=(255, 255, 255),
+            custom_below_level=(150, 150, 150),
+            custom_rect=(600, 70, 950, 130),
+            custom_threshold=0.7,
+            custom_flag=1,
+            average=True
+        )
+        self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
+        if loc_x != -1:
+            return True
+        return False
 
     def click_potion_menu(self):
         resource_name = 'main_scene_menu_potion_loc'
