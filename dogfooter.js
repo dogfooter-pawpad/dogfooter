@@ -140,3 +140,4 @@ exec('"python" main.py', function(error, stdout, stderr) {
 //    console.log('python error:', error)
     process.exit()
 });
+
