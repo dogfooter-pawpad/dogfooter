@@ -1657,6 +1657,10 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.status += 1
             if self.fail_to_detect_m() is True:
                 self.status = 99999
+            else:
+                # 전투중 안풀리는 현상 방어 로직
+                if self.status % 30 == 0:
+                    self.status = 2000
         elif self.status == 3000:
             self.status += 1
         elif 3001 <= self.status < 3300:
