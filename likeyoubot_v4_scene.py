@@ -3628,13 +3628,12 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
 
         elapsed_time = time.time() - self.get_checkpoint('shop_check')
         if elapsed_time > self.period_bot(81640):
-            if elapsed_time > self.period_bot(81640):
-                self.set_checkpoint('shop_check')
-            elif elapsed_time > self.period_bot(600):
-                self.lyb_mouse_click('main_scene_shop', custom_threshold=0)
-                self.game_object.get_scene('shop_scene').status = 0
-                self.set_checkpoint('shop_check', time.time() + self.period_bot(36000))
-                return True
+            self.set_checkpoint('shop_check')
+        elif elapsed_time > self.period_bot(60):
+            self.lyb_mouse_click('main_scene_shop', custom_threshold=0)
+            self.game_object.get_scene('shop_scene').status = 0
+            self.set_checkpoint('shop_check', time.time() + self.period_bot(36000))
+            return True
 
         return False
 
