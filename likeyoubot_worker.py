@@ -45,7 +45,7 @@ class LYBWorker(threading.Thread):
 
     def run(self):
         threading.currentThread().setName('워커쓰레드')
-
+        recv_msg = None
         # logger.debug('['+self.name+']'+' start:'+str(threading.currentThread()))
         while True:
             try:
@@ -271,7 +271,7 @@ class LYBWorker(threading.Thread):
                 elif recv_msg.type == 'long_polling':
                     self.ui = recv_msg.message
                     threading.currentThread().setName('long_polling_worker')
-                    self.logger.debug('long_polling_worker started')
+                    # self.logger.debug('long_polling_worker started')
                     if self.win is None:
                         self.win = likeyoubot_win.LYBWin(self.ui.configure.window_title, self.ui.configure)
                 elif recv_msg.type == 'thumbnail':
@@ -488,11 +488,14 @@ class LYBWorker(threading.Thread):
                         self.response_queue.put_nowait(likeyoubot_message.LYBMessage('game_object', self.game))
                     e = time.time()
                 # print('[DEBUG] Process Game:', round(e-s, 2))
-                elif self.ui != None:
-                    rc = self.long_polling()
-                    if rc < 0:
-                        self.logger.error('long_polling_worker is terminated abnormally.')
-                        break
+                else:
+                    if recv_msg is not None and recv_msg.type == 'long_polling':
+                        if self.ui is not None:
+                            # self.logger.info('long_polling start')
+                            rc = self.long_polling()
+                            if rc < 0:
+                                self.logger.error('long_polling_worker is terminated abnormally.')
+                                break
             except:
                 self.logger.error(traceback.format_exc())
                 # self.logger.error(str(sys.exc_info()[0]) + '(' +str(sys.exc_info()[1]) + ')')
@@ -582,7 +585,6 @@ class LYBWorker(threading.Thread):
     # self.win.mouse_drag(self.hwnd, 400, 180, 450, 180)
 
     def long_polling(self):
-
         try:
             self.ui.update_telegram()
         # self.ui.check_ip()

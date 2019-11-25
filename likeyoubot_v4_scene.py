@@ -1789,6 +1789,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                     if loc_x != -1:
                         self.lyb_mouse_click_location(loc_x - 5, loc_y + 5)
                         self.set_option('tobeol_bosang', True)
+                        self.status = 4001
                         return self.status
 
             resource_name = 'local_map_scene_detail_surak_loc'
@@ -2206,12 +2207,13 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.set_option('press_count', press_count)
             self.status += 1
         elif 2 <= self.status < 10:
-            pb_name = 'potion_gume_scene_gage_ok'
-            match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
-            self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
-            if match_rate < 0.95:
-                self.status = 10
-                return self.status
+            if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'prevent_overflow_gage'):
+                pb_name = 'potion_gume_scene_gage_ok'
+                match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
+                self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
+                if match_rate < 0.95:
+                    self.status = 10
+                    return self.status
 
             press_count = self.get_option('press_count')
             pb_name = self.get_option('pb_name')
@@ -3007,7 +3009,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
 
                     self.set_option('go_jeoljeon', 0)
                 elif inner_status == 5:
-                    if self.get_option('go_home') is False and self.is_town() is False:
+                    if self.get_option('go_home') is not True and self.is_town() is not True:
                         self.lyb_mouse_click('main_scene_auto', custom_threshold=0)
                 elif 6 <= inner_status < 150:
                     if inner_status % 10 == 0:
@@ -3280,7 +3282,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                     self.set_option('go_jeoljeon', 0)
                 elif inner_status == 5:
                     if self.get_option(self.current_work + '_skip_auto') is not True:
-                        if self.get_option('go_home') is False and self.is_town() is False:
+                        if self.get_option('go_home') is not True and self.is_town() is not True:
                             self.lyb_mouse_click('main_scene_auto', custom_threshold=0)
                 elif 6 <= inner_status < 150:
                     go_jeoljeon = self.get_option('go_jeoljeon')
@@ -3341,13 +3343,13 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                     elif go_jeoljeon == 9:
                         self.set_option('go_jeoljeon', 0)
                     elif go_jeoljeon == 10:
-                        if self.get_option('go_home') is False and self.is_town() is False:
+                        if self.get_option('go_home') is not True and self.is_town() is not True:
                             self.lyb_mouse_click('main_scene_auto', custom_threshold=0)
                         self.set_option('go_jeoljeon', 0)
                         return self.status
                     self.set_option('go_jeoljeon', go_jeoljeon + 1)
 
-                if self.get_option('go_home') is False and self.is_town() is False:
+                if self.get_option('go_home') is not True and self.is_town() is not True:
                     if self.is_not_auto():
                         self.lyb_mouse_click('main_scene_auto', custom_threshold=0)
                         return self.status
@@ -3393,7 +3395,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.logger.debug('inner_status ' + str(inner_status))
             if inner_status % 5 == 0:
                 is_clicked = self.click_resource('main_scene_menu_home_loc')
-                if is_clicked is False:
+                if is_clicked is not True:
                     self.set_option(self.current_work + '_end_flag', True)
                 else:
                     self.game_object.get_scene('go_home_scene').status = 100
@@ -4027,25 +4029,25 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
         return False
 
     def is_checked_shop(self):
-        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_tal_gotcha') is True:
+        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_tal_gotcha'):
             return True
 
-        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_pet_gotcha') is True:
+        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_pet_gotcha'):
             return True
 
-        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'shop_sang_potion') is True:
+        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'shop_sang_potion'):
             return True
 
-        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'shop_fellow_gotcha') is True:
+        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'shop_fellow_gotcha'):
             return True
 
-        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'shop_w_box_gotcha') is True:
+        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'shop_w_box_gotcha'):
             return True
 
-        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'shop_s_box_gotcha') is True:
+        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'shop_s_box_gotcha'):
             return True
 
-        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'shop_a_box_gotcha') is True:
+        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'shop_a_box_gotcha'):
             return True
 
         return False

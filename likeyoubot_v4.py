@@ -718,6 +718,25 @@ class LYBV4Tab(lybgame.LYBGameTab):
         frame.pack(anchor=tkinter.W)
 
         frame = ttk.Frame(frame_label)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'prevent_overflow_gage'] = tkinter.BooleanVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'prevent_overflow_gage'].trace(
+            'w', lambda *args: self.prevent_overflow_gage(args, lybconstant.LYB_DO_STRING_V4_ETC + 'prevent_overflow_gage'
+                                                      ))
+        if not lybconstant.LYB_DO_STRING_V4_ETC + 'prevent_overflow_gage' in self.configure.common_config[self.game_name]:
+            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_ETC + 'prevent_overflow_gage'] = True
+
+        check_box = ttk.Checkbutton(
+
+            master=frame,
+            text=self.get_option_text('무게가 70% 이상이면 구매하지 않기', width=27),
+            variable=self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'prevent_overflow_gage'],
+            onvalue=True,
+            offvalue=False
+        )
+        check_box.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
+        frame = ttk.Frame(frame_label)
         self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'go_stash'] = tkinter.BooleanVar(frame)
         self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'go_stash'].trace(
             'w',
@@ -2370,6 +2389,9 @@ class LYBV4Tab(lybgame.LYBGameTab):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
     def go_stash(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def prevent_overflow_gage(self, args, option_name):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
     def shop_sang_potion(self, args, option_name):

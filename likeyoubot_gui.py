@@ -630,7 +630,7 @@ class LYBGUI:
 
         self.gui_config_dic[lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'x'] = tkinter.StringVar(frame)
         if not lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'x' in self.configure.common_config:
-            self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'x'] = 0
+            self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'x'] = 5
         self.gui_config_dic[lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'x'].set(
             self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'x'])
         self.gui_config_dic[lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'x'].trace('w',
@@ -661,7 +661,7 @@ class LYBGUI:
 
         self.gui_config_dic[lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'y'] = tkinter.StringVar(frame)
         if not lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'y' in self.configure.common_config:
-            self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'y'] = 0
+            self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'y'] = 5
         self.gui_config_dic[lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'y'].set(
             self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'y'])
         self.gui_config_dic[lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'y'].trace('w',
@@ -1381,9 +1381,11 @@ class LYBGUI:
         )
         button.pack(anchor=tkinter.W, fill=tkinter.X)
 
-        if self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_SAVE_LOGIN_ACCOUNT + '_chat_id'] == '':
+        cfg_chat_id = str(self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_SAVE_LOGIN_ACCOUNT + '_chat_id'])
+        if len(cfg_chat_id) < 3:
             self.telegram_button_label.set('연동하기')
             self.telegram_entry.set(self.generate_token())
+            cfg_chat_id = ''
         # entry.select_range(0, tkinter.END)
         else:
             self.telegram_button_label.set('연동해제')
@@ -1398,8 +1400,7 @@ class LYBGUI:
             style='green_label.TLabel'
         )
         label.pack()
-        self.telegram_chat_id_label.set(
-            self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_SAVE_LOGIN_ACCOUNT + '_chat_id'])
+        self.telegram_chat_id_label.set(cfg_chat_id)
         login_frame.pack(fill=tkinter.X, padx=2)
 
         button_frame = ttk.Frame(frame_br)
@@ -2590,7 +2591,7 @@ class LYBGUI:
 
         self.logger.critical('Successfully initialized')
 
-        # self.start_long_polling_worker()
+        self.start_long_polling_worker()
         self.start_websocket_worker()
         self.manage_workers()
 
@@ -2819,8 +2820,8 @@ class LYBGUI:
         if chat_id is None or len(str(chat_id)) == 0:
             return
 
-        update = rest.getTelegramUpdates(chat_id)
-        if update == None:
+        update = rest.getTelegramUpdates(chat_id, adjust_time=int(self.configure.common_config[lybconstant.LYB_DO_STRING_PERIOD_TELEGRAM]))
+        if update is None:
             return
 
         command = update.message.text
@@ -4836,8 +4837,8 @@ class LYBGUI:
         tooltip.wraplength = 640
 
     def callback_telegram(self, event):
-        self.logging_message("SUCCESS", "현재 텔레그램 기능을 점검 중입니다.")
-        return
+        # self.logging_message("SUCCESS", "현재 텔레그램 기능을 점검 중입니다.")
+        # return
 
         if self.telegram_button_label.get() == '연동하기':
 
@@ -4847,8 +4848,8 @@ class LYBGUI:
                 return
             rest = self.login()
 
-            chat_id = rest.connect_telegram(self.telegram_entry.get())
-            if chat_id != '':
+            chat_id = rest.connect_telegram(self.telegram_entry.get(), adjust_time=int(self.configure.common_config[lybconstant.LYB_DO_STRING_PERIOD_TELEGRAM]))
+            if chat_id != '' and chat_id != -1:
                 error_message = rest.update_chat_id(chat_id)
                 if error_message == '':
                     self.telegram_button_label.set('연동해제')

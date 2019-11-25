@@ -21,7 +21,7 @@ class LYBRest:
         self.last_id = -1
         self.rest = API(
             api_root_url=root_url,
-            timeout=2000,
+            timeout=2,
             json_encode_body=True,
         )
         self.rest.add_resource(resource_name='api')
@@ -225,9 +225,9 @@ class LYBRest:
     def getConnectCount(self):
         return ""
 
-    def connect_telegram(self, match_string):
+    def connect_telegram(self, match_string, adjust_time):
         try:
-            last_log = self.getTelegramUpdates(-1, match_string=match_string)
+            last_log = self.getTelegramUpdates(-1, match_string=match_string, adjust_time=adjust_time)
             if last_log is not None:
                 return str(last_log.message.chat.id)
         except:
@@ -286,7 +286,7 @@ class LYBRest:
         except:
             self.logger.error(traceback.format_exc())
 
-    def getTelegramUpdates(self, chat_id, match_string=None):
+    def getTelegramUpdates(self, chat_id, match_string=None, adjust_time=10):
         update = None
         update_id = 0
         try:
@@ -295,20 +295,27 @@ class LYBRest:
             if self.telegram_bot is None:
                 self.telegram_bot = telegram.Bot(token=m_token)
             bot = self.telegram_bot
-            lUpdateLog = bot.getUpdates(limit=99, timeout=99)
-            self.logger.debug(lUpdateLog)
-            self.logger.debug('-----------------' + str(len(lUpdateLog)))
-            for eachLog in lUpdateLog:
-                self.logger.debug(eachLog)
+            # self.logger.debug('before -----------------')
+            l_update_log = bot.getUpdates(limit=99)
+            # self.logger.debug(l_update_log)
+            # self.logger.debug('after -----------------' + str(len(l_update_log)))
+            for eachLog in l_update_log:
+                # self.logger.debug(eachLog)
                 # 메세지가 입력된 시간이 10초가 경과한 것들은 다 제거한다.
+                utc = 9*60*60
+                now = int(time.time())
                 issue_time = int(time.mktime(eachLog.message.date.timetuple()))
-                self.logger.debug(str(int(time.time()) - issue_time - self.adjustTime))
-                if int(time.time()) - issue_time - self.adjustTime > 10:
+                message_ok = False
+                if utc - adjust_time <= abs(now - issue_time) <= utc + adjust_time:
+                    message_ok = True
+
+                # self.logger.debug(str(int(now) - issue_time - self.adjustTime))
+                if message_ok is False and int(time.time()) - issue_time - self.adjustTime > adjust_time:
                     if update_id < eachLog.update_id:
                         update_id = int(eachLog.update_id)
                 else:
                     if chat_id <= 0:
-                        self.logger.debug('텔레그램 연동')
+                        self.logger.info('텔레그램 연동')
                         if str(eachLog.message.text) == match_string:
                             if self.last_id != eachLog.update_id:
                                 self.last_id = eachLog.update_id
@@ -323,14 +330,15 @@ class LYBRest:
 
             if update_id != 0:
                 bot.getUpdates(offset=update_id + 1)
+
         except telegram.error.TimedOut:
-            self.logger.error(str(sys.exc_info()[0]) + '(' + str(sys.exc_info()[1]) + ')')
+            # self.logger.error(str(sys.exc_info()[0]) + '(' + str(sys.exc_info()[1]) + ')')
             pass
         except telegram.error.NetworkError:
-            self.logger.error(str(sys.exc_info()[0]) + '(' + str(sys.exc_info()[1]) + ')')
+            # self.logger.error(str(sys.exc_info()[0]) + '(' + str(sys.exc_info()[1]) + ')')
             pass
         except:
-            self.logger.error(str(sys.exc_info()[0]) + '(' + str(sys.exc_info()[1]) + ')')
+            # self.logger.error(str(sys.exc_info()[0]) + '(' + str(sys.exc_info()[1]) + ')')
             # self.logger.error(traceback.format_exc())
             # self.logger.debug(traceback.format_exc())
             # self.logger.error(str(sys.exc_info()[0]) + '(' + str(sys.exc_info()[1]) + ')')
