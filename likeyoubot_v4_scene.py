@@ -3324,7 +3324,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.set_option(self.current_work + '_inner_status', inner_status + 1)
             elif inner_status >= 1:
                 self.set_option(self.current_work + '_inner_status', inner_status + 1)
-                if inner_status % 120 == 0:
+                if inner_status % 60 == 0:
                     self.lyb_mouse_click('main_scene_gabang', custom_threshold=0)
                     self.game_object.get_scene('gabang_scene').status = 0
                     return True
@@ -3626,14 +3626,16 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.set_checkpoint('chulseok_check', time.time() + self.period_bot(36000))
                 return True
 
-        elapsed_time = time.time() - self.get_checkpoint('shop_check')
-        if elapsed_time > self.period_bot(81640):
-            self.set_checkpoint('shop_check')
-        elif elapsed_time > self.period_bot(60):
-            self.lyb_mouse_click('main_scene_shop', custom_threshold=0)
-            self.game_object.get_scene('shop_scene').status = 0
-            self.set_checkpoint('shop_check', time.time() + self.period_bot(36000))
-            return True
+        # 상점 체크리스트
+        if self.is_checked_shop():
+            elapsed_time = time.time() - self.get_checkpoint('shop_check')
+            if elapsed_time > self.period_bot(81640):
+                self.set_checkpoint('shop_check')
+            elif elapsed_time > self.period_bot(60):
+                self.lyb_mouse_click('main_scene_shop', custom_threshold=0)
+                self.game_object.get_scene('shop_scene').status = 0
+                self.set_checkpoint('shop_check', time.time() + self.period_bot(36000))
+                return True
 
         return False
 
@@ -4020,6 +4022,30 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
         self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
         if loc_x != -1:
             self.lyb_mouse_click_location(loc_x, loc_y)
+            return True
+
+        return False
+
+    def is_checked_shop(self):
+        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_tal_gotcha') is True:
+            return True
+
+        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_pet_gotcha') is True:
+            return True
+
+        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'shop_sang_potion') is True:
+            return True
+
+        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'shop_fellow_gotcha') is True:
+            return True
+
+        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'shop_w_box_gotcha') is True:
+            return True
+
+        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'shop_s_box_gotcha') is True:
+            return True
+
+        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'shop_a_box_gotcha') is True:
             return True
 
         return False
