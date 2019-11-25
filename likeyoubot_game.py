@@ -364,7 +364,7 @@ class LYBGame():
 
         if '[작업 예약]' in schedule_list:
             r_work_done_dic = self.main_scene.get_option('r_work_done_dic')
-            if r_work_done_dic == None:
+            if r_work_done_dic is None:
                 r_work_done_dic = {}
 
             # print('[DEBUG] ReservedQueue:', r_work_done_dic)
