@@ -275,22 +275,18 @@ class LYBGUI:
         else:
             base_point = int(base_point)
 
-        if int(self.get_mb_point()) >= base_point:
-            # s = ttk.Style()
-            # s.configure('button_dogfootermacro.TButton', font=('굴림체', 9, 'bold'), foreground='blue', background='red')
-
-            self.dogfootermacro_button = ttk.Button(
-                master=frame,
-                text="라이트버전",
-                width=10,
-                style='button_0.TButton',
-                # bg = 'red',
-                # fg = 'yellow',
-                # relief = 'flat',
-                # style				= 'button_dogfootermacro.TButton',
-                command=lambda: self.callback_fork_dogfootermacro(None)
-            )
-            self.dogfootermacro_button.pack(side=tkinter.LEFT, padx=5)
+        self.dogfootermacro_button = ttk.Button(
+            master=frame,
+            text="라이트버전",
+            width=10,
+            style='button_0.TButton',
+            # bg = 'red',
+            # fg = 'yellow',
+            # relief = 'flat',
+            # style				= 'button_dogfootermacro.TButton',
+            command=lambda: self.callback_fork_dogfootermacro(None)
+        )
+        self.dogfootermacro_button.pack(side=tkinter.LEFT, padx=5)
 
         lybhttp = self.login()
         base_point = lybhttp.get_elem('lybcfg_point')

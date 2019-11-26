@@ -957,6 +957,23 @@ class LYBV4Tab(lybgame.LYBGameTab):
         frame.pack(anchor=tkinter.W)
 
         frame = ttk.Frame(frame_label)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'gabang_full_move'] = tkinter.BooleanVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'gabang_full_move'].trace(
+            'w', lambda *args: self.gabang_full_move(args, lybconstant.LYB_DO_STRING_V4_ETC + 'gabang_full_move'))
+        if not lybconstant.LYB_DO_STRING_V4_ETC + 'gabang_full_move' in self.configure.common_config[self.game_name]:
+            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_ETC + 'gabang_full_move'] = True
+
+        check_box = ttk.Checkbutton(
+            master=frame,
+            text=self.get_option_text('가방 풀 감지되면 창고 가기', width=27),
+            variable=self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'gabang_full_move'],
+            onvalue=True,
+            offvalue=False
+        )
+        check_box.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
+        frame = ttk.Frame(frame_label)
         label = ttk.Label(
             master=frame,
             text=self.get_option_text('휴식 보상', width=19)
@@ -2332,6 +2349,9 @@ class LYBV4Tab(lybgame.LYBGameTab):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
     def event_check(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def gabang_full_move(self, args, option_name):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
     def event_devil(self, args, option_name):

@@ -22,8 +22,6 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             rc = self.character_scene()
         elif self.scene_name == 'main_scene':
             rc = self.main_scene()
-        elif self.scene_name == 'login_scene':
-            rc = self.login_scene()
         elif self.scene_name == 'menu_scene':
             rc = self.menu_scene()
         elif self.scene_name == 'quest_scene':
@@ -2365,6 +2363,9 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             else:
                 self.status = 1
                 self.set_option('potion_index', potion_index + 1)
+        elif self.status == 1000:
+            self.logger.info('가방 비우러 창고 가기')
+            self.status = 99999
         else:
             self.game_object.get_scene('main_scene').set_option('go_stash', True)
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
@@ -2464,6 +2465,21 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
 
             if self.status == 99997:
                 self.game_object.get_scene('main_scene').set_option('from_jeoljeon_hp_empty', True)
+                self.status = 99999
+
+        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'gabang_full_move'):
+            resource_name = 'jeoljeon_mode_scene_gabang_full_loc'
+            (loc_x, loc_y), match_rate = self.game_object.locationResourceOnWindowPart(
+                self.window_image,
+                resource_name,
+                custom_rect=(540, 90, 950, 150),
+                custom_threshold=0.7,
+                custom_flag=1,
+                average=True
+            )
+            self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
+            if loc_x != -1:
+                self.game_object.get_scene('main_scene').set_option('from_jeoljeon_gabang_full', True)
                 self.status = 99999
 
         if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'mp_potion_move'):
@@ -3508,14 +3524,38 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
         if self.get_option('is_moving'):
             return True
 
-        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'go_stash') is True:
+        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'go_stash') or self.get_option('go_stash_for_full'):
             if self.get_option('go_stash'):
                 self.logger.info('물약 상점 인식됨 -> 창고 탐색 시작.')
                 self.set_option('go_stash', False)
+                self.set_option('go_stash_for_full', False)
                 self.game_object.get_scene('stash_scene').status = 0
                 self.game_object.get_scene('menu_scene').status = 2100
                 self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
                 return True
+
+        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'gabang_full_move') is True:
+            elapsed_time = time.time() - self.get_checkpoint('gabang_full_move')
+            if elapsed_time > self.period_bot(5):
+                self.set_checkpoint('gabang_full_move')
+                if self.is_gabang_full() or self.get_option('gabang_full') or self.get_option(
+                        'from_jeoljeon_gabang_full'):
+                    self.set_option('go_jeoljeon', 0)
+                    self.set_option('from_jeoljeon_gabang_full', False)
+                    if self.click_potion_menu():
+                        self.game_object.get_scene('move_potion_npc_scene').status = 100
+                        self.game_object.get_scene('potion_npc_scene').status = 1000
+                        self.set_option('go_stash_for_full', True)
+                        self.set_option('gabang_full', False)
+                        self.set_option('go_home', False)
+                        return True
+                    else:
+                        if self.get_option('go_home') is not True:
+                            self.click_resource('main_scene_menu_home_loc')
+                            self.game_object.get_scene('go_home_scene').status = 100
+                            self.set_option('gabang_full', True)
+                            self.set_option('go_home', True)
+                        return True
 
         if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'hp_potion_move') is True:
             elapsed_time = time.time() - self.get_checkpoint('hp_potion_low')
@@ -4000,6 +4040,16 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                                           custom_threshold=0.5,
                                           limit_count=limit,
                                           reverse=False,
+                                          )
+
+    def is_gabang_full(self, limit=3):
+        return self.is_status_by_resource('가방 풀 감지', 'main_scene_gabang_full_loc',
+                                          custom_top_level=(255, 30, 30),
+                                          custom_below_level=(180, 0, 0),
+                                          custom_rect=(790, 30, 860, 80),
+                                          custom_threshold=0.6,
+                                          limit_count=limit,
+                                          reverse=True,
                                           )
 
     def is_main_quest_complete(self):
