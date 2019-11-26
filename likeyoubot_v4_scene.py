@@ -2671,6 +2671,8 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
 
         return self.status
 
+    # -menu_scene
+
     def menu_scene(self):
 
         if self.status == 0:
@@ -2680,6 +2682,11 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             if self.status % 2 == 0:
                 self.lyb_mouse_click('menu_scene_quest', custom_threshold=0)
                 self.game_object.get_scene('quest_scene').status = 100
+            self.status += 1
+        elif 110 <= self.status < 115:
+            if self.status % 2 == 0:
+                self.lyb_mouse_click('menu_scene_gabang', custom_threshold=0)
+                self.game_object.get_scene('gabang_scene').status = 0
             self.status += 1
         elif 200 <= self.status < 205:
             if self.status % 2 == 0:
@@ -2978,7 +2985,8 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                     self.set_option('go_jeoljeon', 0)
                 elif inner_status >= 1:
                     if inner_status % 10 == 0:
-                        self.lyb_mouse_click('main_scene_gabang', custom_threshold=0)
+                        self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
+                        self.game_object.get_scene('menu_scene').status = 110
                         self.game_object.get_scene('gabang_scene').status = 0
                         self.set_option(self.current_work + '_inner_status', inner_status + 1)
                         return True
@@ -3046,7 +3054,8 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                         self.lyb_mouse_click('main_scene_auto', custom_threshold=0)
                 elif 6 <= inner_status < 150:
                     if inner_status % 10 == 0:
-                        self.lyb_mouse_click('main_scene_gabang', custom_threshold=0)
+                        self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
+                        self.game_object.get_scene('menu_scene').status = 110
                         self.game_object.get_scene('gabang_scene').status = 0
                         self.set_option(self.current_work + '_inner_status', inner_status + 1)
                         return True
@@ -3112,7 +3121,8 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                         return True
 
                     if inner_status % 10 == 0:
-                        self.lyb_mouse_click('main_scene_gabang', custom_threshold=0)
+                        self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
+                        self.game_object.get_scene('menu_scene').status = 110
                         self.game_object.get_scene('gabang_scene').status = 0
                         self.set_option(self.current_work + '_inner_status', inner_status + 1)
                         return True
@@ -3142,7 +3152,8 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.status = self.last_status[self.current_work] + 1
                 return self.status
 
-            self.lyb_mouse_click('main_scene_gabang', custom_threshold=0)
+            self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
+            self.game_object.get_scene('menu_scene').status = 110
             self.game_object.get_scene('gabang_scene').status = 0
 
         elif self.status == self.get_work_status('임무'):
@@ -3360,7 +3371,8 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             elif inner_status >= 1:
                 self.set_option(self.current_work + '_inner_status', inner_status + 1)
                 if inner_status % 60 == 0:
-                    self.lyb_mouse_click('main_scene_gabang', custom_threshold=0)
+                    self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
+                    self.game_object.get_scene('menu_scene').status = 110
                     self.game_object.get_scene('gabang_scene').status = 0
                     return True
 
@@ -3721,7 +3733,8 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 elapsed_time = time.time() - self.get_checkpoint(self.current_work + '_main_quest_equip')
                 if elapsed_time > self.period_bot(300):
                     self.set_checkpoint(self.current_work + '_main_quest_equip')
-                    self.lyb_mouse_click('main_scene_gabang', custom_threshold=0)
+                    self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
+                    self.game_object.get_scene('menu_scene').status = 110
                     self.game_object.get_scene('gabang_scene').set_option('equip', True)
                     self.game_object.get_scene('gabang_scene').status = 0
                     self.set_option('go_jeoljeon', 0)
