@@ -340,12 +340,12 @@ class LYBGame():
 
     def check_reserved(self):
 
-        if self.main_scene == None:
+        if self.main_scene is None:
             return
 
-        if self.wait_for_start_reserved_work == False:
+        if self.wait_for_start_reserved_work is False:
             work_index_to_move = self.recursive_check_reserved(self.get_game_config(self.game_name, '', flag=1), [], [])
-            if work_index_to_move != None:
+            if work_index_to_move is not None:
                 self.logger.debug('reserved work index=' + str(work_index_to_move))
                 schedule_list = self.get_game_config(self.game_name, 'schedule_list')
                 self.main_scene.move_status[self.current_schedule_work] = work_index_to_move

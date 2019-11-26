@@ -616,7 +616,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.set_option('last_status', self.status)
             self.status = 40
         elif self.status == 40:
-            if self.get_option('drag_direction') is not False:
+            if self.get_option('drag_direction') is not True:
                 self.lyb_mouse_drag('shop_scene_list_drag_bot', 'shop_scene_list_drag_top', stop_delay=0.0)
                 self.set_option('drag_direction', True)
             else:
@@ -877,7 +877,8 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             if list_index > 4:
                 self.status = 99999
             else:
-                cfg_order = self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_' + str(list_index))
+                cfg_order = self.get_game_config(
+                    lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_' + str(list_index))
                 if cfg_order == '안함':
                     self.set_option('list_index', list_index + 1)
                 else:
@@ -1568,6 +1569,11 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
         elif 1 <= self.status < 10:
             cfg_free = self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'recover_free')
             pb_name = 'recover_scene_free'
+            if cfg_free is False:
+                self.lyb_mouse_click(pb_name, custom_threshold=0)
+                self.status = 99999
+                return self.status
+
             match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
             self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
             if match_rate > 0.9 and cfg_free is True:
@@ -1915,7 +1921,8 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                     return self.status
             self.set_option('last_status', self.status)
             self.status = 11505
-            self.lyb_mouse_drag('local_map_scene_detail_drag_little_top', 'local_map_scene_detail_drag_little_bot', stop_delay=1.0)
+            self.lyb_mouse_drag('local_map_scene_detail_drag_little_top', 'local_map_scene_detail_drag_little_bot',
+                                stop_delay=1.0)
         elif 11515 <= self.status < 11519:
             self.status += 1
 
@@ -1934,7 +1941,8 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             cfg_order = self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_area_order')
             if cfg_order != '위에서':
                 rect_list.reverse()
-            cfg_sanyang_number = int(self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sanyang_number'))
+            cfg_sanyang_number = int(
+                self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sanyang_number'))
             if cfg_sanyang_number == 0:
                 cfg_sanyang_number = int(10 * random.random()) + 1
             self.logger.info('사냥터 번호: ' + str(cfg_order) + str(cfg_sanyang_number))
@@ -2434,7 +2442,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
         return self.status
 
     def jeoljeon_mode_scene(self):
-        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'hp_potion_move') is True:
+        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'hp_potion_move'):
             resource_name = 'jeoljeon_mode_scene_potion_empty_loc'
             (loc_x, loc_y), match_rate = self.game_object.locationResourceOnWindowPart(
                 self.window_image,
@@ -2457,6 +2465,15 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             if self.status == 99997:
                 self.game_object.get_scene('main_scene').set_option('from_jeoljeon_hp_empty', True)
                 self.status = 99999
+
+        if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'mp_potion_move'):
+            if self.is_empty_mp_potion_in_jeoljeon():
+                self.game_object.get_scene('main_scene').set_option('from_jeoljeon_mp_empty', True)
+                self.status = 99999
+
+        if self.game_object.wait_for_start_reserved_work:
+            self.logger.info('[작업 예약] 실행 시간 감지됨 > 절전 모드 해제')
+            self.status = 99999
 
         if self.status == 0:
             self.logger.info('scene: ' + self.scene_name)
@@ -3549,8 +3566,10 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             elapsed_time = time.time() - self.get_checkpoint('mp_potion_move')
             if elapsed_time > self.period_bot(5):
                 self.set_checkpoint('mp_potion_move')
-                if self.is_mp_potion_empty() is True or self.get_option('mp_potion_empty') is True:
+                if self.is_mp_potion_empty() or self.get_option('mp_potion_empty') or self.get_option(
+                        'from_jeoljeon_mp_empty'):
                     self.set_option('go_jeoljeon', 0)
+                    self.set_option('from_jeoljeon_mp_empty', False)
                     if self.click_potion_menu():
                         self.game_object.get_scene('move_potion_npc_scene').status = 100
                         self.game_object.get_scene('potion_npc_scene').status = 0
@@ -3961,6 +3980,16 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                                           custom_threshold=0.4,
                                           limit_count=limit,
                                           reverse=True,
+                                          )
+
+    def is_empty_mp_potion_in_jeoljeon(self, limit=3):
+        return self.is_status_by_resource('MP 물약 없음 감지', 'jeoljeon_mode_scene_mp_potion_ok_loc',
+                                          custom_top_level=(255, 255, 255),
+                                          custom_below_level=(150, 150, 150),
+                                          custom_rect=(695, 515, 750, 565),
+                                          custom_threshold=0.6,
+                                          limit_count=limit,
+                                          reverse=False,
                                           )
 
     def is_auto_quest(self, limit=3):
