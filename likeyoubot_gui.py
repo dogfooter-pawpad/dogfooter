@@ -270,23 +270,24 @@ class LYBGUI:
 
         lybhttp = self.login()
         base_point = lybhttp.get_elem('dogfootermacro_point')
-        if base_point == None:
+        if base_point is None:
             base_point = 0
         else:
             base_point = int(base_point)
 
-        self.dogfootermacro_button = ttk.Button(
-            master=frame,
-            text="라이트버전",
-            width=10,
-            style='button_0.TButton',
-            # bg = 'red',
-            # fg = 'yellow',
-            # relief = 'flat',
-            # style				= 'button_dogfootermacro.TButton',
-            command=lambda: self.callback_fork_dogfootermacro(None)
-        )
-        self.dogfootermacro_button.pack(side=tkinter.LEFT, padx=5)
+        if int(self.get_mb_point()) >= base_point:
+            self.dogfootermacro_button = ttk.Button(
+                master=frame,
+                text="라이트버전",
+                width=10,
+                style='button_0.TButton',
+                # bg = 'red',
+                # fg = 'yellow',
+                # relief = 'flat',
+                # style				= 'button_dogfootermacro.TButton',
+                command=lambda: self.callback_fork_dogfootermacro(None)
+            )
+            self.dogfootermacro_button.pack(side=tkinter.LEFT, padx=5)
 
         lybhttp = self.login()
         base_point = lybhttp.get_elem('lybcfg_point')
@@ -3414,7 +3415,7 @@ class LYBGUI:
     def callback_fork_dogfootermacro(self, e):
 
         file_path = resource_path('dogfootermacro.exe')
-        if os.path.isfile(file_path) == False:
+        if os.path.isfile(file_path) is False:
             cmd = [
                 'python',
                 'dogfootermacro.py',

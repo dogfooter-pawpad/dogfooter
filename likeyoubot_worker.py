@@ -560,7 +560,7 @@ class LYBWorker(threading.Thread):
         # print('START GRAB', datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])
         # s = time.time()
         try:
-            if self.window_config[lybconstant.LYB_DO_BOOLEAN_USE_INACTIVE_MODE] == False:
+            if self.window_config[lybconstant.LYB_DO_BOOLEAN_USE_INACTIVE_MODE] is False:
                 current_window_image_grab = ImageGrab.grab(bbox=(anchor_x - adj_x, anchor_y - adj_y, end_x, end_y))
             else:
                 current_window_image_grab = self.win.get_window_screenshot(self.hwnd, inactive_flag)
