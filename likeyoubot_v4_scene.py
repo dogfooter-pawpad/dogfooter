@@ -214,6 +214,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
         elif self.status == 105:
             self.status = self.get_option('last_status')
         else:
+            self.game_object.get_scene('quest_scene').status = 99999
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
                 self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
 
@@ -2435,6 +2436,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.set_option('done', True)
             self.status += 1
         else:
+            self.game_object.get_scene('quest_scene').status = 99999
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
                 self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
 
@@ -2630,6 +2632,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                     self.status = 99999
                     break
         else:
+            self.game_object.get_scene('quest_scene').status = 99999
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
                 self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
 
