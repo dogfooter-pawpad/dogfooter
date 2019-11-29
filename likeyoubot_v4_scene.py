@@ -339,6 +339,8 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.lyb_mouse_click(pb_name, custom_threshold=0)
                 self.game_object.get_scene('local_map_scene').set_option('changed', True)
         else:
+            self.game_object.get_scene('jido_scene').status = 99999
+            self.game_object.get_scene('local_map_scene').status = 99999
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
                 self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
 
@@ -405,6 +407,8 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.game_object.get_scene('deryuk_jido_scene').set_option('map', local_map)
                 self.game_object.get_scene('deryuk_jido_scene').set_option('local_map', cfg_local_map)
         else:
+            self.game_object.get_scene('lunatra_jido_scene').status = 99999
+            self.game_object.get_scene('local_map_scene').status = 99999
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
                 self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
 
@@ -2165,6 +2169,8 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             if self.fail_to_detect_m() is True:
                 self.status = 99999
         else:
+            self.game_object.get_scene('lunatra_jido_scene').status = 99999
+            self.game_object.get_scene('jido_scene').status = 99999
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
                 self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
 
