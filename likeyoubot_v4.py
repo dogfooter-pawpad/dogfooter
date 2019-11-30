@@ -2267,6 +2267,41 @@ class LYBV4Tab(lybgame.LYBGameTab):
         combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
         frame.pack(anchor=tkinter.W)
 
+        frame = ttk.Frame(frame_label)
+        label = ttk.Label(
+            master=frame,
+            text=self.get_option_text('잠재력 개방 주기(초)', width=27)
+        )
+        label.pack(side=tkinter.LEFT)
+
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'auto_jamjeryeok_duration'] = tkinter.StringVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'auto_jamjeryeok_duration'].trace(
+            'w', lambda *args: self.auto_jamjeryeok_duration(args,
+                                                  lybconstant.LYB_DO_STRING_V4_WORK + 'auto_jamjeryeok_duration')
+        )
+        combobox_list = []
+        for i in range(0, 3601, 60):
+            combobox_list.append(str(i))
+
+        if not lybconstant.LYB_DO_STRING_V4_WORK + 'auto_jamjeryeok_duration' in self.configure.common_config[
+            self.game_name]:
+            self.configure.common_config[self.game_name][
+                lybconstant.LYB_DO_STRING_V4_WORK + 'auto_jamjeryeok_duration'] = 300
+
+        combobox = ttk.Combobox(
+            master=frame,
+            values=combobox_list,
+            textvariable=self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'auto_jamjeryeok_duration'],
+            state="readonly",
+            height=10,
+            width=7,
+            font=lybconstant.LYB_FONT
+        )
+        combobox.set(self.configure.common_config[self.game_name][
+                         lybconstant.LYB_DO_STRING_V4_WORK + 'auto_jamjeryeok_duration'])
+        combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
         frame_label.pack(anchor=tkinter.NW, padx=5, pady=5)
 
         frame_r.pack(side=tkinter.LEFT, anchor=tkinter.NW)
@@ -2436,6 +2471,9 @@ class LYBV4Tab(lybgame.LYBGameTab):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
     def auto_jeoljeon_duration(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def auto_jamjeryeok_duration(self, args, option_name):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
     def jido_move_area(self, args, option_name):
