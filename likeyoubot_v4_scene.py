@@ -1998,12 +1998,13 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
                 if loc_x != -1:
                     self.lyb_mouse_click_location(loc_x, loc_y)
-                    self.status = 11120
                 else:
                     self.lyb_mouse_drag('local_map_scene_detail_drag_bot', 'local_map_scene_detail_drag_top',
                                         stop_delay=0.0)
                     self.set_option('last_status', self.status)
                     self.status = 11600
+        elif self.status == 11540:
+            self.status = 11120
         elif self.status == 11600:
             self.status += 1
         elif self.status == 11601:
