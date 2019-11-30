@@ -3391,7 +3391,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.set_option(self.current_work + '_inner_status', inner_status + 1)
                 cfg_auto_jamjeryeok = int(self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'auto_jamjeryeok_duration'))
                 if cfg_auto_jamjeryeok > 0:
-                    jamjeryeok_elapsed_time = time.time() - self.get_checkpoint('auto_jamjeryeok_duration')
+                    jamjeryeok_elapsed_time = time.time() - self.get_checkpoint('auto_jamjeryeok')
                     if jamjeryeok_elapsed_time > cfg_auto_jamjeryeok:
                         self.set_checkpoint('auto_jamjeryeok')
                         self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
