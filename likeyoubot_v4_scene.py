@@ -2550,6 +2550,15 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             if current_work == '자동 사냥' and elapsed_time > cfg_duration:
                 self.status = 99998
                 return self.status
+
+            cfg_duration = int(self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'auto_jamjeryeok_duration'))
+            if cfg_duration > 0:
+                elapsed_time = time.time() - self.game_object.get_scene('main_scene').get_checkpoint('auto_jamjeryeok')
+                current_work = self.game_object.get_scene('main_scene').current_work
+                if current_work == '자동 사냥' and elapsed_time > cfg_duration:
+                    self.status = 99998
+                    return self.status
+
         elif self.status == 500:
             self.game_object.get_scene('main_scene').set_option('go_jeoljeon', 0)
             self.status += 1
@@ -3379,11 +3388,15 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.set_option(self.current_work + '_inner_status', inner_status + 1)
             elif inner_status >= 1:
                 self.set_option(self.current_work + '_inner_status', inner_status + 1)
-                if inner_status % 60 == 0:
-                    self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
-                    self.game_object.get_scene('menu_scene').status = 110
-                    self.game_object.get_scene('gabang_scene').status = 0
-                    return True
+                cfg_auto_jamjeryeok = int(self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'auto_jamjeryeok_duration'))
+                if cfg_auto_jamjeryeok > 0:
+                    jamjeryeok_elapsed_time = time.time() - self.get_checkpoint('auto_jamjeryeok_duration')
+                    if jamjeryeok_elapsed_time > cfg_auto_jamjeryeok:
+                        self.set_checkpoint('auto_jamjeryeok')
+                        self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
+                        self.game_object.get_scene('menu_scene').status = 110
+                        self.game_object.get_scene('gabang_scene').status = 0
+                        return True
 
                 cfg_auto_jeoljeon = int(self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'auto_jeoljeon'))
                 if cfg_auto_jeoljeon:
