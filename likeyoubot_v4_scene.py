@@ -3396,6 +3396,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.logger.debug('inner_status ' + str(inner_status))
             if inner_status == 0:
                 self.set_option('go_jeoljeon', 0)
+                self.set_option('go_home', False)
                 self.set_option(self.current_work + '_inner_status', inner_status + 1)
             elif inner_status >= 1:
                 self.set_option(self.current_work + '_inner_status', inner_status + 1)
