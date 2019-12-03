@@ -1643,7 +1643,21 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.game_object.get_scene('monghwan_scene').status = 0
             self.set_option('bug_defense', False)
             self.status += 1
-        elif 2001 <= self.status < 2020:
+        elif self.status == 2001:
+            self.status += 1
+            # V4 버그 대응: 일단 무조건 발자국 클릭한다.
+            pb_name = 'local_map_scene_follow'
+            (loc_x, loc_y), match_rate = self.game_object.locationOnWindowPart(
+                self.window_image,
+                self.game_object.resource_manager.pixel_box_dic[pb_name],
+                custom_threshold=0.8,
+                custom_flag=1,
+                custom_rect=(890, 110, 950, 550)
+            )
+            self.logger.debug(pb_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+            if loc_x != -1:
+                self.lyb_mouse_click_location(loc_x, loc_y)
+        elif 2002 <= self.status < 2020:
             self.status += 1
             if self.fail_to_detect_m(limit=2) is True:
                 pb_name = 'local_map_scene_follow'
