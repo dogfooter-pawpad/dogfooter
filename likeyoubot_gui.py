@@ -747,8 +747,83 @@ class LYBGUI:
         frame_r = ttk.Frame(frame_s, relief=frame_relief)
         frame_label = ttk.LabelFrame(
             master=frame_r,
-            text='공지 사항'
+            text='스폰서 광고'
         )
+
+        image1 = Image.open(resource_path("images/skinny_lab_ad_1.jpg"))
+        if image1.size != (96, 96):
+            image1 = image1.resize((96, 96), Image.ANTIALIAS)
+        image1 = ImageTk.PhotoImage(image1)
+
+        label = ttk.Label(
+            master=frame_label,
+            image=image1,
+            cursor='hand2',
+        )
+        label.bind("<Button-1>", lambda e, url=r"http://me2.do/xjhbMJcw": self.callback_helper_url(url))
+        label.image = image1
+        label.place(x=0, y=0)
+        label.pack(padx=1, side=tkinter.LEFT)
+
+        image1 = Image.open(resource_path("images/skinny_lab_ad_2.png"))
+        if image1.size != (96, 96):
+            image1 = image1.resize((96, 96), Image.ANTIALIAS)
+        image1 = ImageTk.PhotoImage(image1)
+
+        label = ttk.Label(
+            master=frame_label,
+            image=image1,
+            cursor='hand2',
+        )
+        label.bind("<Button-1>", lambda e, url=r"http://me2.do/xjhbMJcw": self.callback_helper_url(url))
+        label.image = image1
+        label.place(x=0, y=0)
+        label.pack(padx=1, side=tkinter.LEFT)
+
+        image1 = Image.open(resource_path("images/skinny_lab_ad_3.png"))
+        if image1.size != (96, 96):
+            image1 = image1.resize((96, 96), Image.ANTIALIAS)
+        image1 = ImageTk.PhotoImage(image1)
+
+        label = ttk.Label(
+            master=frame_label,
+            image=image1,
+            cursor='hand2',
+        )
+        label.bind("<Button-1>", lambda e, url=r"http://me2.do/xjhbMJcw": self.callback_helper_url(url))
+        label.image = image1
+        label.place(x=0, y=0)
+        label.pack(padx=1, side=tkinter.LEFT)
+
+        image1 = Image.open(resource_path("images/skinny_lab_ad_4.png"))
+        if image1.size != (96, 96):
+            image1 = image1.resize((96, 96), Image.ANTIALIAS)
+        image1 = ImageTk.PhotoImage(image1)
+
+        label = ttk.Label(
+            master=frame_label,
+            image=image1,
+            cursor='hand2',
+        )
+        label.bind("<Button-1>", lambda e, url=r"http://me2.do/xjhbMJcw": self.callback_helper_url(url))
+        label.image = image1
+        label.place(x=0, y=0)
+        label.pack(padx=1, side=tkinter.LEFT)
+
+        image1 = Image.open(resource_path("images/skinny_lab_ad_5.png"))
+        if image1.size != (96, 96):
+            image1 = image1.resize((96, 96), Image.ANTIALIAS)
+        image1 = ImageTk.PhotoImage(image1)
+
+        label = ttk.Label(
+            master=frame_label,
+            image=image1,
+            cursor='hand2',
+        )
+        label.bind("<Button-1>", lambda e, url=r"http://me2.do/xjhbMJcw": self.callback_helper_url(url))
+        label.image = image1
+        label.place(x=0, y=0)
+        label.pack()
         # label_font = tkinter.font.Font(label, label.cget('font'))
         # label_font.configure(underline=True)
         # label_font.configure(weight='bold')
@@ -3808,6 +3883,9 @@ class LYBGUI:
         rest = likeyoubot_rest.LYBRest(self.configure.root_url, "", "")
         public_token = rest.get_public_elem("public_token")
         webbrowser.open_new(r"https://pawpad.kr/bbs/" + public_token)
+
+    def callback_helper_url(self, url):
+        webbrowser.open_new(url)
 
     def callback_blog(self, event):
         webbrowser.open_new(r"https://pawpad.kr/bbs/")

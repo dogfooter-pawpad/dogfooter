@@ -759,6 +759,40 @@ class LYBV4Tab(lybgame.LYBGameTab):
         frame = ttk.Frame(frame_label)
         label = ttk.Label(
             master=frame,
+            text=self.get_option_text('창고 재료 탐색 페이지', width=27)
+        )
+        label.pack(side=tkinter.LEFT)
+
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'stash_page_number'] = tkinter.StringVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'stash_page_number'].trace(
+            'w', lambda *args: self.stash_page_number(args, lybconstant.LYB_DO_STRING_V4_ETC + 'stash_page_number')
+        )
+        combobox_list = [
+            '1',
+            '2',
+            '3',
+        ]
+
+        if not lybconstant.LYB_DO_STRING_V4_ETC + 'stash_page_number' in self.configure.common_config[self.game_name]:
+            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_ETC + 'stash_page_number'] = \
+                combobox_list[0]
+
+        combobox = ttk.Combobox(
+            master=frame,
+            values=combobox_list,
+            textvariable=self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'stash_page_number'],
+            state="readonly",
+            height=10,
+            width=7,
+            font=lybconstant.LYB_FONT
+        )
+        combobox.set(self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_ETC + 'stash_page_number'])
+        combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
+        frame = ttk.Frame(frame_label)
+        label = ttk.Label(
+            master=frame,
             text=self.get_option_text('구매할 HP 물약', width=16)
         )
         label.pack(side=tkinter.LEFT)
@@ -2509,6 +2543,9 @@ class LYBV4Tab(lybgame.LYBGameTab):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
     def auto_jeoljeon(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def stash_page_number(self, args, option_name):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
 
