@@ -232,6 +232,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
 
         if self.status == 0:
             self.logger.info('scene: ' + self.scene_name)
+            self.set_option('page_number', 1)
             self.status += 1
         elif self.status == 1:
             self.lyb_mouse_click('stash_scene_tab_3', custom_threshold=0)
@@ -282,7 +283,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 last_col = self.get_option('last_col')
                 if last_col + 1 > 4:
                     if last_row + 1 > 4:
-                        self.status = 99999
+                        self.status = 200
                         return self.status
                     else:
                         self.set_option('last_row', last_row + 1)
@@ -295,6 +296,17 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
         elif self.status == 101:
             self.lyb_mouse_click('stash_scene_sort_2', custom_threshold=0)
             self.status = self.get_option('last_status')
+        elif self.status == 200:
+            cfg_page_number = int(self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'stash_page_number'))
+            page_number = self.get_option('page_number')
+            if page_number >= cfg_page_number:
+                self.status = 99999
+            else:
+                self.set_option('page_number', page_number + 1)
+                self.lyb_mouse_drag('stash_scene_drag_bot', 'stash_scene_drag_top', delay=2.0)
+                self.status += 1
+        elif self.status == 201:
+            self.status = 10
         else:
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
                 self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
