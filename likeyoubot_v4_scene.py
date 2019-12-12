@@ -322,12 +322,20 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.status += 1
         elif self.status == 100:
             self.status += 1
-        elif 101 <= self.status < 105:
+        elif self.status == 101:
             self.status += 1
             local_name = self.get_option('local_name')
             pb_name = 'lunatra_scene_list_' + local_name
             self.lyb_mouse_click(pb_name, custom_threshold=0)
-            self.game_object.get_scene('main_scene').set_option('지도 이동' + '_lunatra_ipjang_ok', True)
+        elif 102 <= self.status < 105:
+            self.status += 1
+            pb_name = 'lunatra_scene_ok'
+            match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
+            self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
+            if match_rate > 0.95:
+                self.lyb_mouse_click(pb_name, custom_threshold=0)
+                self.game_object.get_scene('main_scene').set_option('지도 이동' + '_lunatra_ipjang_ok', True)
+                return self.status
         else:
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
                 self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
@@ -892,17 +900,22 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
 
         if self.status == 0:
             self.logger.info('scene: ' + self.scene_name)
+            self.lyb_mouse_drag('monghwan_scene_list_drag_top', 'monghwan_scene_list_drag_bot')
             self.set_option('list_index', 0)
             self.status += 1
         elif 1 <= self.status < 10:
             self.status += 1
             list_index = self.get_option('list_index')
-            if list_index > 4:
+            if list_index > 6:
                 self.status = 99999
             else:
                 cfg_order = self.get_game_config(
                     lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_' + str(list_index))
                 if cfg_order == '안함':
+                    if list_index >= 4:
+                        self.lyb_mouse_drag('monghwan_scene_list_drag_bot', 'monghwan_scene_list_drag_top')
+                    else:
+                        self.lyb_mouse_drag('monghwan_scene_list_drag_top', 'monghwan_scene_list_drag_bot')
                     self.set_option('list_index', list_index + 1)
                 else:
                     pb_name = 'monghwan_scene_list_' + str(list_index)
@@ -963,12 +976,11 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
         elif self.status == 1000:
             self.status += 1
         elif self.status == 1001:
-            self.status += 1
-            pb_name = 'monghwan_scene_local_' + self.get_game_config(
-                lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sub_area')
-            self.lyb_mouse_click(pb_name, custom_threshold=0)
-            self.status += 1
-        elif 1001 <= self.status < 1010:
+            if '상인의 소원' in self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sub_area'):
+                self.status = 1020
+            else:
+                self.status = 1030
+        elif 1002 <= self.status < 1010:
             self.status += 1
             resource_name = 'monghwan_scene_disable_loc'
             (loc_x, loc_y), match_rate = self.game_object.locationResourceOnWindowPart(
@@ -1009,6 +1021,20 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.lyb_mouse_click(pb_name, custom_threshold=0)
                 self.game_object.get_scene('main_scene').set_option('지도 이동' + '_monghwan_ipjang_ok', True)
                 self.status = 99999
+        elif self.status == 1020:
+            self.status += 1
+            self.lyb_mouse_drag('monghwan_scene_list_drag_bot', 'monghwan_scene_list_drag_top')
+        elif self.status == 1021:
+            pb_name = 'monghwan_scene_local_' + self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sub_area')
+            self.lyb_mouse_click(pb_name, custom_threshold=0)
+            self.status = 1002
+        elif self.status == 1030:
+            self.status += 1
+            self.lyb_mouse_drag('monghwan_scene_list_drag_top', 'monghwan_scene_list_drag_bot')
+        elif self.status == 1031:
+            pb_name = 'monghwan_scene_local_' + self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sub_area')
+            self.lyb_mouse_click(pb_name, custom_threshold=0)
+            self.status = 1002
         elif self.status == 99998:
             self.game_object.get_scene('main_scene').set_option('몽환의 틈' + '_end_flag', True)
             self.game_object.get_scene('main_scene').set_option('지도 이동' + '_end_flag', True)
