@@ -100,7 +100,7 @@ class LYBConstant():
                 '. DogFooter 프로그램은 현재 녹스, 모모 앱플레이어를 지원합니다.      \n' \
                 '. 제작자 여건 상 녹스만 피드백받습니다.                              \n' \
                 '. 모모는 피드백 안받습니다. 문제 생기면 녹스로 하세요.               \n' \
-                '. 앱플레이어 창 사이즈를 가로x세로(800 x 450)으로 설정해야 인식됩니다. \n' \
+                '. 앱플레이어 창 사이즈를 가로x세로(960 x 540)으로 설정해야 인식됩니다. \n' \
                 '. DPI는 120으로 설정해야 합니다.                                     \n' \
                 '. 앱플레이어 창 이름을 확인하시고 검색창에 입력하세요.               \n' \
                 '. 창 이름 검색 단어로는 일부 단어만 입력해도 검색이 됩니다.          \n' \
@@ -134,11 +134,11 @@ class LYBConstant():
 
     LYB_LICENSE_LIMIT = time.mktime((2017, 12, 30, 0, 0, 0, 0, 0, 0))
 
-    LYB_GAME_L2M = '리니지2M'
-    LYB_GAME_DATA_L2M = 'l2m'
+    LYB_GAME_V4 = 'V4'
+    LYB_GAME_DATA_V4 = 'v4'
 
     LYB_GAMES = {
-        LYB_GAME_L2M: LYB_GAME_DATA_L2M,
+        LYB_GAME_V4: LYB_GAME_DATA_V4,
     }
 
     LYB_MULTI_APP_PLAYER_NAME_MOMO = '[MOMO]멀티플레이어'
@@ -167,7 +167,7 @@ class LYBConstant():
     LYB_FONT = (LYB_FONT_FAMILY, LYB_FONT_SIZE)
 
     LYB_DO_PREFIX = 'do_'
-    LYB_L2M_PREFIX = 'l2m_'
+    LYB_V4_PREFIX = 'v4_'
 
     LYB_STATISTIC_0 = '스케쥴 완료 횟수'
     LYB_STATISTIC_1 = '플레이 시간'
@@ -443,7 +443,6 @@ class LYBConstant():
     LYB_DO_STRING_PERIOD_TELEGRAM = LYB_DO_PREFIX + 'period_telegram_stringvar'
     LYB_DO_STRING_WAIT_FOR_NEXT = LYB_DO_PREFIX + 'wait_for_next_stringvar'
     LYB_DO_BOOLEAN_MOUSE_POINTER = LYB_DO_PREFIX + 'mouse_pointer_booleanvar'
-    LYB_DO_BOOLEAN_MONITORING_ONLY = LYB_DO_PREFIX + 'monitoring_only_booleanvar'
 
     LYB_DO_BOOLEAN_RANDOM_CLICK = LYB_DO_PREFIX + 'random_click_booleanvar'
     LYB_DO_STRING_RANDOM_CLICK_DELAY = LYB_DO_PREFIX + 'random_delay'
@@ -451,9 +450,9 @@ class LYBConstant():
     LYB_DO_STRING_CLOSE_APP_NOX_NEW = LYB_DO_PREFIX + 'close_app_nox_new_boolenvar'
     LYB_DO_STRING_TERA_ETC = LYB_DO_PREFIX + 'tera_etc_stringvar_'
 
-    LYB_DO_STRING_L2M_WORK = LYB_DO_PREFIX + LYB_L2M_PREFIX + 'work_'
-    LYB_DO_STRING_L2M_NOTIFY = LYB_DO_PREFIX + LYB_L2M_PREFIX + 'notify_'
-    LYB_DO_STRING_L2M_ETC = LYB_DO_PREFIX + LYB_L2M_PREFIX + 'etc_'
+    LYB_DO_STRING_V4_WORK = LYB_DO_PREFIX + LYB_V4_PREFIX + 'work_'
+    LYB_DO_STRING_V4_NOTIFY = LYB_DO_PREFIX + LYB_V4_PREFIX + 'notify_'
+    LYB_DO_STRING_V4_ETC = LYB_DO_PREFIX + LYB_V4_PREFIX + 'etc_'
 
     def __init__(self):
         pass
