@@ -131,7 +131,26 @@ fs.writeFile(pip_user_file_path, JSON.stringify(pip_user), 'utf8', function(e) {
 //child = spawn('python', ['main.py'])
 
 const exec = require('child_process').exec;
+const spawn = require('child_process').spawn;
 console.log('도그푸터 매크로 실행 중입니다. 잠시만 기다려주세요.')
+const cmd1 = 'Start-Process cmd -Verb RunAs -ArgumentList'
+const cmd2 = "'/c cd D:\\pawpad\\macro && python check.py'"
+const cmd3 = 'powershell -Command "' + cmd1 + ' ' + cmd2 + '"'
+
+//console.log(cmd3)
+//let child = spawn("cmd.exe", ['/c', 'cd D:\\pawpad\\macro && python check.py'], {
+//        detached: true,
+//    }
+//)
+//child.on('exit', function(code) {
+//    console.log(e);
+//    process.exit()
+//})
+//exec(cmd3, function(error, stdout, stderr) {
+//
+//    console.log('python error:', error)
+//    console.log('python stdout:', stdout)
+//    console.log('python stderr:', stderr)
 exec('"python" main.py', function(error, stdout, stderr) {
 //    console.log('python error:', error)
 //    console.log('python stdout:', stdout)
