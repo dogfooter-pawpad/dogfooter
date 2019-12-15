@@ -753,7 +753,43 @@ class LYBL2MTab(lybgame.LYBGameTab):
 
         # 일반 탭 중간
         frame_m = ttk.Frame(self.inner_frame_dic['common_tab_frame'])
-        frame_label = ttk.LabelFrame(frame_m, text='잡화 상점 자동 담기 설정')
+        frame_label = ttk.LabelFrame(frame_m, text='마을 행동 설정')
+
+        frame = ttk.Frame(frame_label)
+        self.option_dic[lybconstant.LYB_DO_STRING_L2M_ETC + 'sell_npc_move'] = tkinter.BooleanVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_L2M_ETC + 'sell_npc_move'].trace(
+            'w', lambda *args: self.sell_npc_move(args, lybconstant.LYB_DO_STRING_L2M_ETC + 'sell_npc_move'
+                                                   ))
+        if not lybconstant.LYB_DO_STRING_L2M_ETC + 'sell_npc_move' in self.configure.common_config[self.game_name]:
+            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_L2M_ETC + 'sell_npc_move'] = True
+
+        check_box = ttk.Checkbutton(
+            master=frame,
+            text=self.get_option_text('매입 상인한테 가서 자동 담기', width=27),
+            variable=self.option_dic[lybconstant.LYB_DO_STRING_L2M_ETC + 'sell_npc_move'],
+            onvalue=True,
+            offvalue=False
+        )
+        check_box.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
+        frame = ttk.Frame(frame_label)
+        self.option_dic[lybconstant.LYB_DO_STRING_L2M_ETC + 'stash_npc_move'] = tkinter.BooleanVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_L2M_ETC + 'stash_npc_move'].trace(
+            'w', lambda *args: self.stash_npc_move(args, lybconstant.LYB_DO_STRING_L2M_ETC + 'stash_npc_move'
+                                                   ))
+        if not lybconstant.LYB_DO_STRING_L2M_ETC + 'stash_npc_move' in self.configure.common_config[self.game_name]:
+            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_L2M_ETC + 'stash_npc_move'] = True
+
+        check_box = ttk.Checkbutton(
+            master=frame,
+            text=self.get_option_text('창고지기한테 가서 자동 보관', width=27),
+            variable=self.option_dic[lybconstant.LYB_DO_STRING_L2M_ETC + 'stash_npc_move'],
+            onvalue=True,
+            offvalue=False
+        )
+        check_box.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
 
         frame = ttk.Frame(frame_label)
         self.option_dic[lybconstant.LYB_DO_STRING_L2M_ETC + 'potion_npc_auto'] = tkinter.BooleanVar(frame)
@@ -761,11 +797,11 @@ class LYBL2MTab(lybgame.LYBGameTab):
             'w', lambda *args: self.potion_npc_auto(args, lybconstant.LYB_DO_STRING_L2M_ETC + 'potion_npc_auto'
                                                     ))
         if not lybconstant.LYB_DO_STRING_L2M_ETC + 'potion_npc_auto' in self.configure.common_config[self.game_name]:
-            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_L2M_ETC + 'potion_npc_auto'] = False
+            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_L2M_ETC + 'potion_npc_auto'] = True
 
         check_box = ttk.Checkbutton(
             master=frame,
-            text=self.get_option_text('자동 담기 사용하기', width=1),
+            text=self.get_option_text('잡화 상인한테 가서 자동 담기', width=1),
             variable=self.option_dic[lybconstant.LYB_DO_STRING_L2M_ETC + 'potion_npc_auto'],
             onvalue=True,
             offvalue=False
@@ -778,7 +814,7 @@ class LYBL2MTab(lybgame.LYBGameTab):
         frame = ttk.Frame(frame_label)
         label = ttk.Label(
             master=frame,
-            text=self.get_option_text('추가 구매', width=2),
+            text=self.get_option_text('잡화 상점 추가 구매', width=2),
         )
         label.pack(side=tkinter.LEFT)
         frame.pack(anchor=tkinter.W)
@@ -1932,24 +1968,6 @@ class LYBL2MTab(lybgame.LYBGameTab):
         label.pack(side=tkinter.LEFT)
         frame.pack(anchor=tkinter.W)
 
-        frame = ttk.Frame(frame_label)
-        self.option_dic[lybconstant.LYB_DO_STRING_L2M_ETC + 'stash_npc_move'] = tkinter.BooleanVar(frame)
-        self.option_dic[lybconstant.LYB_DO_STRING_L2M_ETC + 'stash_npc_move'].trace(
-            'w', lambda *args: self.stash_npc_move(args, lybconstant.LYB_DO_STRING_L2M_ETC + 'stash_npc_move'
-                                                   ))
-        if not lybconstant.LYB_DO_STRING_L2M_ETC + 'stash_npc_move' in self.configure.common_config[self.game_name]:
-            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_L2M_ETC + 'stash_npc_move'] = False
-
-        check_box = ttk.Checkbutton(
-            master=frame,
-            text=self.get_option_text('창고지기한테 가기', width=27),
-            variable=self.option_dic[lybconstant.LYB_DO_STRING_L2M_ETC + 'stash_npc_move'],
-            onvalue=True,
-            offvalue=False
-        )
-        check_box.pack(anchor=tkinter.W, side=tkinter.LEFT)
-        # frame.pack(anchor=tkinter.W)
-
         # frame_label.pack(anchor=tkinter.NW, padx=5, pady=5)
         frame_label = ttk.LabelFrame(frame_r, text='체크 리스트')
 
@@ -2332,6 +2350,42 @@ class LYBL2MTab(lybgame.LYBGameTab):
         frame = ttk.Frame(frame_label)
         label = ttk.Label(
             master=frame,
+            text=self.get_option_text('이동 방식', width=22)
+        )
+        label.pack(side=tkinter.LEFT)
+
+        self.option_dic[lybconstant.LYB_DO_STRING_L2M_WORK + 'jido_move_style'] = tkinter.StringVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_L2M_WORK + 'jido_move_style'].trace(
+            'w', lambda *args: self.jido_move_style(args,
+                                                       lybconstant.LYB_DO_STRING_L2M_WORK + 'jido_move_style')
+        )
+        combobox_list = [
+            '자동 이동',
+            '텔레포트',
+        ]
+
+        if not lybconstant.LYB_DO_STRING_L2M_WORK + 'jido_move_style' in self.configure.common_config[
+            self.game_name]:
+            self.configure.common_config[self.game_name][
+                lybconstant.LYB_DO_STRING_L2M_WORK + 'jido_move_style'] = combobox_list[0]
+
+        combobox = ttk.Combobox(
+            master=frame,
+            values=combobox_list,
+            textvariable=self.option_dic[lybconstant.LYB_DO_STRING_L2M_WORK + 'jido_move_style'],
+            state="readonly",
+            height=10,
+            width=12,
+            font=lybconstant.LYB_FONT
+        )
+        combobox.set(self.configure.common_config[self.game_name][
+                         lybconstant.LYB_DO_STRING_L2M_WORK + 'jido_move_style'])
+        combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
+        frame = ttk.Frame(frame_label)
+        label = ttk.Label(
+            master=frame,
             text=self.get_option_text('최대 진행 시간(초)', width=27)
         )
         label.pack(side=tkinter.LEFT)
@@ -2535,6 +2589,9 @@ class LYBL2MTab(lybgame.LYBGameTab):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
     def stash_npc_move(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def sell_npc_move(self, args, option_name):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
     def monitoring(self, args, option_name):
@@ -2828,4 +2885,7 @@ class LYBL2MTab(lybgame.LYBGameTab):
         self.set_game_config(option_name, self.option_dic[option_name].get())
         
     def character_move_time(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def jido_move_style(self, args, option_name):
         self.set_game_config(option_name, self.option_dic[option_name].get())

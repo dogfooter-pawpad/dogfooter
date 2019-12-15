@@ -38,6 +38,10 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
             rc = self.daily_scene()
         elif self.scene_name == 'quest_scene':
             rc = self.quest_scene()
+        elif self.scene_name == 'sell_npc_scene':
+            rc = self.sell_npc_scene()
+        elif self.scene_name == 'stash_scene':
+            rc = self.stash_scene()
 
 
         else:
@@ -49,6 +53,48 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
 
         if self.status == 0:
             self.logger.info('unknown scene: ' + self.scene_name)
+            self.status += 1
+        else:
+            if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
+                self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
+
+            self.status = 0
+
+        return self.status
+
+    def stash_scene(self):
+
+        if self.status == 0:
+            self.logger.info('scene: ' + self.scene_name)
+            self.game_object.get_scene('main_scene').set_option('npc_ok', True)
+            self.status += 1
+        elif self.status == 1:
+            self.lyb_mouse_click('stash_scene_auto', custom_threshold=0)
+            self.status += 1
+        elif self.status == 2:
+            self.game_object.get_scene('item_buy_scene').status = 100
+            self.lyb_mouse_click('stash_scene_ok', custom_threshold=0)
+            self.status += 1
+        else:
+            if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
+                self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
+
+            self.status = 0
+
+        return self.status
+
+    def sell_npc_scene(self):
+
+        if self.status == 0:
+            self.logger.info('scene: ' + self.scene_name)
+            self.game_object.get_scene('main_scene').set_option('npc_ok', True)
+            self.status += 1
+        elif self.status == 1:
+            self.lyb_mouse_click('sell_npc_scene_auto', custom_threshold=0)
+            self.status += 1
+        elif self.status == 2:
+            self.game_object.get_scene('item_buy_scene').status = 100
+            self.lyb_mouse_click('sell_npc_scene_ok', custom_threshold=0)
             self.status += 1
         else:
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
@@ -328,8 +374,13 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
             self.status += 1
         elif self.status == 201:
             self.game_object.get_scene('main_scene').set_option('jido_move_ok', True)
-            self.lyb_mouse_click('jido_scene_auto_move', custom_threshold=0)
-            # self.lyb_mouse_click('jido_scene_teleport', custom_threshold=0)
+            cfg_style = self.get_game_config(lybconstant.LYB_DO_STRING_L2M_WORK + 'jido_move_style')
+            elapsed_time = time.time() - self.get_checkpoint('teleport')
+            if cfg_style == '자동 이동' or elapsed_time < self.period_bot(600):
+                self.lyb_mouse_click('jido_scene_auto_move', custom_threshold=0)
+            else:
+                self.lyb_mouse_click('jido_scene_teleport', custom_threshold=0)
+                self.set_checkpoint('teleport')
             self.status += 1
         elif self.status == 300:
             self.status += 1
@@ -596,10 +647,11 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                 (loc_x, loc_y), match_rate = self.game_object.locationResourceOnWindowPart(
                     self.window_image,
                     resource_name,
-                    custom_rect=(40, 70, 200, 100),
+                    custom_rect=(40, 70, 200, 120),
                     custom_threshold=0.85,
                     custom_flag=1,
-                    average=False
+                    average=False,
+                    debug=True,
                 )
                 self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
                 if loc_x != -1:
@@ -1211,36 +1263,47 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
             elif 1 <= home_status < 10:
                 self.set_option('home_status', home_status + 1)
                 if self.is_open_npc():
-                    self.set_option('home_status', 10)
+                    self.set_option('home_status', 100)
                 else:
                     self.lyb_mouse_click('main_scene_npc', custom_threshold=0)
                     return True
-            elif home_status == 10:
+            elif home_status == 100:
+                cfg_go_npc = self.get_game_config(lybconstant.LYB_DO_STRING_L2M_ETC + 'sell_npc_move')
+                if cfg_go_npc is False:
+                    self.set_option('home_status', 200)
+                else:
+                    self.game_object.get_scene('sell_npc_scene').status = 0
+                    self.lyb_mouse_drag('main_scene_npc_list_drag_top', 'main_scene_npc_list_drag_bot')
+                    self.set_option('home_find_npc_resource_name', 'main_scene_npc_list_매입 상인_loc')
+                    self.set_option('last_home_status', 200)
+                    self.set_option('next_home_status', 1010)
+                    self.set_option('home_status', 1000)
+                    return True
+            elif home_status == 200:
+                cfg_go_npc = self.get_game_config(lybconstant.LYB_DO_STRING_L2M_ETC + 'stash_npc_move')
+                if cfg_go_npc is False:
+                    self.set_option('home_status', 300)
+                else:
+                    self.game_object.get_scene('stash_scene').status = 0
+                    self.lyb_mouse_drag('main_scene_npc_list_drag_top', 'main_scene_npc_list_drag_bot')
+                    self.set_option('home_find_npc_resource_name', 'main_scene_npc_list_창고지기_loc')
+                    self.set_option('last_home_status', 300)
+                    self.set_option('next_home_status', 1010)
+                    self.set_option('home_status', 1000)
+                    return True
+            elif home_status == 300:
                 cfg_go_npc = self.get_game_config(lybconstant.LYB_DO_STRING_L2M_ETC + 'potion_npc_move')
                 if cfg_go_npc is False:
-                    self.set_option('home_status', 100)
+                    self.set_option('home_status', 99999)
                 else:
                     self.set_option('item_check', False)
                     self.game_object.get_scene('potion_npc_scene').status = 0
                     self.set_option('home_find_npc_resource_name', 'main_scene_npc_list_잡화 상인_loc')
                     self.lyb_mouse_drag('main_scene_npc_list_drag_top', 'main_scene_npc_list_drag_bot')
-                    self.set_option('last_home_status', 100)
+                    self.set_option('last_home_status', 99999)
                     self.set_option('next_home_status', 1010)
                     self.set_option('home_status', 1000)
                     return True
-            elif home_status == 100:
-                self.set_option('home_status', 99999)
-                # cfg_go_npc = self.get_game_config(lybconstant.LYB_DO_STRING_L2M_ETC + 'stash_npc_move')
-                # if cfg_go_npc is False:
-                #     self.set_option('home_status', 99999)
-                # else:
-                #     self.game_object.get_scene('stash_npc_scene').status = 0
-                #     self.lyb_mouse_drag('main_scene_npc_list_drag_top', 'main_scene_npc_list_drag_bot')
-                #     self.set_option('home_find_npc_resource_name', 'main_scene_npc_list_창고지기_loc')
-                #     self.set_option('last_home_status', 99999)
-                #     self.set_option('next_home_status', 1010)
-                #     self.set_option('home_status', 1000)
-                #     return True
             elif 1000 <= home_status < 1010:
                 self.set_option('home_status', home_status + 1)
                 resource_name = self.get_option('home_find_npc_resource_name')
@@ -1251,7 +1314,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                         custom_top_level=(255, 255, 255),
                         custom_below_level=(100, 100, 100),
                         custom_rect=rect,
-                        custom_threshold=0.6,
+                        custom_threshold=0.75,
                         custom_flag=1,
                         average=False,
                         debug=True
