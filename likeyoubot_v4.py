@@ -1521,6 +1521,28 @@ class LYBV4Tab(lybgame.LYBGameTab):
         frame.pack(anchor=tkinter.W)
 
         frame = ttk.Frame(frame_label)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_named'] = tkinter.BooleanVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_named'].trace(
+            'w',
+            lambda *args: self.jido_move_named(args, lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_named'
+                                                  ))
+        if not lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_named' in self.configure.common_config[
+            self.game_name]:
+            self.configure.common_config[self.game_name][
+                lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_named'] = False
+
+        check_box = ttk.Checkbutton(
+
+            master=frame,
+            text=self.get_option_text('네임드로 이동하기(우선 적용)', width=10),
+            variable=self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_named'],
+            onvalue=True,
+            offvalue=False
+        )
+        check_box.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+        frame = ttk.Frame(frame_label)
+
         self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_location'] = tkinter.BooleanVar(frame)
         self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_location'].trace(
             'w',
@@ -1534,7 +1556,7 @@ class LYBV4Tab(lybgame.LYBGameTab):
         check_box = ttk.Checkbutton(
 
             master=frame,
-            text=self.get_option_text('좌표로 이동하기', width=27),
+            text=self.get_option_text('좌표로 이동하기', width=10),
             variable=self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_location'],
             onvalue=True,
             offvalue=False
@@ -2710,6 +2732,9 @@ class LYBV4Tab(lybgame.LYBGameTab):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
     def jido_move_location(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def jido_move_named(self, args, option_name):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
     def monster_josa_area_order(self, args, option_name):
