@@ -1034,7 +1034,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                                           reverse=False,
                                           )
 
-    def is_not_moving(self, limit=5):
+    def is_not_moving(self, limit=10):
         return self.is_status_by_resource('[자동 이동 중] 감지 실패', 'main_scene_auto_moving_loc',
                                           custom_top_level=(255, 110, 30),
                                           custom_below_level=(100, 0, 0),
