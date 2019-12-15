@@ -1906,8 +1906,12 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.game_object.get_scene('jido_scene').set_option('local_map', cfg_local_map)
                 self.lyb_mouse_click('local_map_scene_world', custom_threshold=0)
         elif self.status == 11010:
+            # 네임드가 먼저 적용되게
             cfg_location = self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_location')
-            if cfg_location:
+            cfg_named = self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_named')
+            if cfg_named:
+                self.status = 11500
+            elif cfg_location:
                 self.status = 11100
             else:
                 self.game_object.get_scene('main_scene').set_option('지도 이동' + '_skip_auto', True)
@@ -2042,7 +2046,11 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.lyb_mouse_click_location(last_location[0], last_location[1])
                 self.status = 11520
         elif self.status == 11520:
-            self.status += 1
+            cfg_named = self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_named')
+            if cfg_named:
+                self.status = 11700
+            else:
+                self.status += 1
         elif 11521 <= self.status < 11540:
             self.status += 1
             if self.fail_to_detect_m(limit=2) is True:
@@ -2069,6 +2077,55 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.status += 1
         elif self.status == 11601:
             self.status = self.get_option('last_status')
+        elif self.status == 11700:
+            self.status += 1
+            self.logger.info("네임드 지도 이동")
+        elif 11701 <= self.status < 11703:
+            self.status += 1
+            self.lyb_mouse_drag('local_map_scene_detail_drag_bot', 'local_map_scene_detail_drag_top', stop_delay=0.0)
+        elif 11703 <= self.status < 11715:
+            self.status += 1
+            resource_name = 'local_map_scene_monster_detail_loc'
+            match_rate = self.game_object.rateMatchedResource(self.window_pixels, resource_name)
+            self.logger.debug(resource_name + ' ' + str(round(match_rate, 2)))
+            if match_rate > 0.9:
+                self.status = 11720
+                return self.status
+
+            rect_list = [
+                (650, 120, 730, 170),
+                (650, 150, 730, 210),
+                (650, 190, 730, 250),
+                (650, 230, 730, 290),
+                (650, 270, 730, 340),
+                (650, 320, 730, 380),
+            ]
+            resource_name = 'local_map_scene_detail_monster_info_title_loc'
+            for each in rect_list:
+                (loc_x, loc_y), match_rate = self.game_object.locationResourceOnWindowPart(
+                    self.window_image,
+                    resource_name,
+                    custom_rect=each,
+                    custom_threshold=0.6,
+                    custom_top_level=(255, 240, 200),
+                    custom_below_level=(120, 120, 100),
+                    custom_flag=1,
+                    average=False
+                )
+                self.logger.debug(resource_name + ' ' + str(each) + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
+                if loc_x != -1:
+                    self.lyb_mouse_click_location(loc_x, loc_y + 30)
+                    return self.status
+            self.lyb_mouse_drag('local_map_scene_detail_drag_little_top', 'local_map_scene_detail_drag_little_bot',
+                                stop_delay=1.0)
+        elif 11720 <= self.status < 11725:
+            self.status += 1
+            pb_name = 'local_map_scene_monster_auto_move'
+            match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
+            self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
+            if match_rate > 0.9:
+                self.lyb_mouse_click(pb_name, custom_threshold=0)
+                self.status = 11120
         elif self.status == 12000:
             self.set_option('changed', False)
             self.status += 1
