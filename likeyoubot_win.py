@@ -326,9 +326,9 @@ class LYBWin:
 
         (anchor_x, anchor_y, end_x, end_y) = self.get_player_anchor_rect(hwnd)
 
-        print("모니터 해상도:", win32api.GetSystemMetrics(0), win32api.GetSystemMetrics(1))
-        print('클릭 좌표:', anchor_x, anchor_y, x, y)
-        print("isVisible: ", win32gui.IsWindowVisible(hwnd))
+        # print("모니터 해상도:", win32api.GetSystemMetrics(0), win32api.GetSystemMetrics(1))
+        # print('클릭 좌표:', anchor_x, anchor_y, x, y)
+        # print("isVisible: ", win32gui.IsWindowVisible(hwnd))
 
         # extra = likeyoubot_extra.LYBExtra(self.configure, (win32api.GetSystemMetrics(0), win32api.GetSystemMetrics(1)))
         # extra.mouse_click(anchor_x + x, anchor_y + y)
