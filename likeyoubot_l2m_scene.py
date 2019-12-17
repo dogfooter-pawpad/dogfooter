@@ -1325,6 +1325,8 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                         self.set_option('npc_ok', False)
                         self.set_option('home_status', self.get_option('next_home_status'))
                         return True
+                if home_status == 1003:
+                    self.lyb_mouse_drag('main_scene_npc_list_drag_bot', 'main_scene_npc_list_drag_top')
             elif 1010 <= home_status < 1200:
                 self.set_option('home_status', home_status + 1)
                 if self.get_option('npc_ok'):
