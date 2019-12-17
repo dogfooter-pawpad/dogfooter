@@ -10,7 +10,7 @@ import pickle
 import os
 import likeyoubot_message
 
-import likeyoubot_l2m as LYBL2M
+import likeyoubot_v4 as LYBV4
 
 from likeyoubot_configure import LYBConstant as lybconstant
 import datetime
@@ -94,7 +94,6 @@ class LYBGUI:
         self.mb_point = None
         self.first_for_ads = True
         self.ws = None
-        self.turn_number = 0
         # --- COMMON TAB
 
         self.monitor_button_index = [-1, -1, -1, -1, -1]
@@ -271,15 +270,12 @@ class LYBGUI:
 
         lybhttp = self.login()
         base_point = lybhttp.get_elem('dogfootermacro_point')
-        if base_point == None:
+        if base_point is None:
             base_point = 0
         else:
             base_point = int(base_point)
 
         if int(self.get_mb_point()) >= base_point:
-            # s = ttk.Style()
-            # s.configure('button_dogfootermacro.TButton', font=('굴림체', 9, 'bold'), foreground='blue', background='red')
-
             self.dogfootermacro_button = ttk.Button(
                 master=frame,
                 text="라이트버전",
@@ -387,7 +383,7 @@ class LYBGUI:
         self.gui_config_dic = {}
 
         self.games = [
-            lybconstant.LYB_GAME_L2M,
+            lybconstant.LYB_GAME_V4,
             # lybconstant.LYB_GAME_LIN2REV,
             # lybconstant.LYB_GAME_CLANS,
             # lybconstant.LYB_GAME_YEOLHYUL
@@ -620,7 +616,7 @@ class LYBGUI:
         check_box.pack(side=tkinter.LEFT)
 
         combobox_list = []
-        for i in range(5, 7681):
+        for i in range(0, 7681):
             combobox_list.append(str(i))
 
         label = ttk.Label(
@@ -651,7 +647,7 @@ class LYBGUI:
         combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
 
         combobox_list = []
-        for i in range(50, 2161):
+        for i in range(0, 2161):
             combobox_list.append(str(i))
 
         label = ttk.Label(
@@ -662,7 +658,7 @@ class LYBGUI:
 
         self.gui_config_dic[lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'y'] = tkinter.StringVar(frame)
         if not lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'y' in self.configure.common_config:
-            self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'y'] = 50
+            self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'y'] = 5
         self.gui_config_dic[lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'y'].set(
             self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'y'])
         self.gui_config_dic[lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'y'].trace('w',
@@ -828,7 +824,6 @@ class LYBGUI:
         label.image = image1
         label.place(x=0, y=0)
         label.pack()
-
         # label_font = tkinter.font.Font(label, label.cget('font'))
         # label_font.configure(underline=True)
         # label_font.configure(weight='bold')
@@ -1432,7 +1427,7 @@ class LYBGUI:
 
         label = ttk.Label(
             master=login_frame,
-            image=image1,
+            image=image1
         )
         label.image = image1
         label.place(x=0, y=0)
@@ -2087,26 +2082,6 @@ class LYBGUI:
         label.pack(side=tkinter.LEFT)
         frame.pack(anchor=tkinter.W)
 
-        frame = ttk.Frame(self.configure_frame, relief=frame_relief)
-        self.monitoring_only_booleanvar = tkinter.BooleanVar(frame)
-        checkbutton = ttk.Checkbutton(
-            master=frame,
-            text="퍼플 모니터링하기(마우스 이벤트 없음)",
-            variable=self.monitoring_only_booleanvar,
-            onvalue=True,
-            offvalue=False
-        )
-
-        checkbutton.pack(side=tkinter.LEFT)
-        frame.pack(anchor=tkinter.W)
-
-        if not lybconstant.LYB_DO_BOOLEAN_MONITORING_ONLY in self.configure.common_config:
-            self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_MONITORING_ONLY] = False
-
-        self.monitoring_only_booleanvar.set(
-            self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_MONITORING_ONLY])
-        self.monitoring_only_booleanvar.trace('w', lambda *args: self.callback_monitoring_only_booleanvar(args))
-
         if not lybconstant.LYB_DO_STRING_RECOVERY_COUNT + 'freezing_limit' in self.configure.common_config:
             self.configure.common_config[lybconstant.LYB_DO_STRING_RECOVERY_COUNT + 'freezing_limit'] = 600
 
@@ -2362,7 +2337,7 @@ class LYBGUI:
         # 다크에덴M
 
         game_index = 0
-        lyb_game_tab = LYBL2M.LYBL2MTab(
+        lyb_game_tab = LYBV4.LYBV4Tab(
             self.tab_frame[game_index + 1],
             self.configure,
             self.game_options[self.games[game_index]],
@@ -2370,7 +2345,7 @@ class LYBGUI:
             self.width,
             self.height
         )
-        self.game_tab_dic[lybconstant.LYB_GAME_L2M] = lyb_game_tab
+        self.game_tab_dic[lybconstant.LYB_GAME_V4] = lyb_game_tab
 
         # # 헌드레드 소울
         # lybhttp = self.login()
@@ -2691,35 +2666,6 @@ class LYBGUI:
         self.start_long_polling_worker()
         self.start_websocket_worker()
         self.manage_workers()
-        self.distribute_workers()
-
-    def distribute_workers(self):
-
-        self.workers = [worker for worker in self.workers if worker.isAlive()]
-        worker_count = len(self.workers)
-
-        if worker_count < 1:
-            worker_count = 1
-
-        turn_number = self.turn_number % worker_count
-        self.turn_number += 1
-        if self.turn_number > 99999:
-            self.turn_number = 0
-
-        period_bot = float(1000.0)
-        if len(self.workers) > 0:
-            # self.logger.info("순서: " + str(turn_number))
-            worker = self.workers[turn_number]
-            worker.command_queue.put_nowait(likeyoubot_message.LYBMessage('turn', None))
-
-            try:
-                period_bot = float(self.configure.common_config['wakeup_period_entry']) * float(1000.0)
-            except:
-                period_bot = float(1000.0)
-
-            # self.logger.info("현재 실행 중인 창: " + str(self.workers) + ':' + str(worker_count))
-
-        self.master.after(int(period_bot), self.distribute_workers)
 
     def manage_workers(self):
         # self.information.insert("end", time.ctime() + "\n")
@@ -2946,8 +2892,7 @@ class LYBGUI:
         if chat_id is None or len(str(chat_id)) == 0:
             return
 
-        update = rest.getTelegramUpdates(chat_id, adjust_time=int(
-            self.configure.common_config[lybconstant.LYB_DO_STRING_PERIOD_TELEGRAM]))
+        update = rest.getTelegramUpdates(chat_id, adjust_time=int(self.configure.common_config[lybconstant.LYB_DO_STRING_PERIOD_TELEGRAM]))
         if update is None:
             return
 
@@ -3145,7 +3090,7 @@ class LYBGUI:
                 self.app_player_process.set('')
                 if len(self.configure.keyword) > 0:
                     self.logging_message("FAIL", "[" + self.configure.keyword + "]" + " 단어가 포함된 창 검색 실패")
-                self.logging_message("FAIL", "창 사이즈( 800 x 450 ), 창이 최소화 상태인지 확인")
+                self.logging_message("FAIL", "창 사이즈( 960 x 540 ), 창이 최소화 상태인지 확인")
             self.refresh_window_game()
         elif message.type == 'log':
             self.logging_message(None, message.message)
@@ -3252,6 +3197,7 @@ class LYBGUI:
         # 	for each_config, each_value in self.configure.common_config.items():
         # 		if not each_config in self.configure.window_config[self.search_window.get(i)]:
         # 			self.configure.window_config[self.search_window.get(i)][each_config] = self.configure.common_config[each_config]
+
 
         for each_app_player in self.app_player_process_list['values']:
             if not each_app_player in self.configure.window_config:
@@ -3441,15 +3387,16 @@ class LYBGUI:
 
     def start_websocket_worker(self):
 
+
         worker_thread = self.executeThread(is_system=True)
         if worker_thread is None:
             return
 
         websocket.enableTrace(True)
         self.ws = websocket.WebSocketApp("ws://localhost:18091",
-                                         on_message=self.on_message,
-                                         on_error=self.on_error,
-                                         on_close=self.on_close)
+                                    on_message=self.on_message,
+                                    on_error=self.on_error,
+                                    on_close=self.on_close)
         self.ws.on_open = self.on_open
 
         worker_thread.command_queue.put_nowait(likeyoubot_message.LYBMessage('websocket', self))
@@ -3543,7 +3490,7 @@ class LYBGUI:
     def callback_fork_dogfootermacro(self, e):
 
         file_path = resource_path('dogfootermacro.exe')
-        if os.path.isfile(file_path) == False:
+        if os.path.isfile(file_path) is False:
             cmd = [
                 'python',
                 'dogfootermacro.py',
@@ -4130,11 +4077,6 @@ class LYBGUI:
 
         self.configure.common_config[
             lybconstant.LYB_DO_BOOLEAN_MOUSE_POINTER + 'away'] = self.mouse_pointer_away_booleanvar.get()
-
-    def callback_monitoring_only_booleanvar(self, args):
-
-        self.configure.common_config[
-            lybconstant.LYB_DO_BOOLEAN_MONITORING_ONLY] = self.monitoring_only_booleanvar.get()
 
     def callback_close_app_nox_new_booleanvar(self, args):
 
@@ -4981,8 +4923,7 @@ class LYBGUI:
                 return
             rest = self.login()
 
-            chat_id = rest.connect_telegram(self.telegram_entry.get(), adjust_time=int(
-                self.configure.common_config[lybconstant.LYB_DO_STRING_PERIOD_TELEGRAM]))
+            chat_id = rest.connect_telegram(self.telegram_entry.get(), adjust_time=int(self.configure.common_config[lybconstant.LYB_DO_STRING_PERIOD_TELEGRAM]))
             if chat_id != '' and chat_id != -1:
                 error_message = rest.update_chat_id(chat_id)
                 if error_message == '':
