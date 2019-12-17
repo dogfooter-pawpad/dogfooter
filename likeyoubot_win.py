@@ -9,12 +9,13 @@ import win32ui
 from ctypes import windll
 from PIL import Image
 from likeyoubot_configure import LYBConstant as lybconstant
+import likeyoubot_extra
 import random
 
 
 class LYBWin:
-    WIDTH = 960
-    HEIGHT = 540
+    WIDTH = 800
+    HEIGHT = 450
     NOX_EXTRA_WIDTH = 2
     NOX_EXTRA_HEIGHT = 30
     NOX_EXTRA_UHD_HEIGHT = 46
@@ -129,14 +130,14 @@ class LYBWin:
             (s_x, s_y, e_x, e_y) = win32gui.GetWindowRect(hwnd)
             w_width = e_x - s_x
             w_height = e_y - s_y
-            # print(str(win32gui.GetWindowText(hwnd)) + '[' + str ( (s_x, s_y) ) + '] [' + str( (w_width, w_height) ) + ']')
+            # print(str(win32gui.GetWindowText(hwnd)) + '[' + str ( (s_x, s_y, e_x, e_y) ) + '] [' + str( (w_width, w_height) ) + ']')
 
         if re.match(wildcard, str(win32gui.GetWindowText(hwnd))) != None and win32gui.IsWindowVisible(hwnd) != 0:
             # print('--------------------> !!! found window DEBUG2 new : ', wildcard, str(win32gui.GetWindowText(hwnd)), ':', self.handle_list, ':')
             if not hwnd in self.handle_list:
                 (top_left_x, top_left_y, bottom_right_x, bottom_right_y) = win32gui.GetWindowRect(hwnd)
                 # print('--------------------> !!! found window DEBUG3 new : ', (top_left_x, top_left_y, bottom_right_x, bottom_right_y))
-                # print(win32gui.GetWindowText(hwnd), abs(bottom_right_y - top_left_y))
+                # print(hwnd, win32gui.GetWindowText(hwnd), abs(bottom_right_y - top_left_y))
 
                 if (abs(bottom_right_x - top_left_x - LYBWin.WIDTH) < 100 and
                             abs(bottom_right_y - top_left_y - LYBWin.HEIGHT) < 100
@@ -145,7 +146,7 @@ class LYBWin:
                     diff_width = abs(top_left_x - bottom_right_x)
                     diff_height = abs(bottom_right_y - top_left_y)
 
-                    print(win32gui.GetWindowText(hwnd), diff_width, diff_height)
+                    print(hwnd, win32gui.GetWindowText(hwnd), diff_width, diff_height)
 
                     if diff_height == LYBWin.HEIGHT + 34 and diff_width == LYBWin.WIDTH + 4:
                         # 녹스 FHD
@@ -185,6 +186,15 @@ class LYBWin:
                     elif abs(bottom_right_x - top_left_x) == LYBWin.WIDTH + 40:
                         # Memu
                         win32gui.EnumChildWindows(hwnd, self.callback_memu_child_process, hwnd)
+                    elif abs(bottom_right_x - top_left_x) == LYBWin.WIDTH and abs(bottom_right_y - top_left_y) == LYBWin.HEIGHT:
+                        # Purple
+                        self.handle_list.append(hwnd)
+                    elif diff_height == LYBWin.HEIGHT + 36 and diff_width == LYBWin.WIDTH + 42:
+                        # LDPlayer FHD For L2M
+                        win32gui.EnumChildWindows(hwnd, self.callback_momo_child_process, hwnd)
+                    elif diff_height == LYBWin.HEIGHT + 53 and diff_width == LYBWin.WIDTH + 62:
+                        # LDPlayer UHD For L2M
+                        win32gui.EnumChildWindows(hwnd, self.callback_momo_child_process, hwnd)
 
                         # if re.match('Nox', str(win32gui.GetWindowText(hwnd))):
                         #     print('Nox 사이드 바: ', str(win32gui.GetWindowText(hwnd)), win32gui.IsWindowVisible(hwnd))
@@ -288,7 +298,7 @@ class LYBWin:
                               win32con.SWP_SHOWWINDOW + win32con.SWP_NOMOVE + win32con.SWP_NOSIZE)
 
     def get_title(self, handle):
-        return win32gui.GetWindowText(handle)
+        return win32gui.GetWindowText(handle) + "(" + str(handle) + ")"
 
     def set_foreground(self, handle):
 
@@ -297,6 +307,10 @@ class LYBWin:
         except:
             # self.logger.warn('SetForegroundWindow fail')
             pass
+
+    def set_background(self, handle):
+
+        win32gui.SetWindowPos(handle, win32con.HWND_BOTTOM, 0, 0, 0, 0, win32con.SWP_NOMOVE + win32con.SWP_NOSIZE)
 
     def get_window_location(self, hwnd):
         # (anchor_x, anchor_y, end_x, end_y) = win32gui.GetWindowRect(hwnd)
@@ -307,112 +321,162 @@ class LYBWin:
         return (anchor_x, anchor_y, end_x, end_y)
 
     def mouse_click(self, hwnd, x, y, delay=0, release=True):
-
-        rand_x = 0
-        rand_y = 0
-        if self.configure is not None and self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_RANDOM_CLICK] is True:
-            random_error = int(self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_RANDOM_CLICK + 'pixel'])
-            rand_x += int(random_error * random.random())
-            rand_y += int(random_error * random.random())
-
-        rand_delay = 0.05
-        if self.configure is not None and self.configure.common_config[lybconstant.LYB_DO_STRING_RANDOM_CLICK_DELAY] is not None:
-            rand_delay = float(self.configure.common_config[lybconstant.LYB_DO_STRING_RANDOM_CLICK_DELAY])
-            if rand_delay == 0:
-                rand_delay = 0.05
-
-        # print('>>>> RANDOM:', (rand_x, rand_y))
-        # print('>>> RANDOM DELAY:', rand_delay)
-        # (anchor_x, anchor_y, end_x, end_y) = win32gui.GetWindowRect(hwnd)
-
-        lParam = win32api.MAKELONG(int(x + rand_x), int(y + rand_y))
-
-        # lParam = win32api.MAKELONG(int(x), int(y))
-
-        # win32gui.SendMessage(hwnd, win32con.WM_LBUTTONDOWN, win32con.MK_LBUTTON, lParam)
-        win32gui.PostMessage(hwnd, win32con.WM_LBUTTONDOWN, win32con.MK_LBUTTON, lParam)
-        if delay == 0:
-            delay = rand_delay
-
-        if delay > 0:
-            time.sleep(delay)
-
-        if release is True:
-            # win32gui.SendMessage(hwnd, win32con.WM_LBUTTONUP, 0, lParam)
-            win32gui.PostMessage(hwnd, win32con.WM_LBUTTONUP, 0, lParam)
-
-            # win32api.SetCursorPos((int(x), int(y)))
-            # win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, int(x), int(y), 0, 0)
-            # win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, int(x), int(y), 0, 0)
-
-    def mouse_drag(self, hwnd, from_x, from_y, to_x, to_y, delay=0.5, stop_delay=0, move_away=True):
-
-        if from_x == to_x and from_y == to_y:
+        if self.configure is not None and self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_MONITORING_ONLY]:
             return
 
-        if from_x == to_x:
-            x_step = 1
-        else:
-            x_step = abs(from_x - to_x)
+        (anchor_x, anchor_y, end_x, end_y) = self.get_player_anchor_rect(hwnd)
 
-        if x_step < 15:
-            x_step = 1
+        # print("모니터 해상도:", win32api.GetSystemMetrics(0), win32api.GetSystemMetrics(1))
+        # print('클릭 좌표:', anchor_x, anchor_y, x, y)
+        # print("isVisible: ", win32gui.IsWindowVisible(hwnd))
 
-        if from_y == to_y:
-            y_step = 1
-        else:
-            y_step = abs(from_y - to_y)
+        # extra = likeyoubot_extra.LYBExtra(self.configure, (win32api.GetSystemMetrics(0), win32api.GetSystemMetrics(1)))
+        # extra.mouse_click(anchor_x + x, anchor_y + y)
+        pyautogui.click(anchor_x + x, anchor_y + y)
 
-        if y_step < 15:
-            y_step = 1
+        # self.set_window_pos(hwnd, win32api.GetSystemMetrics(0), win32api.GetSystemMetrics(1))
+        # print("MOVE 1 ")
+        # time.sleep(1)
+        # extra.mouse_move(end_x + 1, end_y + 1)
+        # time.sleep(1)
+        #
+        # self.set_window_pos(hwnd, anchor_x, anchor_y)
+        # self.set_background(hwnd)
+        # time.sleep(1)
+        # print("CLICK")
+        # extra.mouse_click(anchor_x + x, anchor_y + y)
+        # time.sleep(1)
+        #
+        # self.set_window_pos(hwnd, win32api.GetSystemMetrics(0), win32api.GetSystemMetrics(1))
+        # time.sleep(1)
+        # print("MOVE 2 ")
+        # extra.mouse_move(end_x + 1, end_y + 1)
+        # time.sleep(1)
+        #
+        # self.set_window_pos(hwnd, anchor_x, anchor_y)
+        # self.set_background(hwnd)
 
-        step_delay = delay / (abs(x_step) * abs(y_step))
+        # extra = likeyoubot_extra.LYBExtra(self.configure)
+        # extra.mouse_click(anchor_x + x, anchor_y + y, delay, release)
 
-        if from_x > to_x:
-            x_factor = -1
-        else:
-            x_factor = 1
+        # rand_x = 0
+        # rand_y = 0
+        # if self.configure is not None and self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_RANDOM_CLICK] is True:
+        #     random_error = int(self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_RANDOM_CLICK + 'pixel'])
+        #     rand_x += int(random_error * random.random())
+        #     rand_y += int(random_error * random.random())
+        #
+        # rand_delay = 0.05
+        # if self.configure is not None and self.configure.common_config[lybconstant.LYB_DO_STRING_RANDOM_CLICK_DELAY] is not None:
+        #     rand_delay = float(self.configure.common_config[lybconstant.LYB_DO_STRING_RANDOM_CLICK_DELAY])
+        #     if rand_delay == 0:
+        #         rand_delay = 0.05
+        #
+        # # print('>>>> RANDOM:', (rand_x, rand_y))
+        # # print('>>> RANDOM DELAY:', rand_delay)
+        # # (anchor_x, anchor_y, end_x, end_y) = win32gui.GetWindowRect(hwnd)
+        #
+        # lParam = win32api.MAKELONG(int(x + rand_x), int(y + rand_y))
+        #
+        # # lParam = win32api.MAKELONG(int(x), int(y))
+        #
+        # try:
+        #     # win32gui.SendMessage(hwnd, win32con.WM_LBUTTONDOWN, win32con.MK_LBUTTON, lParam)
+        #     win32gui.PostMessage(hwnd, win32con.WM_LBUTTONDOWN, win32con.MK_LBUTTON, lParam)
+        #     if delay == 0:
+        #         delay = rand_delay
+        # except:
+        #     print('fail: ' + str(sys.exc_info()[0]) + '(' + str(sys.exc_info()[1]) + ')')
+        #
+        # if delay > 0:
+        #     time.sleep(delay)
+        #
+        # if release is True:
+        #     # win32gui.SendMessage(hwnd, win32con.WM_LBUTTONUP, 0, lParam)
+        #     try:
+        #         win32gui.PostMessage(hwnd, win32con.WM_LBUTTONUP, 0, lParam)
+        #     except:
+        #         print('fail: ' + str(sys.exc_info()[0]) + '(' + str(sys.exc_info()[1]) + ')')
+        #
+        #     # win32api.SetCursorPos((int(x), int(y)))
+        #     # win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, int(x), int(y), 0, 0)
+        #     # win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, int(x), int(y), 0, 0)
 
-        if from_y > to_y:
-            y_factor = -1
-        else:
-            y_factor = 1
+    def mouse_drag(self, hwnd, from_x, from_y, to_x, to_y, delay=0.5, stop_delay=0, move_away=True):
+        if self.configure is not None and self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_MONITORING_ONLY]:
+            return
 
         (anchor_x, anchor_y, end_x, end_y) = self.get_player_anchor_rect(hwnd)
-        adj_x, adj_y = self.get_player_adjust(hwnd)
-        lParam = win32api.MAKELONG(from_x + adj_x, from_y + adj_y)
 
-        anchor_x, anchor_y, bottom_right_x, bottom_right_y = self.get_window_location(hwnd)
+        pyautogui.moveTo(anchor_x + from_x, anchor_y + from_y)
+        pyautogui.dragTo(anchor_x + to_x, anchor_y + to_y, duration=delay)
 
-        # 사용자 마우스 커서가 윈도우 화면안에 들어와 있으면 비활성 마우스 이동이 되지 않기때문에
-        # 마우스 커서를 잠깐 밖으로 이동시킨다.
-
-        if move_away == True:
-            if self.is_cursor_in_window(hwnd):
-                pyautogui.moveTo(anchor_x - 2, anchor_y - 2)
-
-        win32gui.PostMessage(hwnd, win32con.WM_LBUTTONDOWN, win32con.MK_LBUTTON, lParam)
-
-        if x_step == 1 or y_step == 1:
-            for i in range(int(x_step)):
-                for j in range(int(y_step)):
-                    lParam = win32api.MAKELONG(from_x + adj_x + i * x_factor, from_y + adj_y + j * y_factor)
-                    # lParam = win32api.MAKELONG(from_x + i*x_factor, from_y + j*y_factor)
-                    win32gui.PostMessage(hwnd, win32con.WM_MOUSEMOVE, win32con.MK_LBUTTON, lParam)
-                    time.sleep(step_delay)
-        else:
-            inclination = y_step / x_step
-            for i in range(int(x_step)):
-                lParam = win32api.MAKELONG(from_x + adj_x + i * x_factor,
-                                           from_y + adj_y + int(i * y_factor * inclination))
-                # lParam = win32api.MAKELONG(from_x + i*x_factor, from_y + j*y_factor)
-                win32gui.PostMessage(hwnd, win32con.WM_MOUSEMOVE, win32con.MK_LBUTTON, lParam)
-                time.sleep(step_delay)
-
-        if stop_delay > 0:
-            time.sleep(stop_delay)
-
-        win32gui.PostMessage(hwnd, win32con.WM_LBUTTONUP, 0, lParam)
+        # if from_x == to_x and from_y == to_y:
+        #     return
+        #
+        # if from_x == to_x:
+        #     x_step = 1
+        # else:
+        #     x_step = abs(from_x - to_x)
+        #
+        # if x_step < 15:
+        #     x_step = 1
+        #
+        # if from_y == to_y:
+        #     y_step = 1
+        # else:
+        #     y_step = abs(from_y - to_y)
+        #
+        # if y_step < 15:
+        #     y_step = 1
+        #
+        # step_delay = delay / (abs(x_step) * abs(y_step))
+        #
+        # if from_x > to_x:
+        #     x_factor = -1
+        # else:
+        #     x_factor = 1
+        #
+        # if from_y > to_y:
+        #     y_factor = -1
+        # else:
+        #     y_factor = 1
+        #
+        # (anchor_x, anchor_y, end_x, end_y) = self.get_player_anchor_rect(hwnd)
+        # adj_x, adj_y = self.get_player_adjust(hwnd)
+        # lParam = win32api.MAKELONG(from_x + adj_x, from_y + adj_y)
+        #
+        # anchor_x, anchor_y, bottom_right_x, bottom_right_y = self.get_window_location(hwnd)
+        #
+        # # 사용자 마우스 커서가 윈도우 화면안에 들어와 있으면 비활성 마우스 이동이 되지 않기때문에
+        # # 마우스 커서를 잠깐 밖으로 이동시킨다.
+        #
+        # if move_away == True:
+        #     if self.is_cursor_in_window(hwnd):
+        #         pyautogui.moveTo(anchor_x - 2, anchor_y - 2)
+        #
+        # win32gui.PostMessage(hwnd, win32con.WM_LBUTTONDOWN, win32con.MK_LBUTTON, lParam)
+        #
+        # if x_step == 1 or y_step == 1:
+        #     for i in range(int(x_step)):
+        #         for j in range(int(y_step)):
+        #             lParam = win32api.MAKELONG(from_x + adj_x + i * x_factor, from_y + adj_y + j * y_factor)
+        #             # lParam = win32api.MAKELONG(from_x + i*x_factor, from_y + j*y_factor)
+        #             win32gui.PostMessage(hwnd, win32con.WM_MOUSEMOVE, win32con.MK_LBUTTON, lParam)
+        #             time.sleep(step_delay)
+        # else:
+        #     inclination = y_step / x_step
+        #     for i in range(int(x_step)):
+        #         lParam = win32api.MAKELONG(from_x + adj_x + i * x_factor,
+        #                                    from_y + adj_y + int(i * y_factor * inclination))
+        #         # lParam = win32api.MAKELONG(from_x + i*x_factor, from_y + j*y_factor)
+        #         win32gui.PostMessage(hwnd, win32con.WM_MOUSEMOVE, win32con.MK_LBUTTON, lParam)
+        #         time.sleep(step_delay)
+        #
+        # if stop_delay > 0:
+        #     time.sleep(stop_delay)
+        #
+        # win32gui.PostMessage(hwnd, win32con.WM_LBUTTONUP, 0, lParam)
 
     def is_cursor_in_window(self, hwnd):
         cursor_x, cursor_y = win32gui.GetCursorPos()
@@ -445,6 +509,10 @@ class LYBWin:
             return 'momo', resolution
         elif w_width == LYBWin.WIDTH and w_height == LYBWin.HEIGHT and process_name == 'RenderWindowWindow':
             return 'momo', resolution
+        elif w_width == LYBWin.WIDTH and w_height == LYBWin.HEIGHT and process_name == 'LINEAGE2M':
+            return 'purple', resolution
+        elif w_width == LYBWin.WIDTH and w_height == LYBWin.HEIGHT and process_name == 'LINEAGE 2M':
+            return 'purple', resolution
 
         return '', resolution
 
@@ -464,6 +532,8 @@ class LYBWin:
         player_name, resolution = self.get_player(hwnd)
 
         if player_name == 'nox':
+            return anchor_x, anchor_y, end_x, end_y
+        elif player_name == "purple":
             return anchor_x, anchor_y, end_x, end_y
         else:
             if resolution == 'uhd':
@@ -502,6 +572,8 @@ class LYBWin:
         diff_width = abs(top_left_x - bottom_right_x)
         diff_height = abs(bottom_right_y - top_left_y)
 
+        # print(diff_width, diff_height)
+
         if diff_height == LYBWin.HEIGHT + 34 and diff_width == LYBWin.WIDTH + 4:
             # 녹스 FHD
             return 'fhd'
@@ -511,9 +583,18 @@ class LYBWin:
         elif diff_height == LYBWin.HEIGHT + 38 and diff_width == LYBWin.WIDTH + 38:
             # LDPlayer FHD
             return 'fhd'
+        elif diff_height == LYBWin.HEIGHT + 36 and diff_width == LYBWin.WIDTH + 42:
+            # LDPlayer FHD for L2M
+            return 'fhd'
+        elif diff_height == LYBWin.HEIGHT + 53 and diff_width == LYBWin.WIDTH + 62:
+            # LDPlayer FHD for L2M
+            return 'uhd'
         elif diff_height == LYBWin.HEIGHT + 56 and diff_width == LYBWin.WIDTH + 56:
             # LDPlayer UHD
             return 'uhd'
+        elif diff_height == LYBWin.HEIGHT and diff_width == LYBWin.WIDTH:
+            # Purple UHD
+            return 'fhd'
         else:
             return 'fhd'
 
@@ -536,7 +617,7 @@ class LYBWin:
             if resolution == 'uhd':
                 return -1, -54
             else:
-                return -1, -36
+                return -1, -34
 
     def get_window_screenshot(self, hwnd, flag):
         # hwnd = win32gui.FindWindow(None, '계산기')

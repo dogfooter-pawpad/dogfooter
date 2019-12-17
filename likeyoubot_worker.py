@@ -8,7 +8,7 @@ from PIL import ImageGrab
 import cv2
 import numpy as np
 from likeyoubot_configure import LYBConstant as lybconstant
-import likeyoubot_v4
+import likeyoubot_l2m
 import likeyoubot_logger
 import traceback
 import pyautogui
@@ -49,9 +49,14 @@ class LYBWorker(threading.Thread):
         # logger.debug('['+self.name+']'+' start:'+str(threading.currentThread()))
         while True:
             try:
-                if self.pause_flag:
-                    if self.game is not None:
-                        self.game.interval = 9999999
+                # if self.pause_flag:
+                #     if self.game is not None:
+                #         self.game.interval = 9999999
+                #     recv_msg = self.command_queue.get()
+                # else:
+                #     recv_msg = self.command_queue.get_nowait()
+
+                if threading.currentThread().getName() != 'websocket_worker' and threading.currentThread().getName() != 'long_polling_worker':
                     recv_msg = self.command_queue.get()
                 else:
                     recv_msg = self.command_queue.get_nowait()
@@ -119,7 +124,6 @@ class LYBWorker(threading.Thread):
 
                     # self.response_queue.join()
                     break
-
                 elif recv_msg.type == 'search':
                     window_config = recv_msg.message
                     (handle_list, side_handle_dic, parent_handle_dic, multi_handle_dic) = self.findWindows()
@@ -205,7 +209,7 @@ class LYBWorker(threading.Thread):
                         custom_loc_x = resolution_w
                         custom_loc_y = resolution_h
 
-                    if window_name == None:
+                    if window_name is None:
                         # if len(self.ui.parent_hwnds) > 0:
                         # 	hwnds = self.ui.parent_hwnds
                         # else:
@@ -340,16 +344,18 @@ class LYBWorker(threading.Thread):
 
                     threading.currentThread().setName(self.window_title)
 
-                    if self.win == None:
+                    if self.win is None:
                         self.win = likeyoubot_win.LYBWin(self.configure.window_title, self.configure)
-                    if self.window_config[lybconstant.LYB_DO_BOOLEAN_USE_INACTIVE_MODE] == False:
+
+                    if self.window_config and lybconstant.LYB_DO_BOOLEAN_USE_INACTIVE_MODE in self.window_config and \
+                            self.window_config[lybconstant.LYB_DO_BOOLEAN_USE_INACTIVE_MODE] is False:
                         self.win.set_foreground(self.hwnd)
 
                     # 무슨 게임이냐에 따라서
                     try:
 
-                        if self.game_name == lybconstant.LYB_GAME_V4:
-                            self.game = likeyoubot_v4.LYBV4(None, None, self.win)
+                        if self.game_name == lybconstant.LYB_GAME_L2M:
+                            self.game = likeyoubot_l2m.LYBL2M(None, None, self.win)
                         # elif self.game_name == lybconstant.LYB_GAME_HUNDREDSOUL:
                         # 	self.game = likeyoubot_hundredsoul.LYBHundredSoul(None, None, self.win)
 
@@ -386,6 +392,7 @@ class LYBWorker(threading.Thread):
                     self.app_player_type, resolution = self.win.get_player(self.hwnd)
                     win_width, win_height = self.win.get_player_size(self.hwnd)
 
+                    self.logger.info("app_player_type: " + str(self.app_player_type))
                     # print(win_width, win_height)
                     if (self.app_player_type == 'momo' or
                             self.app_player_type == 'memu'
@@ -437,6 +444,13 @@ class LYBWorker(threading.Thread):
                             likeyoubot_message.LYBMessage('log',
                                                           '[' + self.window_title + '] 창 크기: ' + str(
                                                               (win_width, win_height)) + ', 플레이어 종류: ' + '녹스')
+                        )
+                    elif self.app_player_type == 'purple':
+
+                        self.response_queue.put_nowait(
+                            likeyoubot_message.LYBMessage('log',
+                                                          '[' + self.window_title + '] 창 크기: ' + str(
+                                                              (win_width, win_height)) + ', 플레이어 종류: ' + 'PURPLE')
                         )
 
                     else:
@@ -503,17 +517,17 @@ class LYBWorker(threading.Thread):
                 self.response_queue.join()
                 break
 
-            if self.game != None and self.game.interval != None:
+            if self.game is not None and self.game.interval is not None:
                 # print('[GAME INTERVAL]:', self.game.interval)
                 if self.game.interval > 0:
                     time.sleep(self.game.interval)
                 self.game.interval = None
             else:
-                if self.common_config == None:
-                    time.sleep(1)
+                if self.common_config is None:
+                    time.sleep(0.1)
                 else:
                     # print('[INTERVAL]:', float(self.common_config['wakeup_period_entry']))
-                    time.sleep(float(self.common_config['wakeup_period_entry']))
+                    time.sleep(0.1)
 
     # logger.debug('['+self.name+']'+' end:'+str(threading.currentThread()))
 
@@ -527,7 +541,7 @@ class LYBWorker(threading.Thread):
 
         self.win.find_window_wildcard(wildcard)
 
-        # print('DEBUG 1004:', self.win.handle_list)
+        print('DEBUG 1004:', self.win.handle_list)
 
         for each_hwnd in self.win.handle_list:
             # self.win.set_foreground(each_hwnd)
@@ -560,7 +574,7 @@ class LYBWorker(threading.Thread):
         # print('START GRAB', datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])
         # s = time.time()
         try:
-            if self.window_config[lybconstant.LYB_DO_BOOLEAN_USE_INACTIVE_MODE] is False:
+            if self.window_config[lybconstant.LYB_DO_BOOLEAN_USE_INACTIVE_MODE] == False:
                 current_window_image_grab = ImageGrab.grab(bbox=(anchor_x - adj_x, anchor_y - adj_y, end_x, end_y))
             else:
                 current_window_image_grab = self.win.get_window_screenshot(self.hwnd, inactive_flag)
@@ -641,7 +655,7 @@ class LYBWorker(threading.Thread):
                 win_title = self.win.get_title(parent_handle_dic[h])
                 self.logger.warn('ldplayer ' + str((custom_loc_x, custom_loc_y)) + ' ' + str(win_title))
                 try:
-                    if window_config[win_title][lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'boolean'] == True:
+                    if window_config[win_title][lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'boolean'] is True:
                         try:
                             win_loc_x = int(window_config[win_title][
                                                 lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'x']) + custom_loc_x
@@ -656,7 +670,7 @@ class LYBWorker(threading.Thread):
                     pass
             else:
                 win_title = self.win.get_title(h)
-                self.logger.warn('nox ' + str((custom_loc_x, custom_loc_y)) + ' ' + str(win_title))
+                self.logger.warn('퍼플 ' + str((custom_loc_x, custom_loc_y)) + ' ' + str(win_title))
                 try:
                     if window_config[win_title][lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'boolean'] == True:
                         try:
