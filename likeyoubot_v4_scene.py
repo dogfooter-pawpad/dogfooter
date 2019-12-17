@@ -1429,7 +1429,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.set_option('is_end', False)
             self.set_option('select_index', 0)
             self.set_option('init_status', 1)
-            self.status += 1
+            self.status = 1000
         elif 1 <= self.status < 5:
             self.status += 1
             resource_name = 'monster_josa_scene_new_loc'
@@ -1645,10 +1645,15 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.status += 1
         elif self.status == 701:
             if self.get_option('search_order') == 'bot':
-                self.lyb_mouse_drag('monster_josa_scene_drag_top', 'monster_josa_scene_drag_bot', stop_delay=0.0)
+                self.lyb_mouse_drag('monster_josa_scene_drag_top', 'monster_josa_scene_drag_bot', stop_delay=1.0)
             else:
-                self.lyb_mouse_drag('monster_josa_scene_drag_bot', 'monster_josa_scene_drag_top', stop_delay=0.0)
+                self.lyb_mouse_drag('monster_josa_scene_drag_bot', 'monster_josa_scene_drag_top', stop_delay=1.0)
             self.status = self.get_option('last_status')
+        elif 1000 <= self.status < 1005:
+            self.status += 1
+            self.lyb_mouse_drag('monster_josa_scene_list_drag_top', 'monster_josa_scene_list_drag_bot', stop_delay=0.0)
+        elif self.status == 1005:
+            self.status = 1
         else:
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
                 self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
@@ -1997,17 +2002,17 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             if match_rate > 0.9:
                 self.lyb_mouse_click(pb_name, custom_threshold=0)
                 return self.status
-        elif 11502 <= self.status < 11504:
+        elif 11502 <= self.status < 11506:
             self.lyb_mouse_drag('local_map_scene_detail_drag_bot', 'local_map_scene_detail_drag_top', stop_delay=0.0)
             self.status += 1
-        elif self.status == 11504:
+        elif self.status == 11506:
             self.status += 1
             cfg_order = self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_area_order')
             if cfg_order == '위에서':
                 self.status = 11510
             else:
                 self.status = 11515
-        elif self.status == 11505:
+        elif self.status == 11507:
             self.status = self.get_option('last_status')
         elif 11510 <= self.status < 11515:
             self.status += 1
@@ -2040,7 +2045,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                     self.status = 11515
                     return self.status
             self.set_option('last_status', self.status)
-            self.status = 11505
+            self.status = 11507
             self.lyb_mouse_drag('local_map_scene_detail_drag_little_top', 'local_map_scene_detail_drag_little_bot',
                                 stop_delay=1.0)
         elif 11515 <= self.status < 11519:
