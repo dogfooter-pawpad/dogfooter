@@ -1972,7 +1972,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
                 if max_rate < match_rate:
                     max_rate = match_rate
-                
+
             if max_rate < 0.95:
                 self.lyb_mouse_click('local_map_scene_zoom_plus', custom_threshold=0)
                 self.status += 1
@@ -2145,6 +2145,13 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.status = 11720
                 return self.status
 
+            resource_name = 'local_map_scene_monster_auto_move_single_loc'
+            match_rate = self.game_object.rateMatchedResource(self.window_pixels, resource_name)
+            self.logger.debug(resource_name + ' ' + str(round(match_rate, 2)))
+            if match_rate > 0.9:
+                self.status = 11720
+                return self.status
+
             rect_list = [
                 (650, 120, 730, 170),
                 (650, 150, 730, 210),
@@ -2174,6 +2181,14 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
         elif 11720 <= self.status < 11725:
             self.status += 1
             pb_name = 'local_map_scene_monster_auto_move'
+            match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
+            self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
+            if match_rate > 0.9:
+                self.lyb_mouse_click(pb_name, custom_threshold=0)
+                self.status = 11120
+                return self.status
+
+            pb_name = 'local_map_scene_monster_auto_move_single'
             match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
             self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
             if match_rate > 0.9:
