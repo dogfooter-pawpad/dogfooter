@@ -147,10 +147,10 @@ class LYBGame():
             self.request_restart_app_player = False
             return 7000051
 
-        # if self.last_window_pixels != None and self.window_pixels != None:
-        #     if self.is_freezing() == True:
-        #         self.request_terminate = True
-        #         return 0
+        if self.last_window_pixels != None and self.window_pixels != None:
+            if self.is_freezing() == True:
+                self.request_terminate = True
+                return 0
 
         self.last_window_pixels = self.window_pixels
         self.window_pixels = window_pixels
@@ -459,7 +459,7 @@ class LYBGame():
             self.rest.login()
         chat_id = self.rest.get_chat_id()
 
-        if image is None:
+        if image == None:
             self.rest.send_telegram_message(chat_id, message)
         else:
             self.rest.send_telegram_image(chat_id, image)
@@ -738,19 +738,19 @@ class LYBGame():
     def setWindowHandle(self, hwnd, side_hwnd, parent_hwnd, multi_hwnd_dic):
         self.hwnd = hwnd
 
-        if parent_hwnd == 0 or parent_hwnd is None:
+        if parent_hwnd == 0 or parent_hwnd == None:
             self.window_title = self.window.get_title(self.hwnd)
         else:
             self.window_title = self.window.get_title(parent_hwnd)
 
-        if parent_hwnd is not None and parent_hwnd != 0:
+        if parent_hwnd != None and parent_hwnd != 0:
             self.parent_hwnd = parent_hwnd
         else:
             self.side_hwnd = side_hwnd
-            # if self.side_hwnd is None:
-            #     self.logger.warn('녹스 사이드바가 검색 실패. 자동 재시작 기능 사용 불가')
-            # else:
-            #     self.logger.critical('녹스 사이드바가 검색 성공. 자동 재시작 기능 사용 가능)')
+            if self.side_hwnd == None:
+                self.logger.warn('녹스 사이드바가 검색 실패. 자동 재시작 기능 사용 불가')
+            else:
+                self.logger.critical('녹스 사이드바가 검색 성공. 자동 재시작 기능 사용 가능)')
 
         self.multi_hwnd_dic = multi_hwnd_dic
 
@@ -1374,7 +1374,7 @@ class LYBGame():
     def get_location(self, object_name):
         pixel_box = self.get_center_pixel_info(object_name)
 
-        return pixel_box[0][0], pixel_box[0][1]
+        return (pixel_box[0][0], pixel_box[0][1])
 
     def get_center_pixel_info(self, object_name):
         pixel_box = self.resource_manager.pixel_box_dic[object_name]
@@ -1685,8 +1685,7 @@ class LYBGame():
         pyautogui.moveTo(anchor_x + loc_x, anchor_y + loc_y)
 
     def drag_mouse(self, from_x, from_y, to_x, to_y, delay, stop_delay=0):
-        adj_x, adj_y = self.window.get_player_adjust(self.hwnd)
-        self.window.mouse_drag(self.hwnd, int(from_x + adj_x), int(from_y + adj_y), int(to_x + adj_x), int(to_y + adj_y), delay=delay,
+        self.window.mouse_drag(self.hwnd, int(from_x), int(from_y), int(to_x), int(to_y), delay=delay,
                                stop_delay=stop_delay,
                                move_away=self.common_config[lybconstant.LYB_DO_BOOLEAN_MOUSE_POINTER + 'away'])
 

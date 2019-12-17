@@ -98,7 +98,7 @@ class LYBMakeResource():
 		print("'T' : Delete all pixel box not in resource")
 		print("'Q' : Save & Quit")
 
-		# window.set_foreground_console(window.handle_list[0])
+		window.set_foreground_console(window.handle_list[0])
 		print(window.get_player(window.handle_list[0]), game_name_list[int(game_number) - 1])
 		adj_x, adj_y = window.get_player_adjust(window.handle_list[0])
 		self.anchor_x, self.anchor_y, self.bx, self.by = win32gui.GetWindowRect(window.handle_list[0])
