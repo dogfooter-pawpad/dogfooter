@@ -900,29 +900,61 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
 
         if self.status == 0:
             self.logger.info('scene: ' + self.scene_name)
+            monghwan_area_list = lybgamev4.LYBV4.sub_area_list[lybgamev4.LYBV4.area_list.index('몽환의 틈')]
+            self.logger.info(str(monghwan_area_list))
+            self.set_option('area_list', monghwan_area_list)
             self.lyb_mouse_drag('monghwan_scene_list_drag_top', 'monghwan_scene_list_drag_bot')
             self.set_option('list_index', 0)
             self.status += 1
         elif 1 <= self.status < 10:
             self.status += 1
+            monghwan_area_list = self.get_option('area_list')
             list_index = self.get_option('list_index')
-            if list_index > 6:
+            if list_index >= len(monghwan_area_list):
                 self.status = 99999
             else:
-                cfg_order = self.get_game_config(
-                    lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_' + str(list_index))
+                cfg_order = self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'monghwan_sanyang_order_' + str(list_index))
                 if cfg_order == '안함':
-                    if list_index >= 4:
-                        self.lyb_mouse_drag('monghwan_scene_list_drag_bot', 'monghwan_scene_list_drag_top')
-                    else:
-                        self.lyb_mouse_drag('monghwan_scene_list_drag_top', 'monghwan_scene_list_drag_bot')
                     self.set_option('list_index', list_index + 1)
                 else:
-                    pb_name = 'monghwan_scene_list_' + str(list_index)
-                    self.lyb_mouse_click(pb_name, custom_threshold=0)
+                    resource_name = 'monghwan_scene_' + monghwan_area_list[list_index] + '_loc'
+                    self.set_option('resource_name', resource_name)
                     self.set_option('list_index', list_index + 1)
+                    self.set_option('location_index', 0)
+                    self.lyb_mouse_drag('monghwan_scene_list_drag_top', 'monghwan_scene_list_drag_bot')
                     self.set_option('last_status', self.status)
-                    self.status = 100
+                    self.status = 50
+                    return self.status
+        elif 50 <= self.status < 53:
+            self.lyb_mouse_drag('monghwan_scene_list_drag_top', 'monghwan_scene_list_drag_bot')
+            self.status += 1
+        elif 53 <= self.status < 70:
+            self.status += 1
+            resource_name = self.get_option('resource_name')
+            location_index = self.get_option('location_index')
+
+            match_rate = self.game_object.rateMatchedResource(self.window_pixels, resource_name)
+            self.logger.debug(resource_name + ' ' + str(round(match_rate, 2)))
+            if match_rate > 0.9:
+                self.status = 100
+                return self.status
+
+            if location_index == 5 and self.status < 60:
+                self.status = 80
+                return self.status
+            elif location_index > 9:
+                self.status = 99999
+                self.logger.warn(str(resource_name) + ' 탐색 실패. 오류 보고 필요.')
+                return self.status
+
+            pb_name = 'monghwan_scene_list_' + str(location_index)
+            self.lyb_mouse_click(pb_name, custom_threshold=0)
+            self.set_option('location_index', location_index + 1)
+        elif 80 <= self.status < 83:
+            self.lyb_mouse_drag('monghwan_scene_list_drag_bot', 'monghwan_scene_list_drag_top')
+            self.status += 1
+        elif self.status == 83:
+            self.status = 60
         elif self.status == 100:
             self.status += 1
         elif 101 <= self.status < 110:
@@ -974,13 +1006,42 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
         elif self.status == 300:
             self.status = 0
         elif self.status == 1000:
+            resource_name = 'monghwan_scene_' + self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sub_area') + '_loc'
+            self.set_option('resource_name', resource_name)
+            self.set_option('location_index', 0)
+            self.lyb_mouse_drag('monghwan_scene_list_drag_top', 'monghwan_scene_list_drag_bot')
             self.status += 1
-        elif self.status == 1001:
-            if '상인의 소원' in self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sub_area'):
-                self.status = 1020
-            else:
+        elif 1001 <= self.status < 1003:
+            self.status += 1
+            self.lyb_mouse_drag('monghwan_scene_list_drag_top', 'monghwan_scene_list_drag_bot')
+        elif 1003 <= self.status < 1023:
+            self.status += 1
+            resource_name = self.get_option('resource_name')
+            location_index = self.get_option('location_index')
+
+            match_rate = self.game_object.rateMatchedResource(self.window_pixels, resource_name)
+            self.logger.debug(resource_name + ' ' + str(round(match_rate, 2)))
+            if match_rate > 0.9:
+                self.status = 1100
+                return self.status
+
+            if location_index == 5 and self.status < 1013:
                 self.status = 1030
-        elif 1002 <= self.status < 1010:
+                return self.status
+            elif location_index > 9:
+                self.status = 99999
+                self.logger.warn(str(resource_name) + ' 탐색 실패. 오류 보고 필요.')
+                return self.status
+
+            pb_name = 'monghwan_scene_list_' + str(location_index)
+            self.lyb_mouse_click(pb_name, custom_threshold=0)
+            self.set_option('location_index', location_index + 1)
+        elif 1030 <= self.status < 1033:
+            self.lyb_mouse_drag('monghwan_scene_list_drag_bot', 'monghwan_scene_list_drag_top')
+            self.status += 1
+        elif self.status == 1033:
+            self.status = 1013
+        elif 1100 <= self.status < 1110:
             self.status += 1
             resource_name = 'monghwan_scene_disable_loc'
             (loc_x, loc_y), match_rate = self.game_object.locationResourceOnWindowPart(
@@ -1021,20 +1082,6 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.lyb_mouse_click(pb_name, custom_threshold=0)
                 self.game_object.get_scene('main_scene').set_option('지도 이동' + '_monghwan_ipjang_ok', True)
                 self.status = 99999
-        elif self.status == 1020:
-            self.status += 1
-            self.lyb_mouse_drag('monghwan_scene_list_drag_bot', 'monghwan_scene_list_drag_top')
-        elif self.status == 1021:
-            pb_name = 'monghwan_scene_local_' + self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sub_area')
-            self.lyb_mouse_click(pb_name, custom_threshold=0)
-            self.status = 1002
-        elif self.status == 1030:
-            self.status += 1
-            self.lyb_mouse_drag('monghwan_scene_list_drag_top', 'monghwan_scene_list_drag_bot')
-        elif self.status == 1031:
-            pb_name = 'monghwan_scene_local_' + self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sub_area')
-            self.lyb_mouse_click(pb_name, custom_threshold=0)
-            self.status = 1002
         elif self.status == 99998:
             self.game_object.get_scene('main_scene').set_option('몽환의 틈' + '_end_flag', True)
             self.game_object.get_scene('main_scene').set_option('지도 이동' + '_end_flag', True)
@@ -1917,11 +1964,17 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.game_object.get_scene('main_scene').set_option('지도 이동' + '_skip_auto', True)
                 self.status = 11500
         elif 11100 <= self.status < 11110:
-            pb_name = 'local_map_scene_zoom_plus'
-            match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
-            self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
-            if match_rate < 0.95:
-                self.lyb_mouse_click(pb_name, custom_threshold=0)
+            resource_name = 'local_map_scene_zoom_plus_loc'
+            resource = self.game_object.resource_manager.resource_dic[resource_name]
+            max_rate = 0.0
+            for pb_name in resource:
+                match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
+                self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
+                if max_rate < match_rate:
+                    max_rate = match_rate
+                
+            if max_rate < 0.95:
+                self.lyb_mouse_click('local_map_scene_zoom_plus', custom_threshold=0)
                 self.status += 1
             else:
                 self.status = 11110
