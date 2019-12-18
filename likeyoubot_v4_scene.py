@@ -1485,7 +1485,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                     self.window_image,
                     resource_name,
                     custom_rect=each,
-                    custom_threshold=0.85,
+                    custom_threshold=0.8,
                     custom_flag=1,
                     average=False,
                     debug=True,
@@ -2164,6 +2164,8 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 (650, 230, 730, 290),
                 (650, 270, 730, 340),
                 (650, 320, 730, 380),
+                (650, 360, 730, 420),
+                (650, 400, 730, 460),
             ]
             resource_name = 'local_map_scene_detail_monster_info_title_loc'
             for each in rect_list:
