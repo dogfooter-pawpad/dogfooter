@@ -744,9 +744,19 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                 #         self.set_option('hp_100_message', True)
                 #         if cfg_notify_potion:
                 #             self.game_object.telegram_send('HP 물약이 100개 이하입니다. ' + cfg_notify_potion_message)
+        elif self.status == 100000:
+            self.status += 1
+        elif self.status == 100001:
+            elapsed_time = time.time() - self.get_checkpoint('closed')
+            if elapsed_time < self.period_bot(10):
+                self.game_object.telegram_send('게임 가드에 블럭됨')
+                return -1
+            else:
+                self.status = 0
         else:
             self.lyb_mouse_drag('jeoljeon_mode_scene_drag_right', 'jeoljeon_mode_scene_drag_left')
-            self.status = 0
+            self.set_checkpoint('closed')
+            self.status = 100000
 
         return self.status
 
@@ -1257,6 +1267,11 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                     return True
 
         if self.get_option('is_home'):
+            elapsed_time = time.time() - self.get_checkpoint('home_check')
+            if elapsed_time < self.period_bot(60):
+                self.set_option('is_home', False)
+                return False
+
             # self.logger.info('마을입니다.')
             rect_list = [
                 (40, 80, 140, 120),
@@ -1385,6 +1400,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
             #         self.lyb_mouse_drag('main_scene_item_slot_drag_right', 'main_scene_item_slot_drag_left')
             else:
                 self.set_option('home_status', 0)
+                self.set_checkpoint('home_check')
                 self.set_option('is_home', False)
                 return False
 

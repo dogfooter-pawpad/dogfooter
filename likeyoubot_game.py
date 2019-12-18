@@ -73,6 +73,7 @@ class LYBGame():
         self.last_logging = 0
         self.cursor_loc = (0, 0)
         self.wait_for_start_reserved_work = False
+        self.check_block_count = 0
 
         self.current_matched_scene['name'] = ''
         self.current_matched_scene['rate'] = 0
@@ -1639,6 +1640,20 @@ class LYBGame():
 
         self.last_click['loc'] = (loc_x + adj_x, loc_y + adj_y)
         # self.logger.warn((loc_x + adj_x, loc_y + adj_y))
+
+        # anchor_x, anchor_y, bx, by = self.window.get_window_location(self.hwnd)
+        # (r, g, b) = pyautogui.pixel(anchor_x + loc_x + adj_x, anchor_y + loc_y + adj_y)
+        # if (r, g, b) == (0, 0, 0):
+        #     if self.check_block_count > 5:
+        #         self.logger.warn('블럭 탐지됨: ' + str((r, g, b)) + ' ' + str(self.last_window_pixels[loc_x, loc_y]))
+        #         self.check_block_count = 0
+        #         self.telegram_send('퍼플 창 [' + str(self.window_title) + '] 블럭 탐지됨')
+        #         return -1, -1
+        #     else:
+        #         self.check_block_count += 1
+        # else:
+        #     self.check_block_count = 0
+
         self.window.mouse_click(self.hwnd, loc_x + adj_x, loc_y + adj_y, delay=delay, release=release)
 
         return (loc_x + adj_x, loc_y + adj_y)
