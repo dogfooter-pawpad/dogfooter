@@ -744,14 +744,11 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                 #         self.set_option('hp_100_message', True)
                 #         if cfg_notify_potion:
                 #             self.game_object.telegram_send('HP 물약이 100개 이하입니다. ' + cfg_notify_potion_message)
-        elif self.status == 100000:
+        elif 100000 <= self.status < 100010:
             self.status += 1
-        elif self.status == 100001:
-            elapsed_time = time.time() - self.get_checkpoint('closed')
-            if elapsed_time < self.period_bot(10):
-                self.game_object.telegram_send("게임 가드 블럭 감지됨")
-            else:
-                self.status = 0
+        elif self.status == 100010:
+            self.game_object.telegram_send("게임 가드 블럭 감지됨")
+            self.status = 0
         else:
             self.lyb_mouse_drag('jeoljeon_mode_scene_drag_right', 'jeoljeon_mode_scene_drag_left')
             self.set_checkpoint('closed')
