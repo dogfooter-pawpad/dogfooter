@@ -749,8 +749,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
         elif self.status == 100001:
             elapsed_time = time.time() - self.get_checkpoint('closed')
             if elapsed_time < self.period_bot(10):
-                self.game_object.telegram_send('게임 가드에 블럭됨')
-                return -1
+                self.game_object.telegram_send("게임 가드 블럭 감지됨")
             else:
                 self.status = 0
         else:
@@ -764,6 +763,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
 
         if self.status == 0:
             self.logger.info('scene: ' + self.scene_name)
+            self.set_option('changed', True)
             self.status += 1
         elif 1 <= self.status < 10:
             self.status += 1
@@ -1018,10 +1018,14 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
             if inner_status == 0:
                 self.lyb_mouse_click('main_scene_quick_config', custom_threshold=0)
                 self.game_object.get_scene('quick_config_scene').status = 0
+                self.game_object.get_scene('quick_config_scene').set_option('changed', False)
                 self.set_option(self.current_work + '_inner_status', inner_status + 1)
                 self.game_object.get_scene('jeoljeon_mode_scene').set_option('check_auto', True)
                 self.set_checkpoint('auto_jeoljeon_period')
             else:
+                if self.game_object.get_scene('quick_config_scene').get_option('changed') is not True:
+                    self.game_object.telegram_send("게임 가드 블럭 감지됨")
+
                 if self.get_option('is_home'):
                     self.logger.info('안전 지대입니다. 순간 이동 작업을 수행하지 않습니다.')
                     self.set_option(self.current_work + '_end_flag', True)
@@ -1572,10 +1576,14 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
         if inner_status == 0:
             self.lyb_mouse_click('main_scene_quick_config', custom_threshold=0)
             self.game_object.get_scene('quick_config_scene').status = 0
+            self.game_object.get_scene('quick_config_scene').set_option('changed', False)
             self.set_option(self.current_work + '_inner_status', inner_status + 1)
             self.game_object.get_scene('jeoljeon_mode_scene').set_option('check_auto', True)
             self.set_checkpoint('auto_jeoljeon_period')
         elif 1 <= inner_status < 99999:
+            if self.game_object.get_scene('quick_config_scene').get_option('changed') is not True:
+                self.game_object.telegram_send("게임 가드 블럭 감지됨")
+
             self.set_option(self.current_work + '_inner_status', inner_status + 1)
             cfg_duration = int(self.get_game_config(lybconstant.LYB_DO_STRING_L2M_WORK + 'auto_jeoljeon_period'))
             elapsed_time = time.time() - self.get_checkpoint('auto_jeoljeon_period')
@@ -1583,6 +1591,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                 self.set_checkpoint('auto_jeoljeon_period')
                 self.lyb_mouse_click('main_scene_quick_config', custom_threshold=0)
                 self.game_object.get_scene('quick_config_scene').status = 0
+                self.game_object.get_scene('quick_config_scene').set_option('changed', False)
 
             # 아이템 사용
             # 스킬 사용
