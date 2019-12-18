@@ -1330,7 +1330,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                         custom_top_level=(255, 255, 255),
                         custom_below_level=(100, 100, 100),
                         custom_rect=rect,
-                        custom_threshold=0.75,
+                        custom_threshold=0.7,
                         custom_flag=1,
                         average=False,
                         debug=True
