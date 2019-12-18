@@ -747,8 +747,12 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
         elif 100000 <= self.status < 100010:
             self.status += 1
         elif self.status == 100010:
-            self.game_object.telegram_send("게임 가드 블럭 감지됨")
-            return -1
+            elapsed_time = time.time() - self.get_checkpoint('closed')
+            if elapsed_time < self.get_checkpoint(30):
+                self.game_object.telegram_send("게임 가드 블럭 감지됨")
+                return -1
+            else:
+                self.status = 0
         else:
             self.lyb_mouse_drag('jeoljeon_mode_scene_drag_right', 'jeoljeon_mode_scene_drag_left')
             self.set_checkpoint('closed')
