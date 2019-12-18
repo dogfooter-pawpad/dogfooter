@@ -653,7 +653,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                     average=False,
                     debug=True,
                 )
-                self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+                # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
                 if loc_x != -1:
                     self.logger.info('안전 지대 인식됨: ' + str(home))
                     self.set_option('hp_200_message', False)
@@ -1000,12 +1000,28 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                 self.set_option(self.current_work + '_inner_status', None)
                 self.status = self.last_status[self.current_work] + 1
 
-            if self.move_item_slot_1() is False:
-                self.set_option(self.current_work + '_end_flag', True)
-                pb_name = 'main_scene_item_3'
-                match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
-                if match_rate > 0.7:
-                    self.lyb_mouse_click(pb_name, custom_threshold=0)
+            inner_status = self.get_option(self.current_work + '_inner_status')
+            if inner_status is None:
+                inner_status = 0
+
+            self.logger.debug('inner_status ' + str(inner_status))
+            if inner_status == 0:
+                self.lyb_mouse_click('main_scene_quick_config', custom_threshold=0)
+                self.game_object.get_scene('quick_config_scene').status = 0
+                self.set_option(self.current_work + '_inner_status', inner_status + 1)
+                self.game_object.get_scene('jeoljeon_mode_scene').set_option('check_auto', True)
+                self.set_checkpoint('auto_jeoljeon_period')
+            else:
+                if self.get_option('is_home'):
+                    self.logger.info('안전 지대입니다. 순간 이동 작업을 수행하지 않습니다.')
+                    self.set_option(self.current_work + '_end_flag', True)
+                else:
+                    if self.move_item_slot_1() is False:
+                        self.set_option(self.current_work + '_end_flag', True)
+                        pb_name = 'main_scene_item_3'
+                        match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
+                        if match_rate > 0.7:
+                            self.lyb_mouse_click(pb_name, custom_threshold=0)
 
         elif self.status == self.get_work_status('알림'):
 
