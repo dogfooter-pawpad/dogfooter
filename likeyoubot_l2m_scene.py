@@ -1327,10 +1327,8 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                     (loc_x, loc_y), match_rate = self.game_object.locationResourceOnWindowPart(
                         self.window_image,
                         resource_name,
-                        custom_top_level=(255, 255, 255),
-                        custom_below_level=(100, 100, 100),
                         custom_rect=rect,
-                        custom_threshold=0.7,
+                        custom_threshold=0.8,
                         custom_flag=1,
                         average=False,
                         debug=True
