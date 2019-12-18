@@ -1017,8 +1017,6 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                 self.game_object.get_scene('quick_config_scene').status = 0
                 self.game_object.get_scene('quick_config_scene').set_option('changed', False)
                 self.set_option(self.current_work + '_inner_status', inner_status + 1)
-                self.game_object.get_scene('jeoljeon_mode_scene').set_option('check_auto', True)
-                self.set_checkpoint('auto_jeoljeon_period')
             else:
                 if self.game_object.get_scene('quick_config_scene').get_option('changed') is not True:
                     self.game_object.telegram_send("게임 가드 블럭 감지됨")
