@@ -2514,6 +2514,9 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.status += 1
             potion_list = self.get_option('potion_list')
             potion_index = self.get_option('potion_index')
+            if potion_index > len(potion_list) - 1:
+                self.status = 99999
+                return self.status
 
             if self.game_object.get_scene('potion_gume_scene').get_option('overflow'):
                 self.status = 99999
@@ -3791,8 +3794,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             elapsed_time = time.time() - self.get_checkpoint('hp_potion_low')
             if elapsed_time > self.period_bot(3):
                 self.set_checkpoint('hp_potion_low')
-                if self.is_hp_potion_low() or self.get_option('hp_potion_low') or self.get_option(
-                        'from_jeoljeon_hp_empty'):
+                if self.is_hp_potion_low() or self.get_option('hp_potion_low') or self.get_option('from_jeoljeon_hp_empty'):
                     self.set_option('go_jeoljeon', 0)
                     self.set_option('from_jeoljeon_hp_empty', False)
                     if self.click_potion_menu():
