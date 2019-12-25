@@ -1668,11 +1668,12 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.logger.info('scene: ' + self.scene_name)
             self.status += 1
         elif 1 <= self.status < 10:
+            self.status += 1
             cfg_free = self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'recover_free')
             pb_name = 'recover_scene_free'
             if cfg_free is False:
                 self.lyb_mouse_click(pb_name, custom_threshold=0)
-                self.status = 99999
+                self.status = 10
                 return self.status
 
             match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
@@ -1680,7 +1681,14 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             if match_rate > 0.9 and cfg_free is True:
                 self.lyb_mouse_click(pb_name, custom_threshold=0)
             else:
-                self.status = 99999
+                self.status = 10
+        elif self.status == 10:
+            pb_name = 'recover_scene_item'
+            match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
+            self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
+            if match_rate < 0.9:
+                self.lyb_mouse_click(pb_name, custom_threshold=0)
+            self.status = 99999
         else:
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
                 self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
@@ -3241,9 +3249,11 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 return self.status
 
             if self.get_option(self.current_work + '_move_ok') is not True:
-                self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
-                self.game_object.get_scene('menu_scene').status = 300
-                self.set_option(self.current_work + '_inner_status', 0)
+                if self.get_option('go_home') is not True:
+                    self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
+                    self.game_object.get_scene('menu_scene').status = 300
+                else:
+                    self.set_option(self.current_work + '_inner_status', 0)
             else:
                 inner_status = self.get_option(self.current_work + '_inner_status')
                 if inner_status is None:
