@@ -2508,6 +2508,9 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             potion_list = self.get_option('potion_list')
             potion_index = self.get_option('potion_index')
             self.logger.info(str(potion_list))
+            if potion_index > len(potion_list) - 1:
+                self.status = 99999
+                return self.status
 
             self.game_object.get_scene('potion_gume_scene').status = 0
             self.game_object.get_scene('potion_gume_scene').set_option('overflow', False)

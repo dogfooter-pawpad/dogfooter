@@ -186,6 +186,44 @@ class LYBV4(lybgame.LYBGame):
                 self.get_scene('main_scene').lyb_mouse_click_location(loc_x, loc_y)
                 return resource_name
 
+        resource_name = 'popup_20200115_loc'
+        elapsed_time = time.time() - self.get_scene('main_scene').get_checkpoint(resource_name)
+        if elapsed_time > self.period_bot(30):
+            (loc_x, loc_y), match_rate = self.locationResourceOnWindowPart(
+                self.window_image,
+                resource_name,
+                custom_threshold=0.75,
+                custom_flag=1,
+                custom_top_level=(200, 170, 170),
+                custom_below_level=(145, 110, 110),
+                custom_rect=(25, 510, 100, 560),
+            )
+            self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
+            if loc_x != -1:
+                self.get_scene('main_scene').set_checkpoint(resource_name)
+                self.logger.info('팝업: ' + str(round(match_rate, 2)))
+                self.get_scene('main_scene').lyb_mouse_click_location(loc_x, loc_y)
+                return resource_name
+
+        resource_name = 'popup_20200115_1_loc'
+        elapsed_time = time.time() - self.get_scene('main_scene').get_checkpoint(resource_name)
+        if elapsed_time > self.period_bot(30):
+            (loc_x, loc_y), match_rate = self.locationResourceOnWindowPart(
+                self.window_image,
+                resource_name,
+                custom_threshold=0.75,
+                custom_flag=1,
+                custom_top_level=(255, 100, 50),
+                custom_below_level=(140, 50, 20),
+                custom_rect=(25, 510, 100, 560),
+            )
+            self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
+            if loc_x != -1:
+                self.get_scene('main_scene').set_checkpoint(resource_name)
+                self.logger.info('팝업: ' + str(round(match_rate, 2)))
+                self.get_scene('main_scene').lyb_mouse_click_location(loc_x, loc_y)
+                return resource_name
+
         resource_name = 'confirm_loc'
         elapsed_time = time.time() - self.get_scene('main_scene').get_checkpoint(resource_name)
         if elapsed_time > self.period_bot(10):
