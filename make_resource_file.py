@@ -8,6 +8,7 @@ import sys
 import likeyoubot_resource as lybresource
 import likeyoubot_win as lybwin
 import likeyoubot_configure as lybconfigure
+import likeyoubot_dd
 from PIL import ImageGrab
 
 class LYBMakeResource():
@@ -32,7 +33,8 @@ class LYBMakeResource():
 			)
 
 	def mouseMove(self, str, x, y):
-		pyautogui.moveTo( x, y )
+		likeyoubot_dd.DDMouse(likeyoubot_dd.DDClass.get_dll()).move(x, y)
+		# pyautogui.moveTo( x, y )
 
 	def execute(self):
 

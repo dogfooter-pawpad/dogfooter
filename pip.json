@@ -9,6 +9,7 @@
     "belfrywidgets",
     "simple_rest_client",
     "python-telegram-bot",
-    "websocket-client"
+    "websocket-client",
+    "screeninfo"
   ]
 }

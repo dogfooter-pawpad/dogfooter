@@ -11,7 +11,7 @@ from PIL import Image
 from likeyoubot_configure import LYBConstant as lybconstant
 import likeyoubot_extra
 import random
-
+import likeyoubot_dd
 
 class LYBWin:
     WIDTH = 800
@@ -38,7 +38,7 @@ class LYBWin:
         if not handle in self.handle_list:
             (top_left_x, top_left_y, bottom_right_x, bottom_right_y) = win32gui.GetWindowRect(handle)
             if abs(bottom_right_x - top_left_x - LYBWin.WIDTH) < 50 and abs(
-                                    bottom_right_y - top_left_y - LYBWin.HEIGHT) < 100:
+                    bottom_right_y - top_left_y - LYBWin.HEIGHT) < 100:
                 self.handle_list.append(handle)
 
         handle = win32gui.FindWindow(class_name, 'Nox')
@@ -115,9 +115,9 @@ class LYBWin:
             (top_left_x, top_left_y, bottom_right_x, bottom_right_y) = win32gui.GetWindowRect(hwnd)
 
             if (s_x < top_left_x and s_x < bottom_right_x and
-                        e_x > top_left_x and e_x > bottom_right_x and
-                        s_y < top_left_y and s_y < bottom_right_y and
-                        e_y > top_left_y and e_y > bottom_right_y):
+                    e_x > top_left_x and e_x > bottom_right_x and
+                    s_y < top_left_y and s_y < bottom_right_y and
+                    e_y > top_left_y and e_y > bottom_right_y):
                 (x, y, x2, y2) = win32gui.GetWindowRect(hwnd)
                 w_width = x2 - x
                 w_height = y2 - y
@@ -140,8 +140,8 @@ class LYBWin:
                 # print(hwnd, win32gui.GetWindowText(hwnd), abs(bottom_right_y - top_left_y))
 
                 if (abs(bottom_right_x - top_left_x - LYBWin.WIDTH) < 100 and
-                            abs(bottom_right_y - top_left_y - LYBWin.HEIGHT) < 100
-                    ):
+                        abs(bottom_right_y - top_left_y - LYBWin.HEIGHT) < 100
+                ):
 
                     diff_width = abs(top_left_x - bottom_right_x)
                     diff_height = abs(bottom_right_y - top_left_y)
@@ -186,7 +186,8 @@ class LYBWin:
                     elif abs(bottom_right_x - top_left_x) == LYBWin.WIDTH + 40:
                         # Memu
                         win32gui.EnumChildWindows(hwnd, self.callback_memu_child_process, hwnd)
-                    elif abs(bottom_right_x - top_left_x) == LYBWin.WIDTH and abs(bottom_right_y - top_left_y) == LYBWin.HEIGHT:
+                    elif abs(bottom_right_x - top_left_x) == LYBWin.WIDTH and abs(
+                            bottom_right_y - top_left_y) == LYBWin.HEIGHT:
                         # Purple
                         self.handle_list.append(hwnd)
                     elif diff_height == LYBWin.HEIGHT + 36 and diff_width == LYBWin.WIDTH + 42:
@@ -207,9 +208,10 @@ class LYBWin:
                 print('--------------------> !!! found window DEBUG4 Nox : ', str(win32gui.GetWindowText(hwnd)))
                 if hwnd not in self.side_window_handle_list:
                     (top_left_x, top_left_y, bottom_right_x, bottom_right_y) = win32gui.GetWindowRect(hwnd)
-                    print('--------------------> !!! found window DEBUG5 Nox : ', (top_left_x, top_left_y, bottom_right_x, bottom_right_y))
+                    print('--------------------> !!! found window DEBUG5 Nox : ',
+                          (top_left_x, top_left_y, bottom_right_x, bottom_right_y))
                     if abs(bottom_right_x - top_left_x) - 36 < 100 and abs(
-                                            bottom_right_y - top_left_y - LYBWin.HEIGHT) < 80:
+                            bottom_right_y - top_left_y - LYBWin.HEIGHT) < 80:
                         self.side_window_handle_list.append(hwnd)
                         #
                         # 모모 멀티플레이어
@@ -241,9 +243,9 @@ class LYBWin:
                 (w_x, w_y, w_bx, w_by) = win32gui.GetWindowRect(each_window)
                 # self.logger.debug('main:' + str((w_x, w_y, w_bx, w_by)) )
                 if (abs(abs(s_x - w_x) - (LYBWin.WIDTH + 4)) < 40 and
-                            abs(abs(s_y - w_y) - 30) < 40 and
-                            abs(abs(s_bx - w_bx) - 36) < 40 and
-                            abs(s_by - w_by) < 40):
+                        abs(abs(s_y - w_y) - 30) < 40 and
+                        abs(abs(s_bx - w_bx) - 36) < 40 and
+                        abs(s_by - w_by) < 40):
                     self.side_window_dic[each_window] = each_side
                     # 녹스 사이드바
 
@@ -255,7 +257,8 @@ class LYBWin:
             #                        win32gui.GetWindowLong(hwnd, win32con.GWL_EXSTYLE) | win32con.WS_EX_TOOLWINDOW);
 
             win32gui.SetWindowLong(hwnd, win32con.GWL_EXSTYLE,
-                                   win32gui.GetWindowLong(hwnd, win32con.GWL_EXSTYLE) | win32con.WS_EX_LAYERED | win32con.WS_EX_TOOLWINDOW);
+                                   win32gui.GetWindowLong(hwnd,
+                                                          win32con.GWL_EXSTYLE) | win32con.WS_EX_LAYERED | win32con.WS_EX_TOOLWINDOW);
             win32gui.SetLayeredWindowAttributes(hwnd, 0, 0, 2)
             # win32gui.ShowWindow(hwnd, win32con.SW_SHOW)
         except:
@@ -268,7 +271,8 @@ class LYBWin:
             # win32gui.SetWindowLong(hwnd, win32con.GWL_EXSTYLE,
             #                        win32gui.GetWindowLong(hwnd, win32con.GWL_EXSTYLE) & ~win32con.WS_EX_TOOLWINDOW);
             win32gui.SetWindowLong(hwnd, win32con.GWL_EXSTYLE,
-                                   win32gui.GetWindowLong(hwnd, win32con.GWL_EXSTYLE) & ~win32con.WS_EX_LAYERED & ~win32con.WS_EX_TOOLWINDOW );
+                                   win32gui.GetWindowLong(hwnd,
+                                                          win32con.GWL_EXSTYLE) & ~win32con.WS_EX_LAYERED & ~win32con.WS_EX_TOOLWINDOW);
             # win32gui.ShowWindow(hwnd, win32con.SW_SHOW)
             self.set_foreground(hwnd)
         except:
@@ -298,7 +302,8 @@ class LYBWin:
                               win32con.SWP_SHOWWINDOW + win32con.SWP_NOMOVE + win32con.SWP_NOSIZE)
 
     def get_title(self, handle):
-        return win32gui.GetWindowText(handle) + "(" + str(handle) + ")"
+        # return win32gui.GetWindowText(handle) + "(" + str(handle) + ")"
+        return win32gui.GetWindowText(handle)
 
     def set_foreground(self, handle):
 
@@ -325,14 +330,35 @@ class LYBWin:
             return
 
         (anchor_x, anchor_y, end_x, end_y) = self.get_player_anchor_rect(hwnd)
+        if self.configure is not None and self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_USE_DD_CLASS] is False:
 
-        # print("모니터 해상도:", win32api.GetSystemMetrics(0), win32api.GetSystemMetrics(1))
-        # print('클릭 좌표:', anchor_x, anchor_y, x, y)
-        # print("isVisible: ", win32gui.IsWindowVisible(hwnd))
+            # print("모니터 해상도:", win32api.GetSystemMetrics(0), win32api.GetSystemMetrics(1))
 
-        # extra = likeyoubot_extra.LYBExtra(self.configure, (win32api.GetSystemMetrics(0), win32api.GetSystemMetrics(1)))
-        # extra.mouse_click(anchor_x + x, anchor_y + y)
-        pyautogui.click(anchor_x + x, anchor_y + y)
+            # print('클릭 좌표:', anchor_x, anchor_y, x, y)
+            # print("isVisible: ", win32gui.IsWindowVisible(hwnd))
+
+            # extra = likeyoubot_extra.LYBExtra(self.configure, (win32api.GetSystemMetrics(0), win32api.GetSystemMetrics(1)))
+            # extra.mouse_click(anchor_x + x, anchor_y + y)
+
+            pyautogui.click(anchor_x + x, anchor_y + y)
+            return
+
+        likeyoubot_dd.DDMouse(likeyoubot_dd.DDClass.get_dll()).move(anchor_x + x, anchor_y + y)
+        likeyoubot_dd.DDMouse(likeyoubot_dd.DDClass.get_dll()).down()
+        if delay > 0:
+            time.sleep(delay)
+
+        if release is True:
+            likeyoubot_dd.DDMouse(likeyoubot_dd.DDClass.get_dll()).up()
+
+
+
+
+
+
+
+
+
 
         # self.set_window_pos(hwnd, win32api.GetSystemMetrics(0), win32api.GetSystemMetrics(1))
         # print("MOVE 1 ")
@@ -408,42 +434,91 @@ class LYBWin:
 
         (anchor_x, anchor_y, end_x, end_y) = self.get_player_anchor_rect(hwnd)
 
-        pyautogui.moveTo(anchor_x + from_x, anchor_y + from_y)
-        pyautogui.dragTo(anchor_x + to_x, anchor_y + to_y, duration=delay)
+        if self.configure is not None and self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_USE_DD_CLASS] is False:
+            pyautogui.moveTo(anchor_x + from_x, anchor_y + from_y)
+            pyautogui.dragTo(anchor_x + to_x, anchor_y + to_y, duration=delay)
+            return
 
-        # if from_x == to_x and from_y == to_y:
-        #     return
-        #
-        # if from_x == to_x:
-        #     x_step = 1
-        # else:
-        #     x_step = abs(from_x - to_x)
-        #
-        # if x_step < 15:
-        #     x_step = 1
-        #
-        # if from_y == to_y:
-        #     y_step = 1
-        # else:
-        #     y_step = abs(from_y - to_y)
-        #
-        # if y_step < 15:
-        #     y_step = 1
-        #
-        # step_delay = delay / (abs(x_step) * abs(y_step))
-        #
-        # if from_x > to_x:
-        #     x_factor = -1
-        # else:
-        #     x_factor = 1
-        #
-        # if from_y > to_y:
-        #     y_factor = -1
-        # else:
-        #     y_factor = 1
-        #
-        # (anchor_x, anchor_y, end_x, end_y) = self.get_player_anchor_rect(hwnd)
-        # adj_x, adj_y = self.get_player_adjust(hwnd)
+
+
+
+
+
+
+
+
+
+
+        if from_x == to_x and from_y == to_y:
+            return
+
+        if from_x == to_x:
+            x_step = 1
+        else:
+            x_step = abs(from_x - to_x)
+
+        if x_step < 15:
+            x_step = 1
+
+        if from_y == to_y:
+            y_step = 1
+        else:
+            y_step = abs(from_y - to_y)
+
+        if y_step < 15:
+            y_step = 1
+
+
+        if from_x > to_x:
+            x_factor = -1
+        else:
+            x_factor = 1
+
+        if from_y > to_y:
+            y_factor = -1
+        else:
+            y_factor = 1
+
+        (anchor_x, anchor_y, end_x, end_y) = self.get_player_anchor_rect(hwnd)
+        adj_x, adj_y = self.get_player_adjust(hwnd)
+
+        anchor_x, anchor_y, bottom_right_x, bottom_right_y = self.get_window_location(hwnd)
+
+        likeyoubot_dd.DDMouse(likeyoubot_dd.DDClass.get_dll()).move(anchor_x + from_x, anchor_y + from_y)
+        likeyoubot_dd.DDMouse(likeyoubot_dd.DDClass.get_dll()).down()
+
+        # print('----------------->', delay, step_delay, x_step, y_step)
+        if x_step == 1 or y_step == 1:
+            step_delay = delay / (abs(x_step) * abs(y_step))
+            for i in range(int(x_step)):
+                for j in range(int(y_step)):
+                    likeyoubot_dd.DDMouse(likeyoubot_dd.DDClass.get_dll()).move(anchor_x + from_x + i * x_factor,
+                                                                                anchor_y + from_y + j * y_factor)
+                    time.sleep(step_delay)
+        else:
+            step_delay = delay / abs(x_step)
+            inclination = y_step / x_step
+            for i in range(int(x_step)):
+                likeyoubot_dd.DDMouse(likeyoubot_dd.DDClass.get_dll()).move(anchor_x + from_x + i * x_factor,
+                                                                            anchor_y + from_y + + int(
+                                                                                i * y_factor * inclination))
+                time.sleep(step_delay)
+
+        if stop_delay > 0:
+            time.sleep(stop_delay)
+
+        likeyoubot_dd.DDMouse(likeyoubot_dd.DDClass.get_dll()).up()
+
+
+
+
+
+
+
+
+
+
+
         # lParam = win32api.MAKELONG(from_x + adj_x, from_y + adj_y)
         #
         # anchor_x, anchor_y, bottom_right_x, bottom_right_y = self.get_window_location(hwnd)
@@ -512,6 +587,8 @@ class LYBWin:
         elif w_width == LYBWin.WIDTH and w_height == LYBWin.HEIGHT and process_name == 'LINEAGE2M':
             return 'purple', resolution
         elif w_width == LYBWin.WIDTH and w_height == LYBWin.HEIGHT and process_name == 'LINEAGE 2M':
+            return 'purple', resolution
+        elif w_width == LYBWin.WIDTH and w_height == LYBWin.HEIGHT and 'LINEAGE' in process_name:
             return 'purple', resolution
 
         return '', resolution

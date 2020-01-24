@@ -2298,7 +2298,7 @@ class LYBL2MTab(lybgame.LYBGameTab):
 
         if not lybconstant.LYB_DO_STRING_L2M_WORK + 'jido_move_area' in self.configure.common_config[self.game_name]:
             self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_L2M_WORK + 'jido_move_area'] = \
-                combobox_list[1]
+                combobox_list[0]
 
         combobox = ttk.Combobox(
             master=frame,
@@ -2326,7 +2326,7 @@ class LYBL2MTab(lybgame.LYBGameTab):
             if not lybconstant.LYB_DO_STRING_L2M_WORK + 'jido_move_sub_area' in self.configure.common_config[
                 self.game_name]:
                 self.configure.common_config[self.game_name][
-                    lybconstant.LYB_DO_STRING_L2M_WORK + 'jido_move_sub_area'] = combobox_list[13]
+                    lybconstant.LYB_DO_STRING_L2M_WORK + 'jido_move_sub_area'] = combobox_list[0]
         except ValueError:
             area_index = 0
             combobox_list = LYBL2M.sub_area_list[area_index]
@@ -2367,7 +2367,7 @@ class LYBL2MTab(lybgame.LYBGameTab):
         if not lybconstant.LYB_DO_STRING_L2M_WORK + 'jido_move_style' in self.configure.common_config[
             self.game_name]:
             self.configure.common_config[self.game_name][
-                lybconstant.LYB_DO_STRING_L2M_WORK + 'jido_move_style'] = combobox_list[0]
+                lybconstant.LYB_DO_STRING_L2M_WORK + 'jido_move_style'] = combobox_list[1]
 
         combobox = ttk.Combobox(
             master=frame,

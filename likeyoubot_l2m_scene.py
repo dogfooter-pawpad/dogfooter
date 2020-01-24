@@ -121,6 +121,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
 
         if self.status == 0:
             self.logger.info('scene: ' + self.scene_name)
+            self.game_object.get_scene('main_scene').set_option('daily_check_ok', True)
             self.status += 1
         elif 1 <= self.status < 10:
             self.status += 1
@@ -242,28 +243,31 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
             self.logger.info('scene: ' + self.scene_name)
             self.status += 1
             self.game_object.get_scene('main_scene').set_option('mail_check_ok', True)
-        elif 1 <= self.status < 10:
+        elif self.status == 1:
+            self.lyb_mouse_click('mail_scene_all', custom_threshold=0)
             self.status += 1
-            pb_name = 'mail_scene_empty_2'
-            match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
-            self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
-            if match_rate > 0.9:
-                self.status = 10
-                return self.status
-
-            if self.status % 2 == 1:
-                self.lyb_mouse_click('mail_scene_receive_2', custom_threshold=0)
-        elif 10 <= self.status < 20:
-            self.status += 1
-            pb_name = 'mail_scene_empty'
-            match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
-            self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
-            if match_rate > 0.9:
-                self.status = 99999
-                return self.status
-
-            if self.status % 2 == 1:
-                self.lyb_mouse_click('mail_scene_receive', custom_threshold=0)
+        # elif 1 <= self.status < 10:
+        #     self.status += 1
+        #     pb_name = 'mail_scene_empty_2'
+        #     match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
+        #     self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
+        #     if match_rate > 0.9:
+        #         self.status = 10
+        #         return self.status
+        #
+        #     if self.status % 2 == 1:
+        #         self.lyb_mouse_click('mail_scene_receive_2', custom_threshold=0)
+        # elif 10 <= self.status < 20:
+        #     self.status += 1
+        #     pb_name = 'mail_scene_empty'
+        #     match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
+        #     self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
+        #     if match_rate > 0.9:
+        #         self.status = 99999
+        #         return self.status
+        #
+        #     if self.status % 2 == 1:
+        #         self.lyb_mouse_click('mail_scene_receive', custom_threshold=0)
         else:
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
                 self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
@@ -647,7 +651,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                 (loc_x, loc_y), match_rate = self.game_object.locationResourceOnWindowPart(
                     self.window_image,
                     resource_name,
-                    custom_rect=(40, 70, 200, 120),
+                    custom_rect=(40, 70, 200, 140),
                     custom_threshold=0.85,
                     custom_flag=1,
                     average=False,
@@ -692,41 +696,73 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
             #         max_rate = match_rate
             #         max_number = i
 
-            pb_name = 'jeoljeon_mode_scene_hp_low'
-            match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
-            self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
-            if match_rate > max_rate:
-                max_rate = match_rate
-                max_number = 0
+            # pb_name = 'jeoljeon_mode_scene_hp_low'
+            # match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
+            # self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
+            # if match_rate > max_rate:
+            #     max_rate = match_rate
+            #     max_number = 0
 
-            pb_name = 'jeoljeon_mode_scene_hp_empty'
-            match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
-            self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
-            if match_rate > max_rate:
+            # pb_name = 'jeoljeon_mode_scene_hp_empty'
+            # match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
+            # self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
+            # if match_rate > max_rate:
+            #     max_rate = match_rate
+            #     max_number = -1
+
+            resource_name = 'jeoljeon_mode_scene_hp_empty_loc'
+            (loc_x, loc_y), match_rate = self.game_object.locationResourceOnWindowPart(
+                self.window_image,
+                resource_name,
+                custom_threshold=0.85,
+                custom_flag=1,
+                custom_rect=(200, 400, 450, 460),
+                average=True
+            )
+            self.logger.debug(resource_name + ' ' + str(round(match_rate, 2)))
+            if loc_x != -1:
                 max_rate = match_rate
                 max_number = -1
 
-            if max_rate > 0.92:
+            resource_name = 'jeoljeon_mode_scene_arrow_empty_loc'
+            (loc_x, loc_y), match_rate = self.game_object.locationResourceOnWindowPart(
+                self.window_image,
+                resource_name,
+                custom_threshold=0.85,
+                custom_flag=1,
+                custom_rect=(600, 270, 720, 380),
+                average=True
+            )
+            self.logger.debug(resource_name + ' ' + str(round(match_rate, 2)))
+            if loc_x != -1:
+                max_rate = match_rate
+                max_number = -2
+
+            if max_rate > 0.85:
                 if max_number == -1:
                     self.logger.info('물약 없음 감지됨')
                     if cfg_go_home_potion:
                         self.logger.info('귀환서 클릭합니다.')
                         self.game_object.get_scene('main_scene').set_option('is_home', True)
                         self.lyb_mouse_click('jeoljeon_mode_scene_home', custom_threshold=0)
-                    if self.get_option('hp_10_message') is not True:
-                        self.set_option('hp_10_message', True)
                         if cfg_notify_potion:
                             self.game_object.telegram_send('HP 물약이 없습니다.' + cfg_notify_potion_message)
-                elif max_number == 0:
-                    self.logger.info('물약 10개 이하 감지됨')
+                elif max_number == -2:
+                    self.logger.info('화살 없음 감지됨')
                     if cfg_go_home_potion:
                         self.logger.info('귀환서 클릭합니다.')
                         self.game_object.get_scene('main_scene').set_option('is_home', True)
                         self.lyb_mouse_click('jeoljeon_mode_scene_home', custom_threshold=0)
-                    if self.get_option('hp_10_message') is not True:
-                        self.set_option('hp_10_message', True)
-                        if cfg_notify_potion:
-                            self.game_object.telegram_send('HP 물약이 10개 이하입니다. ' + cfg_notify_potion_message)
+                # elif max_number == 0:
+                #     self.logger.info('물약 10개 이하 감지됨')
+                #     if cfg_go_home_potion:
+                #         self.logger.info('귀환서 클릭합니다.')
+                #         self.game_object.get_scene('main_scene').set_option('is_home', True)
+                #         self.lyb_mouse_click('jeoljeon_mode_scene_home', custom_threshold=0)
+                #     if self.get_option('hp_10_message') is not True:
+                #         self.set_option('hp_10_message', True)
+                #         if cfg_notify_potion:
+                #             self.game_object.telegram_send('HP 물약이 10개 이하입니다. ' + cfg_notify_potion_message)
                 # elif max_number == 100:
                 #     if self.get_option('hp_200_message') is not True:
                 #         self.logger.info('물약 200개 이하 감지됨')
@@ -961,9 +997,15 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                     self.lyb_mouse_click('main_scene_map', custom_threshold=0)
             else:
                 self.set_option(self.current_work + '_inner_status', inner_status + 1)
-                if self.is_not_moving():
+
+                cfg_style = self.get_game_config(lybconstant.LYB_DO_STRING_L2M_WORK + 'jido_move_style')
+                if cfg_style == "텔레포트":
                     self.set_option(self.current_work + '_end_flag', True)
                     self.logger.info('도착')
+                else:
+                    if self.is_not_moving():
+                        self.set_option(self.current_work + '_end_flag', True)
+                        self.logger.info('도착')
 
         elif self.status == self.get_work_status('자동 사냥'):
 
@@ -974,7 +1016,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                 self.set_option(self.current_work + '_end_flag', True)
 
             self.loggingElapsedTime('[' + str(self.current_work) + '] 경과 시간', elapsed_time, cfg_duration, period=60)
-
+            self.logger.info(str(self.get_option(self.current_work + '_end_flag')))
             if self.get_option(self.current_work + '_end_flag'):
                 self.set_option(self.current_work + '_end_flag', False)
                 self.set_option(self.current_work + '_inner_status', None)
@@ -987,7 +1029,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
 
             cfg_duration = int(self.get_game_config(lybconstant.LYB_DO_STRING_L2M_WORK + 'character_move_time'))
             elapsed_time = self.get_elapsed_time()
-            if elapsed_time > self.period_bot(cfg_duration):
+            if elapsed_time > self.period_bot(600):
                 self.set_option(self.current_work + '_end_flag', True)
 
             if self.get_option(self.current_work + '_end_flag'):
@@ -997,7 +1039,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                 return self.status
 
             pb_name = self.character_move_direction()
-            self.lyb_mouse_drag('main_scene_pad_c', pb_name, delay=cfg_duration)
+            self.lyb_mouse_drag('main_scene_pad_c', pb_name, stop_delay=cfg_duration)
             self.set_option(self.current_work + '_end_flag', True)
 
         elif self.status == self.get_work_status('순간 이동'):
@@ -1358,8 +1400,10 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                         self.set_option('npc_ok', False)
                         self.set_option('home_status', self.get_option('next_home_status'))
                         return True
-                if home_status == 1003:
+                if home_status % 4 < 2:
                     self.lyb_mouse_drag('main_scene_npc_list_drag_bot', 'main_scene_npc_list_drag_top')
+                else:
+                    self.lyb_mouse_drag('main_scene_npc_list_drag_top', 'main_scene_npc_list_drag_bot')
             elif 1010 <= home_status < 1200:
                 self.set_option('home_status', home_status + 1)
                 if self.get_option('npc_ok'):
@@ -1505,7 +1549,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
 
     def process_skill(self):
 
-        if self.current_work == "자동 사냥":
+        if self.current_work == "자동 사냥" and self.get_option('자동 사냥' + '_end_flag') is not True:
             skill_queue = self.get_option('skill_queue')
             if skill_queue is None:
                 skill_queue = []
@@ -1537,7 +1581,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
 
     def process_item(self):
 
-        if self.current_work == "자동 사냥":
+        if self.current_work == "자동 사냥" and self.get_option('자동 사냥' + '_end_flag') is not True:
             item_queue = self.get_option('item_queue')
             if item_queue is None:
                 item_queue = []

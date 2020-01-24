@@ -15,11 +15,12 @@ import pyautogui
 
 
 class LYBWorker(threading.Thread):
-    def __init__(self, name, configure, cmd_queue, res_queue):
+    def __init__(self, name, configure, cmd_queue, res_queue, turn_queue):
         super().__init__()
         self.logger = likeyoubot_logger.LYBLogger.getLogger()
         self.command_queue = cmd_queue
         self.response_queue = res_queue
+        self.turn_queue = turn_queue
         self.name = name
         self.keyword = ""
         self.start_action = False
@@ -42,6 +43,7 @@ class LYBWorker(threading.Thread):
         self.window_config = None
         self.pause_flag = False
         self.app_player_type = 'nox'
+        self.turn_number = 0
 
     def run(self):
         threading.currentThread().setName('워커쓰레드')
@@ -60,6 +62,12 @@ class LYBWorker(threading.Thread):
                     recv_msg = self.command_queue.get()
                 else:
                     recv_msg = self.command_queue.get_nowait()
+
+                # self.logger.info('1TURN:' + str(recv_msg.type))
+
+                if recv_msg.type != 'turn':
+                    self.turn_queue.put_nowait(likeyoubot_message.LYBMessage('empty', str(self.window_title)))
+                    self.turn_queue.join()
 
                 if recv_msg.type == 'end':
                     self.response_queue.put_nowait(likeyoubot_message.LYBMessage('end_return', str(self.window_title)))
@@ -475,6 +483,8 @@ class LYBWorker(threading.Thread):
                     else:
                         self.logger.warn("Paused")
                         self.pause_flag = True
+                elif recv_msg.type == 'turn':
+                    self.turn_number = recv_msg.message
 
             except queue.Empty:
                 pass
@@ -528,6 +538,10 @@ class LYBWorker(threading.Thread):
                 else:
                     # print('[INTERVAL]:', float(self.common_config['wakeup_period_entry']))
                     time.sleep(0.1)
+
+            if recv_msg.type == "turn":
+                self.turn_queue.put_nowait(likeyoubot_message.LYBMessage('turn', self.turn_number))
+                self.turn_queue.join()
 
     # logger.debug('['+self.name+']'+' end:'+str(threading.currentThread()))
 

@@ -444,6 +444,7 @@ class LYBConstant():
     LYB_DO_STRING_WAIT_FOR_NEXT = LYB_DO_PREFIX + 'wait_for_next_stringvar'
     LYB_DO_BOOLEAN_MOUSE_POINTER = LYB_DO_PREFIX + 'mouse_pointer_booleanvar'
     LYB_DO_BOOLEAN_MONITORING_ONLY = LYB_DO_PREFIX + 'monitoring_only_booleanvar'
+    LYB_DO_BOOLEAN_USE_DD_CLASS = LYB_DO_PREFIX + 'use_dd_class_booleanvar'
 
     LYB_DO_BOOLEAN_RANDOM_CLICK = LYB_DO_PREFIX + 'random_click_booleanvar'
     LYB_DO_STRING_RANDOM_CLICK_DELAY = LYB_DO_PREFIX + 'random_delay'

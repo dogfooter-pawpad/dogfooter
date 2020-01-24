@@ -95,6 +95,7 @@ class LYBGUI:
         self.first_for_ads = True
         self.ws = None
         self.turn_number = 0
+        self.last_turn_number = -1
         # --- COMMON TAB
 
         self.monitor_button_index = [-1, -1, -1, -1, -1]
@@ -2107,6 +2108,26 @@ class LYBGUI:
             self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_MONITORING_ONLY])
         self.monitoring_only_booleanvar.trace('w', lambda *args: self.callback_monitoring_only_booleanvar(args))
 
+        frame = ttk.Frame(self.configure_frame, relief=frame_relief)
+        self.use_dd_class_booleanvar = tkinter.BooleanVar(frame)
+        checkbutton = ttk.Checkbutton(
+            master=frame,
+            text="하드웨어 마우스 클릭 사용하기",
+            variable=self.use_dd_class_booleanvar,
+            onvalue=True,
+            offvalue=False
+        )
+
+        checkbutton.pack(side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
+        if not lybconstant.LYB_DO_BOOLEAN_USE_DD_CLASS in self.configure.common_config:
+            self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_USE_DD_CLASS] = True
+
+        self.use_dd_class_booleanvar.set(
+            self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_USE_DD_CLASS])
+        self.use_dd_class_booleanvar.trace('w', lambda *args: self.callback_use_dd_class_booleanvar(args))
+
         if not lybconstant.LYB_DO_STRING_RECOVERY_COUNT + 'freezing_limit' in self.configure.common_config:
             self.configure.common_config[lybconstant.LYB_DO_STRING_RECOVERY_COUNT + 'freezing_limit'] = 600
 
@@ -2695,6 +2716,7 @@ class LYBGUI:
 
     def distribute_workers(self):
 
+        period_bot = float(1000.0)
         self.workers = [worker for worker in self.workers if worker.isAlive()]
         worker_count = len(self.workers)
 
@@ -2702,20 +2724,43 @@ class LYBGUI:
             worker_count = 1
 
         turn_number = self.turn_number % worker_count
-        self.turn_number += 1
-        if self.turn_number > 99999:
-            self.turn_number = 0
+        if self.last_turn_number == -1:
+            last_turn_number = self.turn_number
+            self.turn_number += 1
+            if self.turn_number > 99999:
+                self.turn_number = 0
+        else:
+            last_turn_number = self.last_turn_number
+            self.turn_number = self.last_turn_number
 
-        period_bot = float(1000.0)
+        # self.logger.info("워커 갯수: " + str(len(self.workers)))
         if len(self.workers) > 0:
             # self.logger.info("순서: " + str(turn_number))
             worker = self.workers[turn_number]
-            worker.command_queue.put_nowait(likeyoubot_message.LYBMessage('turn', None))
+            # self.logger.info("TURN RESPONSE 1:" + str(worker.name))
+
+            if self.last_turn_number == -1:
+                worker.command_queue.put_nowait(likeyoubot_message.LYBMessage('turn', self.turn_number))
 
             try:
+                turn_message = worker.turn_queue.get_nowait()
+                # self.logger.info("TURN DEBUG:" + str(turn_message.type) + " " + str(turn_message.message) + ' ' + str(self.last_turn_number) + ' ' + str(self.turn_number) + ' ' + str(last_turn_number))
+                if turn_message.type == "turn":
+                    if turn_message.message == self.last_turn_number + 1:
+                        self.last_turn_number = -1
+                        self.turn_number = turn_message.message
+                    else:
+                        self.last_turn_number = last_turn_number
+                        self.turn_number = last_turn_number
+                else:
+                    self.last_turn_number = -1
+
+                worker.turn_queue.task_done()
                 period_bot = float(self.configure.common_config['wakeup_period_entry']) * float(1000.0)
             except:
-                period_bot = float(1000.0)
+                self.last_turn_number = last_turn_number
+                self.turn_number = last_turn_number
+                # self.logger.info("3응답 패스:")
 
             # self.logger.info("현재 실행 중인 창: " + str(self.workers) + ':' + str(worker_count))
 
@@ -3225,7 +3270,7 @@ class LYBGUI:
         # 	return None
 
         worker_thread = likeyoubot_worker.LYBWorker('Thread-' + str(self.start_flag), self.configure, queue.Queue(),
-                                                    queue.Queue())
+                                                    queue.Queue(), queue.Queue())
         worker_thread.daemon = True
         worker_thread.start()
         if is_system == False:
@@ -4130,6 +4175,11 @@ class LYBGUI:
 
         self.configure.common_config[
             lybconstant.LYB_DO_BOOLEAN_MOUSE_POINTER + 'away'] = self.mouse_pointer_away_booleanvar.get()
+
+    def callback_use_dd_class_booleanvar(self, args):
+
+        self.configure.common_config[
+            lybconstant.LYB_DO_BOOLEAN_USE_DD_CLASS] = self.use_dd_class_booleanvar.get()
 
     def callback_monitoring_only_booleanvar(self, args):
 
