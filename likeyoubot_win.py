@@ -437,7 +437,13 @@ class LYBWin:
 
         if self.configure is not None and self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_USE_DD_CLASS] is False:
             pyautogui.moveTo(anchor_x + from_x, anchor_y + from_y)
-            pyautogui.dragTo(anchor_x + to_x, anchor_y + to_y, duration=delay)
+            pyautogui.mouseDown(button="left")
+            pyautogui.moveTo(anchor_x + to_x, anchor_y + to_y, duration=delay)
+
+            if stop_delay > 0:
+                time.sleep(stop_delay)
+            pyautogui.mouseUp(button="left")
+            # pyautogui.dragTo(anchor_x + to_x, anchor_y + to_y, duration=delay)
             return
 
 

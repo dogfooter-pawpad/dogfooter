@@ -2718,7 +2718,8 @@ class LYBGUI:
 
     def distribute_workers(self):
 
-        period_bot = float(100.0)
+        period_bot = float(self.configure.common_config['wakeup_period_entry']) * float(100.0)
+
         self.workers = [worker for worker in self.workers if worker.isAlive()]
         worker_count = len(self.workers)
 
