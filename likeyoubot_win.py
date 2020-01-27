@@ -20,7 +20,7 @@ class LYBWin:
     NOX_EXTRA_HEIGHT = 30
     NOX_EXTRA_UHD_HEIGHT = 46
 
-    def __init__(self, my_name, configure=None):
+    def __init__(self, my_name, configure=None, dd_class=None):
         # self.logger = likeyoubot_logger.LYBLogger.getLogger()
         self.handle_list = []
         self.multi_window_handle_dic = {}
@@ -32,6 +32,7 @@ class LYBWin:
         self.my_handle = None
         self.my_name = my_name
         self.configure = configure
+        self.dd_class = dd_class
 
     def find_window(self, class_name, window_name=None):
         handle = win32gui.FindWindow(class_name, window_name)
@@ -343,13 +344,13 @@ class LYBWin:
             pyautogui.click(anchor_x + x, anchor_y + y)
             return
 
-        likeyoubot_dd.DDMouse(likeyoubot_dd.DDClass.get_dll()).move(anchor_x + x, anchor_y + y)
-        likeyoubot_dd.DDMouse(likeyoubot_dd.DDClass.get_dll()).down()
+        likeyoubot_dd.DDMouse(self.dd_class[0], self.dd_class[1], self.dd_class[2]).move(anchor_x + x, anchor_y + y)
+        likeyoubot_dd.DDMouse(self.dd_class[0], self.dd_class[1], self.dd_class[2]).down()
         if delay > 0:
             time.sleep(delay)
 
         if release is True:
-            likeyoubot_dd.DDMouse(likeyoubot_dd.DDClass.get_dll()).up()
+            likeyoubot_dd.DDMouse(self.dd_class[0], self.dd_class[1], self.dd_class[2]).up()
 
 
 
@@ -484,22 +485,22 @@ class LYBWin:
 
         anchor_x, anchor_y, bottom_right_x, bottom_right_y = self.get_window_location(hwnd)
 
-        likeyoubot_dd.DDMouse(likeyoubot_dd.DDClass.get_dll()).move(anchor_x + from_x, anchor_y + from_y)
-        likeyoubot_dd.DDMouse(likeyoubot_dd.DDClass.get_dll()).down()
+        likeyoubot_dd.DDMouse(self.dd_class[0], self.dd_class[1], self.dd_class[2]).move(anchor_x + from_x, anchor_y + from_y)
+        likeyoubot_dd.DDMouse(self.dd_class[0], self.dd_class[1], self.dd_class[2]).down()
 
         # print('----------------->', delay, step_delay, x_step, y_step)
         if x_step == 1 or y_step == 1:
             step_delay = delay / (abs(x_step) * abs(y_step))
             for i in range(int(x_step)):
                 for j in range(int(y_step)):
-                    likeyoubot_dd.DDMouse(likeyoubot_dd.DDClass.get_dll()).move(anchor_x + from_x + i * x_factor,
+                    likeyoubot_dd.DDMouse(self.dd_class[0], self.dd_class[1], self.dd_class[2]).move(anchor_x + from_x + i * x_factor,
                                                                                 anchor_y + from_y + j * y_factor)
                     time.sleep(step_delay)
         else:
             step_delay = delay / abs(x_step)
             inclination = y_step / x_step
             for i in range(int(x_step)):
-                likeyoubot_dd.DDMouse(likeyoubot_dd.DDClass.get_dll()).move(anchor_x + from_x + i * x_factor,
+                likeyoubot_dd.DDMouse(self.dd_class[0], self.dd_class[1], self.dd_class[2]).move(anchor_x + from_x + i * x_factor,
                                                                             anchor_y + from_y + + int(
                                                                                 i * y_factor * inclination))
                 time.sleep(step_delay)
@@ -507,7 +508,7 @@ class LYBWin:
         if stop_delay > 0:
             time.sleep(stop_delay)
 
-        likeyoubot_dd.DDMouse(likeyoubot_dd.DDClass.get_dll()).up()
+        likeyoubot_dd.DDMouse(self.dd_class[0], self.dd_class[1], self.dd_class[2]).up()
 
 
 

@@ -33,7 +33,8 @@ class LYBMakeResource():
 			)
 
 	def mouseMove(self, str, x, y):
-		likeyoubot_dd.DDMouse(likeyoubot_dd.DDClass.get_dll()).move(x, y)
+		dll, mov, btn = likeyoubot_dd.DDClass.get_dll()
+		likeyoubot_dd.DDMouse(dll, mov, btn).move(x, y)
 		# pyautogui.moveTo( x, y )
 
 	def execute(self):

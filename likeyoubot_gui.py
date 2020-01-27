@@ -26,6 +26,7 @@ import random
 import string
 import shutil
 import requests
+import likeyoubot_dd
 
 from subprocess import Popen, PIPE
 
@@ -96,6 +97,7 @@ class LYBGUI:
         self.ws = None
         self.turn_number = 0
         self.last_turn_number = -1
+        self.dd_class = likeyoubot_dd.DDClass().get_dll()
         # --- COMMON TAB
 
         self.monitor_button_index = [-1, -1, -1, -1, -1]
@@ -2716,7 +2718,7 @@ class LYBGUI:
 
     def distribute_workers(self):
 
-        period_bot = float(1000.0)
+        period_bot = float(100.0)
         self.workers = [worker for worker in self.workers if worker.isAlive()]
         worker_count = len(self.workers)
 
@@ -2756,7 +2758,7 @@ class LYBGUI:
                     self.last_turn_number = -1
 
                 worker.turn_queue.task_done()
-                period_bot = float(self.configure.common_config['wakeup_period_entry']) * float(1000.0)
+                # period_bot = float(self.configure.common_config['wakeup_period_entry']) * float(100.0)
             except:
                 self.last_turn_number = last_turn_number
                 self.turn_number = last_turn_number
@@ -3270,7 +3272,7 @@ class LYBGUI:
         # 	return None
 
         worker_thread = likeyoubot_worker.LYBWorker('Thread-' + str(self.start_flag), self.configure, queue.Queue(),
-                                                    queue.Queue(), queue.Queue())
+                                                    queue.Queue(), queue.Queue(), self.dd_class)
         worker_thread.daemon = True
         worker_thread.start()
         if is_system == False:

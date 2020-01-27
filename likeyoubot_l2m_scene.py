@@ -1560,7 +1560,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                     elapsed_time = time.time() - self.get_checkpoint('skill_cooltime_' + str(i))
 
                     if elapsed_time > self.period_bot(81640):
-                        self.set_checkpoint('skill_cooltime_' + str(i), time.time() + 10)
+                        self.set_checkpoint('skill_cooltime_' + str(i), time.time() + self.period_bot(10))
                     elif elapsed_time > cfg_cooltime:
                         self.set_checkpoint('skill_cooltime_' + str(i))
                         if i not in skill_queue:
@@ -1591,7 +1591,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                 elapsed_time = time.time() - self.get_checkpoint('use_item_premium_potion')
 
                 if elapsed_time > self.period_bot(81640):
-                    self.set_checkpoint('use_item_premium_potion', time.time() + 10)
+                    self.set_checkpoint('use_item_premium_potion', time.time() + self.period_bot(10))
                 elif elapsed_time > cfg_cooltime:
                     self.set_checkpoint('use_item_premium_potion')
                     if 0 not in item_queue:

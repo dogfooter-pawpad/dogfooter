@@ -224,6 +224,23 @@ class LYBL2M(lybgame.LYBGame):
                 self.logger.info('오늘 그만 보기: ' + str(round(match_rate, 2)))
                 self.get_scene('main_scene').lyb_mouse_click_location(loc_x - 10, loc_y)
                 return resource_name
+
+        resource_name = 'today_stop_loc'
+        elapsed_time = time.time() - self.get_scene('main_scene').get_checkpoint(resource_name)
+        if elapsed_time > self.period_bot(5):
+            (loc_x, loc_y), match_rate = self.locationResourceOnWindowPart(
+                self.window_image,
+                resource_name,
+                custom_threshold=0.7,
+                custom_flag=1,
+                custom_rect=(10, 400, 90, 430)
+            )
+            # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
+            if loc_x != -1:
+                self.get_scene('main_scene').set_checkpoint(resource_name)
+                self.logger.info('오늘 그만 보기: ' + str(round(match_rate, 2)))
+                self.get_scene('main_scene').lyb_mouse_click_location(loc_x - 10, loc_y)
+                return resource_name
         #
         # resource_name = 'touch_screen_loc'
         # elapsed_time = time.time() - self.get_scene('main_scene').get_checkpoint(resource_name)
