@@ -97,7 +97,6 @@ class LYBGUI:
         self.ws = None
         self.turn_number = 0
         self.last_turn_number = -1
-        self.dd_class = likeyoubot_dd.DDClass().get_dll()
         # --- COMMON TAB
 
         self.monitor_button_index = [-1, -1, -1, -1, -1]
@@ -2130,6 +2129,10 @@ class LYBGUI:
             self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_USE_DD_CLASS])
         self.use_dd_class_booleanvar.trace('w', lambda *args: self.callback_use_dd_class_booleanvar(args))
 
+        self.dd_class = None
+        if self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_USE_DD_CLASS]:
+            self.dd_class = likeyoubot_dd.DDClass().get_dll()
+
         if not lybconstant.LYB_DO_STRING_RECOVERY_COUNT + 'freezing_limit' in self.configure.common_config:
             self.configure.common_config[lybconstant.LYB_DO_STRING_RECOVERY_COUNT + 'freezing_limit'] = 600
 
@@ -2718,7 +2721,7 @@ class LYBGUI:
 
     def distribute_workers(self):
 
-        period_bot = float(self.configure.common_config['wakeup_period_entry']) * float(100.0)
+        period_bot = float(self.configure.common_config['wakeup_period_entry']) * float(1000.0)
 
         self.workers = [worker for worker in self.workers if worker.isAlive()]
         worker_count = len(self.workers)

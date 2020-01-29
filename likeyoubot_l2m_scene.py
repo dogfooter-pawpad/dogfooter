@@ -135,7 +135,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                 custom_threshold=0.7,
                 custom_flag=1,
             )
-            self.logger.debug(pb_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+            # self.logger.debug(pb_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
             if loc_x != -1:
                 self.lyb_mouse_click_location(loc_x, loc_y)
                 self.set_option('last_status', self.status)
@@ -161,7 +161,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                     custom_flag=1,
                     average=False
                 )
-                self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+                # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
                 if loc_x != -1:
                     self.lyb_mouse_click_location(loc_x, loc_y)
                     return self.status
@@ -207,7 +207,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                 custom_flag=1,
                 average=False
             )
-            self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+            # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
             if loc_x != -1:
                 self.logger.info('무료 복구 인식됨: 확인')
                 self.lyb_mouse_click('recover_scene_ok', custom_threshold=0)
@@ -215,7 +215,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
 
             pb_name = 'recover_scene_gold'
             match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
-            self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
+            # self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
             if match_rate > 0.9:
                 self.logger.info('골드 복구 인식됨: 확인')
                 self.lyb_mouse_click('recover_scene_ok', custom_threshold=0)
@@ -223,7 +223,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
 
             pb_name = 'recover_scene_gem'
             match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
-            self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
+            # self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
             if match_rate > 0.9:
                 self.set_option('option_gem', True)
                 self.logger.info('다이아 복구 인식됨: 취소')
@@ -294,7 +294,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                     custom_flag=1,
                     average=False
                 )
-                self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+                # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
                 if loc_x != -1:
                     self.lyb_mouse_click_location(loc_x, loc_y)
                     self.set_option('aden_clicked', True)
@@ -326,7 +326,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                         custom_flag=1,
                         average=False
                     )
-                    self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+                    # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
                     if loc_x != -1:
                         self.status = 100
                         return self.status
@@ -365,9 +365,9 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                     custom_threshold=0.8,
                     custom_flag=1,
                     average=False,
-                    debug=True,
+                    # debug=True,
                 )
-                self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+                # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
                 if loc_x != -1:
                     self.lyb_mouse_click_location(loc_x, loc_y)
                     self.status = 200
@@ -492,7 +492,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                     custom_flag=1,
                     average=False
                 )
-                self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+                # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
                 if loc_x != -1:
                     self.lyb_mouse_click_location(loc_x, loc_y)
                     self.status = 100
@@ -579,7 +579,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                     custom_flag=1,
                     average=False
                 )
-                self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+                # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
                 if loc_x != -1:
                     self.lyb_mouse_click_location(loc_x, loc_y)
                     self.status = 1100
@@ -636,7 +636,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                 custom_flag=1,
                 average=True
             )
-            self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+            # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
             if loc_x != -1:
                 self.logger.info('절전 모드 사망 감지. 귀환서 클릭합니다.')
                 self.game_object.get_scene('main_scene').set_option('is_home', True)
@@ -655,7 +655,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                     custom_threshold=0.85,
                     custom_flag=1,
                     average=False,
-                    debug=True,
+                    # debug=True,
                 )
                 # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
                 if loc_x != -1:
@@ -714,12 +714,12 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
             (loc_x, loc_y), match_rate = self.game_object.locationResourceOnWindowPart(
                 self.window_image,
                 resource_name,
-                custom_threshold=0.85,
+                custom_threshold=0.9,
                 custom_flag=1,
                 custom_rect=(200, 400, 450, 460),
                 average=True
             )
-            self.logger.debug(resource_name + ' ' + str(round(match_rate, 2)))
+            # self.logger.debug(resource_name + ' ' + str(round(match_rate, 2)))
             if loc_x != -1:
                 max_rate = match_rate
                 max_number = -1
@@ -733,7 +733,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                 custom_rect=(600, 270, 720, 380),
                 average=True
             )
-            self.logger.debug(resource_name + ' ' + str(round(match_rate, 2)))
+            # self.logger.debug(resource_name + ' ' + str(round(match_rate, 2)))
             if loc_x != -1:
                 max_rate = match_rate
                 max_number = -2
@@ -977,7 +977,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
             if inner_status is None:
                 inner_status = 0
 
-            self.logger.debug('inner_status ' + str(inner_status))
+            # self.logger.debug('inner_status ' + str(inner_status))
             if inner_status == 0:
                 self.set_option(self.current_work + '_inner_status', inner_status + 1)
                 self.set_option('jido_move_ok', False)
@@ -1057,7 +1057,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
             if inner_status is None:
                 inner_status = 0
 
-            self.logger.debug('inner_status ' + str(inner_status))
+            # self.logger.debug('inner_status ' + str(inner_status))
             if inner_status == 0:
                 self.lyb_mouse_click('main_scene_quick_config', custom_threshold=0)
                 self.game_object.get_scene('quick_config_scene').status = 0
@@ -1185,9 +1185,9 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
             resource_name,
             custom_threshold=custom_threshold,
             near=near,
-            debug=True,
+            # debug=True,
             custom_flag=1)
-        self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
+        # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
         if loc_x != -1:
             self.lyb_mouse_click_location(loc_x, loc_y)
             return True, match_rate
@@ -1206,7 +1206,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
             custom_rect=custom_rect,
             average=True
         )
-        self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+        # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
         if loc_x != -1 and reverse is not True:
             self.set_option(resource_name + 'check_count', 0)
             return False
@@ -1234,7 +1234,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
         match_rate = self.game_object.rateMatchedResource(self.window_pixels, resource_name,
                                                           custom_top_level=custom_top_level,
                                                           custom_below_level=custom_below_level)
-        self.logger.debug(resource_name + ' ' + str(round(match_rate, 2)))
+        # self.logger.debug(resource_name + ' ' + str(round(match_rate, 2)))
         if match_rate > custom_threshold and reverse is not True:
             self.set_option(resource_name + 'check_count', 0)
             return False
@@ -1265,7 +1265,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
             if menu_status is None:
                 menu_status = 0
 
-            self.logger.debug('menu_status: ' + str(menu_status))
+            # self.logger.debug('menu_status: ' + str(menu_status))
 
             if menu_status == 0:
                 self.set_option('menu_status', menu_status + 1)
@@ -1331,7 +1331,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
             if home_status is None:
                 home_status = 0
 
-            self.logger.debug('home_status: ' + str(home_status))
+            # self.logger.debug('home_status: ' + str(home_status))
 
             if home_status == 0:
                 self.logger.info('마을입니다. [자동 사냥] 작업을 종료합니다.')
@@ -1392,9 +1392,9 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                         custom_threshold=0.8,
                         custom_flag=1,
                         average=False,
-                        debug=True
+                        # debug=True
                     )
-                    self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+                    # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
                     if loc_x != -1:
                         self.lyb_mouse_click_location(loc_x, loc_y)
                         self.set_option('npc_ok', False)
@@ -1501,7 +1501,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
             if recover_status is None:
                 recover_status = 0
 
-            self.logger.debug('recover_status: ' + str(recover_status))
+            # self.logger.debug('recover_status: ' + str(recover_status))
             if recover_status == 0:
                 self.set_option('recover_status', recover_status + 1)
             elif recover_status == 1:
@@ -1616,7 +1616,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
         if inner_status is None:
             inner_status = 0
 
-        self.logger.debug('inner_status ' + str(inner_status))
+        # self.logger.debug('inner_status ' + str(inner_status))
         if inner_status == 0:
             self.lyb_mouse_click('main_scene_quick_config', custom_threshold=0)
             self.game_object.get_scene('quick_config_scene').status = 0
@@ -1653,7 +1653,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
             custom_flag=1,
             average=True
         )
-        self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+        # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
         if loc_x != -1:
             return True
 
@@ -1662,7 +1662,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
     def is_open_menu(self):
         pb_name = 'main_scene_menu_close_icon'
         match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
-        self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
+        # self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
         if match_rate > 0.75:
             return True
 
@@ -1683,7 +1683,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                 custom_flag=1,
                 average=True
             )
-            self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+            # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
             if loc_x != -1:
                 self.lyb_mouse_click_location(loc_x, loc_y)
                 return True
@@ -1700,7 +1700,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
             custom_flag=1,
             average=True
         )
-        self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+        # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
         if loc_x != -1:
             return True
 
@@ -1718,7 +1718,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
             custom_flag=1,
             average=True
         )
-        self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+        # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
         if loc_x != -1:
             return True
 
@@ -1727,7 +1727,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
     def is_recover_cross_active(self):
         pb_name = 'main_scene_recover_cross_active'
         match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
-        self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
+        # self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
         if match_rate > 0.9:
             return True
 
@@ -1772,7 +1772,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                 custom_flag=1,
                 average=True
             )
-            self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+            # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
             if loc_x != -1:
                 return slot_number
             slot_number += 1
