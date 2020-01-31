@@ -53,12 +53,12 @@ class LYBV4(lybgame.LYBGame):
             '비텐 고원',
         ],
         [
-            '광란의 숲',
-            '저주의 평야',
-            '상실의 숲',
+            '고독의 숲',
             '환각의 사막',
             '파멸의 화산',
             '허상의 고원',
+            '오만의 평야',
+            '좌절의 숲',
         ],
         [
             '기사의 후회 I',
@@ -198,7 +198,7 @@ class LYBV4(lybgame.LYBGame):
                 custom_below_level=(145, 110, 110),
                 custom_rect=(25, 510, 100, 560),
             )
-            self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
+            # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
             if loc_x != -1:
                 self.get_scene('main_scene').set_checkpoint(resource_name)
                 self.logger.info('팝업: ' + str(round(match_rate, 2)))
@@ -217,7 +217,7 @@ class LYBV4(lybgame.LYBGame):
                 custom_below_level=(140, 50, 20),
                 custom_rect=(25, 510, 100, 560),
             )
-            self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
+            # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
             if loc_x != -1:
                 self.get_scene('main_scene').set_checkpoint(resource_name)
                 self.logger.info('팝업: ' + str(round(match_rate, 2)))
@@ -234,7 +234,7 @@ class LYBV4(lybgame.LYBGame):
                 custom_flag=1,
                 custom_rect=(25, 510, 100, 560),
             )
-            self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
+            # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
             if loc_x != -1:
                 self.get_scene('main_scene').set_checkpoint(resource_name)
                 self.logger.info('팝업: ' + str(round(match_rate, 2)))
@@ -1859,6 +1859,8 @@ class LYBV4Tab(lybgame.LYBGameTab):
             '환각의 사막',
             '파멸의 화산',
             '허상의 고원',
+            '오만의 평야',
+            '좌절의 숲',
         ]
 
         if not lybconstant.LYB_DO_STRING_V4_WORK + 'monster_josa_area' in self.configure.common_config[self.game_name]:
