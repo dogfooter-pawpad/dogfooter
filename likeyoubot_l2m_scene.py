@@ -1016,7 +1016,6 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                 self.set_option(self.current_work + '_end_flag', True)
 
             self.loggingElapsedTime('[' + str(self.current_work) + '] 경과 시간', elapsed_time, cfg_duration, period=60)
-            self.logger.info(str(self.get_option(self.current_work + '_end_flag')))
             if self.get_option(self.current_work + '_end_flag'):
                 self.set_option(self.current_work + '_end_flag', False)
                 self.set_option(self.current_work + '_inner_status', None)

@@ -15,7 +15,7 @@ import pyautogui
 
 
 class LYBWorker(threading.Thread):
-    def __init__(self, name, configure, cmd_queue, res_queue, turn_queue, dd_class):
+    def __init__(self, name, configure, cmd_queue, res_queue, turn_queue):
         super().__init__()
         self.logger = likeyoubot_logger.LYBLogger.getLogger()
         self.command_queue = cmd_queue
@@ -44,7 +44,6 @@ class LYBWorker(threading.Thread):
         self.pause_flag = False
         self.app_player_type = 'nox'
         self.turn_number = 0
-        self.dd_class = dd_class
 
     def run(self):
         threading.currentThread().setName('워커쓰레드')
@@ -81,7 +80,7 @@ class LYBWorker(threading.Thread):
                     window_title = recv_msg.message[2]
                     configure = recv_msg.message[3]
                     window_config = configure.window_config[window_title]
-                    window = likeyoubot_win.LYBWin(configure.window_title, configure, self.dd_class)
+                    window = likeyoubot_win.LYBWin(configure.window_title, configure)
 
                     if player_type == 'nox':
                         if lybconstant.LYB_MULTI_APP_PLAYER_NAME_NOX in multi_hwnd_dic:
@@ -207,7 +206,7 @@ class LYBWorker(threading.Thread):
                     cmd = recv_msg.message[1]
                     window_name = recv_msg.message[2]
 
-                    self.win = likeyoubot_win.LYBWin(configure.window_title, configure, self.dd_class)
+                    self.win = likeyoubot_win.LYBWin(configure.window_title, configure)
 
                     if cmd == 'show':
                         self.logger.warn('창 보이기')
@@ -286,7 +285,7 @@ class LYBWorker(threading.Thread):
                     threading.currentThread().setName('long_polling_worker')
                     # self.logger.debug('long_polling_worker started')
                     if self.win is None:
-                        self.win = likeyoubot_win.LYBWin(self.ui.configure.window_title, self.ui.configure, self.dd_class)
+                        self.win = likeyoubot_win.LYBWin(self.ui.configure.window_title, self.ui.configure)
                 elif recv_msg.type == 'thumbnail':
                     self.ui = recv_msg.message[0]
                     window_name = recv_msg.message[1]
@@ -298,7 +297,7 @@ class LYBWorker(threading.Thread):
                     # cv2.destroyAllWindows()
 
                     win_hwnds = self.ui.hwnds[window_name]
-                    self.win = likeyoubot_win.LYBWin(self.ui.configure.window_title, self.ui.configure, self.dd_class)
+                    self.win = likeyoubot_win.LYBWin(self.ui.configure.window_title, self.ui.configure)
                     (anchor_x, anchor_y, end_x, end_y) = self.win.get_window_location(win_hwnds)
                     adj_x, adj_y = self.win.get_player_adjust(win_hwnds)
                     width = int(self.ui.configure.common_config[lybconstant.LYB_DO_STRING_THUMBNAIL_SIZE + 'width'])
@@ -354,7 +353,7 @@ class LYBWorker(threading.Thread):
                     threading.currentThread().setName(self.window_title)
 
                     if self.win is None:
-                        self.win = likeyoubot_win.LYBWin(self.configure.window_title, self.configure, self.dd_class)
+                        self.win = likeyoubot_win.LYBWin(self.configure.window_title, self.configure)
 
                     if self.window_config and lybconstant.LYB_DO_BOOLEAN_USE_INACTIVE_MODE in self.window_config and \
                             self.window_config[lybconstant.LYB_DO_BOOLEAN_USE_INACTIVE_MODE] is False:
@@ -548,7 +547,7 @@ class LYBWorker(threading.Thread):
 
     def findWindows(self):
 
-        self.win = likeyoubot_win.LYBWin(self.configure.window_title, self.configure, self.dd_class)
+        self.win = likeyoubot_win.LYBWin(self.configure.window_title, self.configure)
 
         wildcard = ".*" + self.configure.keyword + ".*"
         # wildcard = '.*'

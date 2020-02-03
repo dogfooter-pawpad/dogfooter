@@ -26,7 +26,6 @@ import random
 import string
 import shutil
 import requests
-import likeyoubot_dd
 
 from subprocess import Popen, PIPE
 
@@ -2129,10 +2128,6 @@ class LYBGUI:
             self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_USE_DD_CLASS])
         self.use_dd_class_booleanvar.trace('w', lambda *args: self.callback_use_dd_class_booleanvar(args))
 
-        self.dd_class = None
-        if self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_USE_DD_CLASS]:
-            self.dd_class = likeyoubot_dd.DDClass().get_dll()
-
         if not lybconstant.LYB_DO_STRING_RECOVERY_COUNT + 'freezing_limit' in self.configure.common_config:
             self.configure.common_config[lybconstant.LYB_DO_STRING_RECOVERY_COUNT + 'freezing_limit'] = 600
 
@@ -3276,7 +3271,7 @@ class LYBGUI:
         # 	return None
 
         worker_thread = likeyoubot_worker.LYBWorker('Thread-' + str(self.start_flag), self.configure, queue.Queue(),
-                                                    queue.Queue(), queue.Queue(), self.dd_class)
+                                                    queue.Queue(), queue.Queue())
         worker_thread.daemon = True
         worker_thread.start()
         if is_system == False:

@@ -20,7 +20,7 @@ class LYBWin:
     NOX_EXTRA_HEIGHT = 30
     NOX_EXTRA_UHD_HEIGHT = 46
 
-    def __init__(self, my_name, configure=None, dd_class=None):
+    def __init__(self, my_name, configure=None):
         # self.logger = likeyoubot_logger.LYBLogger.getLogger()
         self.handle_list = []
         self.multi_window_handle_dic = {}
@@ -32,7 +32,7 @@ class LYBWin:
         self.my_handle = None
         self.my_name = my_name
         self.configure = configure
-        self.dd_class = dd_class
+        self.dd_class = None
 
     def find_window(self, class_name, window_name=None):
         handle = win32gui.FindWindow(class_name, window_name)
@@ -201,6 +201,12 @@ class LYBWin:
                         # if re.match('Nox', str(win32gui.GetWindowText(hwnd))):
                         #     print('Nox 사이드 바: ', str(win32gui.GetWindowText(hwnd)), win32gui.IsWindowVisible(hwnd))
 
+                window_title = win32gui.GetWindowText(hwnd)
+                if window_title is not None and len(window_title) > 0 and "LINEAGE" in window_title:
+                    # Purple
+                    self.handle_list.append(hwnd)
+                    win32gui.SetWindowPos(hwnd, win32con.HWND_TOP, 0, 0, LYBWin.WIDTH, LYBWin.HEIGHT, win32con.SWP_NOMOVE + win32con.SWP_SHOWWINDOW)
+
         if win32gui.IsWindowVisible(hwnd) != 0:
             # 녹스 사이드 바 이름 변경됨 6.0.5.1
             if (re.match('nox', str(win32gui.GetWindowText(hwnd))) is not None or
@@ -344,6 +350,11 @@ class LYBWin:
             pyautogui.click(anchor_x + x, anchor_y + y)
             return
 
+        if self.dd_class is None or self.dd_class[3] > 8500:
+            if self.dd_class is not None:
+                likeyoubot_dd.DDClass.free(self.dd_class[0])
+            self.dd_class = likeyoubot_dd.DDClass.get_dll(refresh=True)
+
         likeyoubot_dd.DDMouse(self.dd_class[0], self.dd_class[1], self.dd_class[2]).move(anchor_x + x, anchor_y + y)
         likeyoubot_dd.DDMouse(self.dd_class[0], self.dd_class[1], self.dd_class[2]).down()
         if delay > 0:
@@ -352,7 +363,8 @@ class LYBWin:
         if release is True:
             likeyoubot_dd.DDMouse(self.dd_class[0], self.dd_class[1], self.dd_class[2]).up()
 
-
+        self.dd_class[3] += 3
+        print("DEBUG >> DDClass OP count: ", self.dd_class[3])
 
 
 
@@ -454,7 +466,10 @@ class LYBWin:
 
 
 
-
+        if self.dd_class is None or self.dd_class[3] > 8500:
+            if self.dd_class is not None:
+                likeyoubot_dd.DDClass.free(self.dd_class[0])
+            self.dd_class = likeyoubot_dd.DDClass.get_dll(refresh=True)
 
         if from_x == to_x and from_y == to_y:
             return
@@ -501,6 +516,7 @@ class LYBWin:
                 for j in range(int(y_step)):
                     likeyoubot_dd.DDMouse(self.dd_class[0], self.dd_class[1], self.dd_class[2]).move(anchor_x + from_x + i * x_factor,
                                                                                 anchor_y + from_y + j * y_factor)
+                    self.dd_class[3] += 1
                     time.sleep(step_delay)
         else:
             step_delay = delay / abs(x_step)
@@ -509,13 +525,15 @@ class LYBWin:
                 likeyoubot_dd.DDMouse(self.dd_class[0], self.dd_class[1], self.dd_class[2]).move(anchor_x + from_x + i * x_factor,
                                                                             anchor_y + from_y + + int(
                                                                                 i * y_factor * inclination))
+                self.dd_class[3] += 1
                 time.sleep(step_delay)
 
         if stop_delay > 0:
             time.sleep(stop_delay)
 
         likeyoubot_dd.DDMouse(self.dd_class[0], self.dd_class[1], self.dd_class[2]).up()
-
+        self.dd_class[3] += 3
+        print("DEBUG >> DDClass OP count: ", self.dd_class[3])
 
 
 
