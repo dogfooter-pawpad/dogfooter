@@ -107,7 +107,8 @@ class LYBGame():
             if self.start_status != 0:
                 self.get_scene('main_scene').status = self.start_status
 
-        self.statistics[lybconstant.LYB_STATISTIC_1] = str(datetime.timedelta(seconds=int(time.time() - self.start_time)))
+        self.statistics[lybconstant.LYB_STATISTIC_1] = str(
+            datetime.timedelta(seconds=int(time.time() - self.start_time)))
 
         if self.weight_threshold < 0.9:
             self.weight_threshold = 1.0
@@ -166,20 +167,18 @@ class LYBGame():
         is_new_search = False
 
         if ('name' in self.current_matched_scene and
-                    'rate' in self.current_matched_scene and
-                    len(self.current_matched_scene['name']) > 0 and
-                    self.current_matched_scene['rate'] >= float(
+                'rate' in self.current_matched_scene and
+                len(self.current_matched_scene['name']) > 0 and
+                self.current_matched_scene['rate'] >= float(
                     self.get_window_config('threshold_entry')) * self.weight_threshold
-            ):           
+        ):
 
             match_rate = self.rateMatchedResource(window_pixels, self.current_matched_scene['name'],
                                                   weight_tolerance=self.weight_tolerance)
 
-
             # self.logger.info(match_rate)
             # self.logger.info(self.current_matched_scene['name'])
             # self.logger.info(self.current_matched_scene['rate'])
-            
 
             if match_rate > 0.9 and abs(int(match_rate * 100) - self.current_matched_scene['rate']) < 10:
                 scene_name = self.current_matched_scene['name']
@@ -189,11 +188,11 @@ class LYBGame():
         if scene_name == '':
             # print('CP 1', datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])
             if ('name' in self.current_matched_event and
-                        'rate' in self.current_matched_event and
-                        len(self.current_matched_event['name']) > 0 and
-                        self.current_matched_event['rate'] >= float(
+                    'rate' in self.current_matched_event and
+                    len(self.current_matched_event['name']) > 0 and
+                    self.current_matched_event['rate'] >= float(
                         self.get_window_config('threshold_entry')) * self.weight_threshold
-                ):
+            ):
 
                 # 이벤트는 더 빡시게 검사
                 match_rate = self.rateMatchedResource(window_pixels, self.current_matched_event['name'],
@@ -275,7 +274,6 @@ class LYBGame():
             return rc
         # self.loggingToGUI("%-52s [%-5s] 상태값:    %11s" \
         # 	% (self.get_adjusted_name(self.current_matched_scene['name']), 'scene', str(rc)))
-
 
         # print('[DEBUG]: rc=', rc, scene_name, self.last_scene)
         is_same = False
@@ -628,7 +626,8 @@ class LYBGame():
                                            likeyoubot_win.LYBWin.HEIGHT - 90, 0,
                                            likeyoubot_win.LYBWin.HEIGHT - 90,
                                            delay=0,
-                                           move_away=self.common_config[lybconstant.LYB_DO_BOOLEAN_MOUSE_POINTER + 'away'])
+                                           move_away=self.common_config[
+                                               lybconstant.LYB_DO_BOOLEAN_MOUSE_POINTER + 'away'])
                 else:
                     # self.window.mouse_drag(self.hwnd, 630, 220, 630, 80, 0.5)
                     self.window.mouse_click(self.hwnd,
@@ -831,7 +830,7 @@ class LYBGame():
         if custom_flag != -1:
             adj_x, adj_y = self.get_player_adjust()
             custom_rect2 = (
-            custom_rect[0] + adj_x, custom_rect[1] + adj_y, custom_rect[2] + adj_x, custom_rect[3] + adj_y)
+                custom_rect[0] + adj_x, custom_rect[1] + adj_y, custom_rect[2] + adj_x, custom_rect[3] + adj_y)
         else:
             custom_rect2 = (-1, -1, -1, -1)
 
@@ -854,18 +853,17 @@ class LYBGame():
 
         return (loc_x, loc_y)
 
-
     def locationResourceOnWindowPart2(self, parent, child_resource,
-                                     custom_threshold=-1,
-                                     custom_below_level=-1,
-                                     custom_top_level=-1,
-                                     source_custom_below_level=-1,
-                                     source_custom_top_level=-1,
-                                     custom_flag=-1,
-                                     near=32,
-                                     average=False,
-                                     debug=False
-                                     ):
+                                      custom_threshold=-1,
+                                      custom_below_level=-1,
+                                      custom_top_level=-1,
+                                      source_custom_below_level=-1,
+                                      source_custom_top_level=-1,
+                                      custom_flag=-1,
+                                      near=32,
+                                      average=False,
+                                      debug=False
+                                      ):
         if not child_resource in self.resource_manager.resource_dic:
             return ((-1, -1), 0)
 
@@ -884,7 +882,7 @@ class LYBGame():
                 pb_width = pixel_box.width
             if pb_height < pixel_box.height:
                 pb_height = pixel_box.height
-                
+
             (loc_x, loc_y) = self.get_location(each_pixel_box_name)
             if loc_x < left:
                 left = loc_x
@@ -895,9 +893,7 @@ class LYBGame():
             if loc_y > bottom:
                 bottom = loc_y
 
-
         adj_x, adj_y = self.get_player_adjust()
-
 
         left = left - pb_width - near + adj_x
         top = top - pb_height - near + adj_y
@@ -913,20 +909,20 @@ class LYBGame():
         if bottom > likeyoubot_win.LYBWin.HEIGHT - adj_y:
             bottom = likeyoubot_win.LYBWin.HEIGHT - adj_y
 
-        near_rect = (left, top, right, bottom) 
+        near_rect = (left, top, right, bottom)
 
         self.logger.warn(near_rect)
 
         return self.locationResourceOnWindowPart(parent, child_resource,
-            custom_threshold=custom_threshold,
-            custom_below_level=custom_below_level,
-            custom_top_level=custom_top_level,
-            source_custom_below_level=source_custom_below_level,
-            source_custom_top_level=source_custom_top_level,
-            custom_flag=custom_flag,
-            custom_rect=near_rect,
-            average=average,
-            debug=debug)
+                                                 custom_threshold=custom_threshold,
+                                                 custom_below_level=custom_below_level,
+                                                 custom_top_level=custom_top_level,
+                                                 source_custom_below_level=source_custom_below_level,
+                                                 source_custom_top_level=source_custom_top_level,
+                                                 custom_flag=custom_flag,
+                                                 custom_rect=near_rect,
+                                                 average=average,
+                                                 debug=debug)
 
     def locationResourceOnWindowPart(self, parent, child_resource,
                                      custom_threshold=-1,
@@ -1107,7 +1103,6 @@ class LYBGame():
             # methods = ['cv2.TM_CCOEFF', 'cv2.TM_CCOEFF_NORMED', 'cv2.TM_CCORR',
             # 'cv2.TM_CCORR_NORMED', 'cv2.TM_SQDIFF', 'cv2.TM_SQDIFF_NORMED']
 
-
             # if 'jangbiham_scene_holy_rank' in child.pixel_box_name:
             # 	cv2.imwrite(child.pixel_box_name+'2_'+str(time.time())+'.png', template_image)
 
@@ -1154,15 +1149,11 @@ class LYBGame():
             except:
                 result_dic[(int(top_left[0] + w / 2), int(top_left[1] + h / 2))] = 1
 
-
-
             # if 'boss' in child.pixel_box_name:
             # 	img = Image.fromarray(window_image, 'RGB')
             # 	img.save(child.pixel_box_name+'.png')
 
-
             # print(meth, ':', min_val, max_val, min_loc, max_loc)
-
 
             # bottom_right = (top_left[0] + w, top_left[1] + h)
 
@@ -1208,12 +1199,12 @@ class LYBGame():
                 for each_elem in window_image:
                     for each_elem2 in each_elem:
                         if (each_elem2[0] < custom_below_level[0] and
-                                    each_elem2[1] < custom_below_level[1] and
-                                    each_elem2[2] < custom_below_level[2]):
+                                each_elem2[1] < custom_below_level[1] and
+                                each_elem2[2] < custom_below_level[2]):
                             each_elem2 = [0, 0, 0]
                         elif (each_elem2[0] > custom_top_level[0] and
-                                      each_elem2[1] > custom_top_level[1] and
-                                      each_elem2[2] > custom_top_level[2]):
+                              each_elem2[1] > custom_top_level[1] and
+                              each_elem2[2] > custom_top_level[2]):
                             each_elem2 = [255, 255, 255]
         else:
             custom_width = custom_rect[2] - custom_rect[0]
@@ -1227,12 +1218,12 @@ class LYBGame():
                     # 모모도 추가해야함
                     if custom_below_level != -1 or custom_below_level != -1:
                         if (window_image[custom_rect[1] + j][custom_rect[0] + i][0] < custom_below_level[0] or
-                                    window_image[custom_rect[1] + j][custom_rect[0] + i][1] < custom_below_level[1] or
-                                    window_image[custom_rect[1] + j][custom_rect[0] + i][2] < custom_below_level[2] or
-                                    window_image[custom_rect[1] + j][custom_rect[0] + i][0] > custom_top_level[0] or
-                                    window_image[custom_rect[1] + j][custom_rect[0] + i][1] > custom_top_level[1] or
-                                    window_image[custom_rect[1] + j][custom_rect[0] + i][2] > custom_top_level[2]
-                            ):
+                                window_image[custom_rect[1] + j][custom_rect[0] + i][1] < custom_below_level[1] or
+                                window_image[custom_rect[1] + j][custom_rect[0] + i][2] < custom_below_level[2] or
+                                window_image[custom_rect[1] + j][custom_rect[0] + i][0] > custom_top_level[0] or
+                                window_image[custom_rect[1] + j][custom_rect[0] + i][1] > custom_top_level[1] or
+                                window_image[custom_rect[1] + j][custom_rect[0] + i][2] > custom_top_level[2]
+                        ):
                             custom_window_image[j][i] = [0, 0, 0]
                         else:
                             custom_window_image[j][i] = [255, 255, 255]
@@ -1281,12 +1272,12 @@ class LYBGame():
                 for each_elem2 in each_elem:
                     if custom_below_level != -1 or custom_below_level != -1:
                         if (each_elem2[0] >= custom_below_level[0] and
-                                    each_elem2[1] >= custom_below_level[1] and
-                                    each_elem2[2] >= custom_below_level[2] and
-                                    each_elem2[0] <= custom_top_level[0] and
-                                    each_elem2[1] <= custom_top_level[1] and
-                                    each_elem2[2] <= custom_top_level[2]
-                            ):
+                                each_elem2[1] >= custom_below_level[1] and
+                                each_elem2[2] >= custom_below_level[2] and
+                                each_elem2[0] <= custom_top_level[0] and
+                                each_elem2[1] <= custom_top_level[1] and
+                                each_elem2[2] <= custom_top_level[2]
+                        ):
                             each_elem[i] = [255, 255, 255]
                         else:
                             each_elem[i] = [0, 0, 0]
@@ -1339,15 +1330,11 @@ class LYBGame():
             except:
                 result_dic[(int(top_left[0] + w / 2), int(top_left[1] + h / 2))] = 1
 
-
-
             # if 'boss' in child.pixel_box_name:
             # 	img = Image.fromarray(window_image, 'RGB')
             # 	img.save(child.pixel_box_name+'.png')
 
-
             # print(meth, ':', min_val, max_val, min_loc, max_loc)
-
 
             # bottom_right = (top_left[0] + w, top_left[1] + h)
 
@@ -1457,11 +1444,10 @@ class LYBGame():
 
         # print('DEBUG30: RGB=', (pixelR, pixelG, pixelB), ':', (centerR, centerG, centerB), tolerance)
 
-
         if (abs(pixelR - centerR) <= tolerance and
-                    abs(pixelG - centerG) <= tolerance and
-                    abs(pixelB - centerB) <= tolerance
-            ):
+                abs(pixelG - centerG) <= tolerance and
+                abs(pixelB - centerB) <= tolerance
+        ):
             return True
 
         return False
@@ -1554,7 +1540,6 @@ class LYBGame():
                 # 		i = i+1
                 # 		j = 0
 
-
                 if pR > top_level or pG > top_level or pB > top_level:
                     continue
 
@@ -1604,9 +1589,9 @@ class LYBGame():
 
                 compare_pixel_len += 1
                 if ((abs(pixelR - pR) <= tolerance and abs(pixelG - pG) <= tolerance and abs(
-                            pixelB - pB) <= tolerance) and
+                        pixelB - pB) <= tolerance) and
                         (abs(org_gap_RG - tgt_gap_RG) <= tolerance and abs(
-                                org_gap_RB - tgt_gap_RB) <= tolerance and abs(org_gap_GB - tgt_gap_GB) <= tolerance)):
+                            org_gap_RB - tgt_gap_RB) <= tolerance and abs(org_gap_GB - tgt_gap_GB) <= tolerance)):
                     match_location_number += 1
                 else:
                     # if 'tera_main_scene_maul' in pixel_box_name:
@@ -1623,7 +1608,6 @@ class LYBGame():
         # 	img = Image.fromarray(data, 'RGB')
         # 	img.save(pixel_box_name+'.png')
         # 	img.show()
-
 
         if compare_pixel_len > 0:
             match_rate = match_location_number / compare_pixel_len
@@ -1764,7 +1748,6 @@ class LYBGame():
                 else:
                     continue
 
-
                 ########################## DEBUG
                 # if 'main_scene' in each_resource_name:
                 # 	self.logger.info('main_scene : ' + str(match_rate) +  '%')
@@ -1776,8 +1759,8 @@ class LYBGame():
                 threshold_value = 1.0
 
             if (match_rate[each_resource.resource_type] >= threshold_value and
-                        match_rate[each_resource.resource_type] > top_match_rate[each_resource.resource_type]
-                ):
+                    match_rate[each_resource.resource_type] > top_match_rate[each_resource.resource_type]
+            ):
                 top_match_rate[each_resource.resource_type] = match_rate[each_resource.resource_type]
                 match_resource_name[each_resource.resource_type] = each_resource_name
             # print(each_resource_name, ':', int(match_rate * 100), '%')
@@ -1897,12 +1880,12 @@ class LYBGame():
                 if custom_below_level != -1 or custom_below_level != -1:
                     # self.logger.debug(window_image[custom_rect[1] + j][custom_rect[0] + i])
                     if (window_image[custom_rect[1] + j][custom_rect[0] + i][0] < custom_below_level[0] or
-                                window_image[custom_rect[1] + j][custom_rect[0] + i][1] < custom_below_level[1] or
-                                window_image[custom_rect[1] + j][custom_rect[0] + i][2] < custom_below_level[2] or
-                                window_image[custom_rect[1] + j][custom_rect[0] + i][0] > custom_top_level[0] or
-                                window_image[custom_rect[1] + j][custom_rect[0] + i][1] > custom_top_level[1] or
-                                window_image[custom_rect[1] + j][custom_rect[0] + i][2] > custom_top_level[2]
-                        ):
+                            window_image[custom_rect[1] + j][custom_rect[0] + i][1] < custom_below_level[1] or
+                            window_image[custom_rect[1] + j][custom_rect[0] + i][2] < custom_below_level[2] or
+                            window_image[custom_rect[1] + j][custom_rect[0] + i][0] > custom_top_level[0] or
+                            window_image[custom_rect[1] + j][custom_rect[0] + i][1] > custom_top_level[1] or
+                            window_image[custom_rect[1] + j][custom_rect[0] + i][2] > custom_top_level[2]
+                    ):
                         custom_window_image[j][i] = [0, 0, 0]
                     else:
                         custom_window_image[j][i] = [255, 255, 255]
@@ -1964,8 +1947,8 @@ class LYBGameTab():
             values=[],
             textvariable=self.option_dic['window_list_stringvar'],
             state="readonly",
-            height=10,
-            width=15,
+            height=20,
+            width=10,
             font=lybconstant.LYB_FONT
         )
         self.option_dic['window_list_option_menu'].pack(anchor=tkinter.W, side=tkinter.LEFT)
@@ -1983,7 +1966,7 @@ class LYBGameTab():
         label = ttk.Label(
 
             master=frame,
-            text='←② 창 선택',
+            text='←②창선택',
             foreground='blue'
 
         )
@@ -1999,8 +1982,8 @@ class LYBGameTab():
             values=[],
             textvariable=self.option_dic['config_list_stringvar'],
             state="readonly",
-            height=10,
-            width=30,
+            height=20,
+            width=25,
             font=lybconstant.LYB_FONT
         )
         self.option_dic['config_list_option_menu'].pack(side=tkinter.LEFT)
@@ -2018,7 +2001,7 @@ class LYBGameTab():
         label = ttk.Label(
 
             master=frame,
-            text='←③ 설정 선택',
+            text='←③설정선택',
             foreground='blue'
 
         )
@@ -2147,7 +2130,8 @@ class LYBGameTab():
             activestyle='none',
             exportselection=False,
             font=lybconstant.LYB_FONT,
-            width=24
+            height=17,
+            width=26
 
         )
 
@@ -2201,7 +2185,8 @@ class LYBGameTab():
             master=frame_l_schedule_b,
             activestyle='none',
             font=lybconstant.LYB_FONT,
-            width=24
+            height=17,
+            width=26
 
         )
 
@@ -2306,7 +2291,7 @@ class LYBGameTab():
         frame_r = ttk.Frame(frame)
         label = ttk.Label(
             master=frame_r,
-            text="※ 자동 재시작을 위해서는 스케쥴에 [게임 시작][로그인] 작업 등록 필수",
+            text="※게임 재시작은 스케쥴에 [게임시작][로그인] 등록",
             foreground='red'
         )
 
@@ -2328,7 +2313,7 @@ class LYBGameTab():
         check_box = ttk.Checkbutton(
 
             master=frame_r,
-            text='등록된 스케쥴이 모두 완료되면 게임을 종료합니다',
+            text='스케쥴이 완료시 게임 종료',
             variable=self.option_dic[lybconstant.LYB_DO_BOOLEAN_RESTART_GAME],
             onvalue=True,
             offvalue=False
@@ -2356,7 +2341,7 @@ class LYBGameTab():
 
         checkbutton = ttk.Checkbutton(
             master=frame_r,
-            text="게임 시작시 스케쥴을 초기화 합니다",
+            text="게임 시작시 스케쥴 초기화",
             variable=self.option_dic[lybconstant.LYB_DO_STRING_PERIOD_RESTART_GAME + 'schedule'],
             onvalue=True,
             offvalue=False
@@ -2369,7 +2354,7 @@ class LYBGameTab():
         frame_r = ttk.Frame(frame)
         label = ttk.Label(
             master=frame_r,
-            text="등록된 스케쥴이 모두 완료되면 "
+            text="스케쥴 모두 완료시 "
         )
 
         label.pack(side=tkinter.LEFT)
@@ -2403,7 +2388,7 @@ class LYBGameTab():
 
         label = ttk.Label(
             master=frame_r,
-            text=" 초 동안 작업을 쉽니다"
+            text=" 초 작업대기"
         )
         label.pack(side=tkinter.LEFT)
         frame_r.pack(anchor=tkinter.W)
@@ -2411,7 +2396,7 @@ class LYBGameTab():
         frame_r = ttk.Frame(frame)
         label = ttk.Label(
             master=frame_r,
-            text="게임을 "
+            text="게임"
         )
 
         label.pack(side=tkinter.LEFT)
@@ -2448,7 +2433,7 @@ class LYBGameTab():
 
         label = ttk.Label(
             master=frame_r,
-            text="분 마다 주기적으로 종료합니다(0:사용안함)"
+            text="분 주기로 종료(0:사용안함)"
         )
         label.pack(side=tkinter.LEFT)
         frame_r.pack(anchor=tkinter.W)
@@ -2456,7 +2441,7 @@ class LYBGameTab():
         frame_r = ttk.Frame(frame)
         label = ttk.Label(
             master=frame_r,
-            text="[반복 시작][반복 종료] 작업을 "
+            text="[반복시작][반복종료] 를 "
         )
 
         label.pack(side=tkinter.LEFT)
@@ -2491,7 +2476,7 @@ class LYBGameTab():
 
         label = ttk.Label(
             master=frame_r,
-            text="회 수행합니다"
+            text="회 수행"
         )
 
         label.pack(side=tkinter.LEFT)
@@ -2525,7 +2510,7 @@ class LYBGameTab():
             values=hour_list,
             textvariable=self.option_dic[lybconstant.LYB_DO_STRING_RESERVED_HOUR],
             state="readonly",
-            height=10,
+            height=8,
             width=3,
             font=lybconstant.LYB_FONT
         )
@@ -2565,7 +2550,7 @@ class LYBGameTab():
             values=minute_list,
             textvariable=self.option_dic[lybconstant.LYB_DO_STRING_RESERVED_MINUTE],
             state="readonly",
-            height=10,
+            height=8,
             width=3,
             font=lybconstant.LYB_FONT
         )
@@ -2599,7 +2584,7 @@ class LYBGameTab():
             values=second_list,
             textvariable=self.option_dic[lybconstant.LYB_DO_STRING_RESERVED_SECOND],
             state="readonly",
-            height=10,
+            height=8,
             width=3,
             font=lybconstant.LYB_FONT
         )
@@ -2724,7 +2709,8 @@ class LYBGameTab():
             activestyle='none',
             exportselection=False,
             font=lybconstant.LYB_FONT,
-            width=24
+            height=17,
+            width=50
 
         )
 
@@ -2773,7 +2759,8 @@ class LYBGameTab():
             master=frame_l_work_b,
             activestyle='none',
             font=lybconstant.LYB_FONT,
-            width=24
+            height=17,
+            width=50
 
         )
 
@@ -2806,7 +2793,7 @@ class LYBGameTab():
         w_button = ttk.Button(
             master=frame_l_my_wlist_button,
             text="D",
-            width=2,
+            width=4,
             command=lambda: self.callback_my_wlist_delete_button_stringvar(None)
         )
         w_button.pack(side=tkinter.BOTTOM, pady=button_padding)
@@ -2814,7 +2801,7 @@ class LYBGameTab():
         w_button = ttk.Button(
             master=frame_l_my_wlist_button,
             text="I",
-            width=2,
+            width=4,
             command=lambda: self.callback_my_wlist_init_button_stringvar(None)
         )
         w_button.pack(side=tkinter.BOTTOM, pady=button_padding)
@@ -2822,7 +2809,7 @@ class LYBGameTab():
         self.option_dic['my_wlist_lock_button'] = ttk.Button(
             master=frame_l_my_wlist_button,
             text="U",
-            width=2,
+            width=4,
             style='toggle_false.TButton',
             command=lambda: self.callback_my_wlist_lock_button_stringvar(None)
         )
@@ -2831,7 +2818,7 @@ class LYBGameTab():
         w_button = ttk.Button(
             master=frame_l_my_wlist_button,
             text="▼",
-            width=2,
+            width=4,
             command=lambda: self.callback_my_wlist_down_button_stringvar(None)
         )
         w_button.pack(side=tkinter.BOTTOM, pady=button_padding)
@@ -2839,7 +2826,7 @@ class LYBGameTab():
         w_button = ttk.Button(
             master=frame_l_my_wlist_button,
             text="▲",
-            width=2,
+            width=4,
             command=lambda: self.callback_my_wlist_up_button_stringvar(None)
         )
         w_button.pack(side=tkinter.BOTTOM, pady=button_padding)
@@ -2989,7 +2976,6 @@ class LYBGameTab():
         # print('[SELECT CONFIG]:', selected_window_name)
         # print(self.configure.window_config[selected_window_name][self.game_name])
 
-
         # print('DEBUG CONFIG LIST:', self.option_dic['config_list_stringvar'].get())
 
         last_config_name = self.game_name + '_last'
@@ -3042,7 +3028,6 @@ class LYBGameTab():
         # if last_index != None:
         # 	for i in range(last_index + 1):
         # 		print('==========>', self.option_dic['config_list_option_menu']['menu'].entrycget(i, "label"))
-
 
         self.option_dic['config_list_option_menu']['values'] = new_config_list
         # for each_config in new_config_list:
@@ -3217,14 +3202,12 @@ class LYBGameTab():
                 if selected_work_name == self.option_dic['config_list_stringvar'].get():
                     return
 
-
                 # print('DEBUG88:', self.option_dic['schedule_list_listbox'].size())
 
                 # if not selected_work_name in schedule_list:
                 # schedule_list.append(selected_work_name)
 
             # print('DEBUG::', self.schedule_lock_index)
-
 
             if len(self.option_dic['schedule_list_listbox'].curselection()) == 0:
                 self.schedule_lock_index = -1
@@ -3449,7 +3432,6 @@ class LYBGameTab():
     # 		if self.schedule_lock_index != -1:
     # 			self.option_dic['schedule_list_listbox'].selection_clear(self.schedule_lock_index)
     # 			self.schedule_lock_index = -1
-
 
     def clicked_schedule_tab(self, event):
         tab_index = self.option_dic['schedule_note'].tk.call(self.option_dic['schedule_note']._w, "identify", "tab",

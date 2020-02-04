@@ -10,6 +10,8 @@ import likeyoubot_logger
 # import pystray
 # from PIL import Image
 
+import likeyoubot_gui
+
 
 
 def connresize(e):
@@ -115,6 +117,8 @@ try:
 except FileNotFoundError:
     dogfooter_logger.error(str(sys.exc_info()[0]) + '(' + str(sys.exc_info()[1]) + ')')
 
+configure.setGeometry(700, 600, 0, 0)
+
 configure.merge()
 root.update()
 
@@ -123,8 +127,12 @@ root.update()
 likeyoubot_logger.LYBLogger.removeLog()
 
 dogfooter_logger.debug('size: ' + str(root.winfo_width()) + ' ' + str(root.winfo_height()))
+# 화면 세로로 늘이기 허용
+root.resizable(False, True)
 # lyb_gui = likeyoubot_gui.LYBGUI(root, configure)
 likeyoubot_login_gui.LYBLoginGUI(root, configure)
+
+
 
 # root.protocol('WM_DELETE_WINDOW', withdraw_window)
 root.mainloop()

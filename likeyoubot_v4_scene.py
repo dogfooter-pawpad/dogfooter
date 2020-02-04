@@ -92,6 +92,9 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             rc = self.stash_reserve_scene()
         elif self.scene_name == 'ure_scene':
             rc = self.ure_scene()
+        # 영혼석 성장 씬 추가
+        elif self.scene_name == 'soul_scene':
+            rc = self.soul_scene()
 
         else:
             rc = self.else_scene()
@@ -625,7 +628,28 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                     return self.status
             self.set_option('last_status', self.status)
             self.status = 40
-        elif 20 <= self.status < 30:
+        elif 20 <= self.status < 29:
+            self.status += 1
+            resource_name = 'shop_scene_list_동료_loc'
+            for each in rect_list:
+                (loc_x, loc_y), match_rate = self.game_object.locationResourceOnWindowPart(
+                    self.window_image,
+                    resource_name,
+                    custom_rect=each,
+                    custom_threshold=0.85,
+                    custom_flag=1,
+                    average=False,
+                    debug=True,
+                )
+                self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+                if loc_x != -1:
+                    self.lyb_mouse_click_location(loc_x, loc_y)
+                    self.set_option('last_status', 99999)
+                    self.status = 100
+                    return self.status
+            self.set_option('last_status', self.status)
+            self.status = 40
+        elif 29 <= self.status < 38:
             self.status += 1
             resource_name = 'shop_scene_list_일일 한정_loc'
             for each in rect_list:
@@ -676,6 +700,12 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                     self.set_checkpoint(resource_name)
                     self.game_object.get_scene('sangpum_gume_scene').set_checkpoint('clicked')
                     return self.status
+                resource_name = 'shop_scene_눈부신 탈것 소환_loc'
+                elapsed_time = time.time() - self.get_checkpoint(resource_name)
+                if elapsed_time > self.period_bot(3600) and self.click_shop_resource(resource_name):
+                    self.set_checkpoint(resource_name)
+                    self.game_object.get_scene('sangpum_gume_scene').set_checkpoint('clicked')
+                    return self.status
 
             if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_pet_gotcha') is True:
                 resource_name = 'shop_scene_화려한 소환수 부화_loc'
@@ -696,17 +726,22 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                     self.set_checkpoint(resource_name)
                     self.game_object.get_scene('sangpum_gume_scene').set_checkpoint('clicked')
                     return self.status
-
-            if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'shop_sang_potion') is True:
-                resource_name = 'shop_scene_상급 축복의 물약_loc'
+            if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'shop_fellow_gotcha') is True:
+                resource_name = 'shop_scene_리노어 동료 계약서_loc'
+                elapsed_time = time.time() - self.get_checkpoint(resource_name)
+                if elapsed_time > self.period_bot(3600) and self.click_shop_resource(resource_name):
+                    self.set_checkpoint(resource_name)
+                    self.game_object.get_scene('sangpum_gume_scene').set_checkpoint('clicked')
+                    return self.status
+                resource_name = 'shop_scene_화려한 동료 계약서_loc'
                 elapsed_time = time.time() - self.get_checkpoint(resource_name)
                 if elapsed_time > self.period_bot(3600) and self.click_shop_resource(resource_name):
                     self.set_checkpoint(resource_name)
                     self.game_object.get_scene('sangpum_gume_scene').set_checkpoint('clicked')
                     return self.status
 
-            if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'shop_fellow_gotcha') is True:
-                resource_name = 'shop_scene_화려한 동료 계약서_loc'
+            if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'shop_sang_potion') is True:
+                resource_name = 'shop_scene_상급 축복의 물약_loc'
                 elapsed_time = time.time() - self.get_checkpoint(resource_name)
                 if elapsed_time > self.period_bot(3600) and self.click_shop_resource(resource_name):
                     self.set_checkpoint(resource_name)
@@ -1006,7 +1041,8 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
         elif self.status == 300:
             self.status = 0
         elif self.status == 1000:
-            resource_name = 'monghwan_scene_' + self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sub_area') + '_loc'
+            resource_name = 'monghwan_scene_' + self.get_game_config(
+                lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_sub_area') + '_loc'
             self.set_option('resource_name', resource_name)
             self.set_option('location_index', 0)
             self.lyb_mouse_drag('monghwan_scene_list_drag_top', 'monghwan_scene_list_drag_bot')
@@ -1367,6 +1403,23 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.status += 1
         elif 1 <= self.status < 10:
             self.status += 1
+            # TODO 잠재력 모드 추가
+            cfg_jamjeryeok_mode = self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'jamjeryeok_mode')
+            # TODO 잠재력모드 인내 강제설정
+            # cfg_jamjeryeok_mode = '인내'
+            if cfg_jamjeryeok_mode == '투지':
+                self.lyb_mouse_click('jamjeryeok_scene_select_tuzi', custom_threshold=0)
+            elif cfg_jamjeryeok_mode == '인내':
+                self.lyb_mouse_click('jamjeryeok_scene_select_inne', custom_threshold=0)
+            elif cfg_jamjeryeok_mode == '통찰':
+                self.lyb_mouse_click('jamjeryeok_scene_select_tongchal', custom_threshold=0)
+            elif cfg_jamjeryeok_mode == '의지':
+                self.lyb_mouse_click('jamjeryeok_scene_select_uzi', custom_threshold=0)
+            self.set_option('last_status', self.status)
+            self.status = 20
+        elif 20 <= self.status < 30:
+            self.status += 1
+            # 일괄등록 클릭
             self.lyb_mouse_click('jamjeryeok_scene_all', custom_threshold=0)
             self.set_option('last_status', self.status)
             self.status = 100
@@ -1385,6 +1438,96 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.status += 1
         elif self.status == 103:
             self.status = self.get_option('last_status')
+        else:
+            if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
+                self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
+
+            self.status = 0
+
+        return self.status
+
+    def soul_scene(self):
+
+        if self.status == 0:
+            self.logger.info('scene: ' + self.scene_name)
+            self.status += 1
+        elif 1 <= self.status < 5:
+            self.status += 1
+            pb_name = 'soul_scene_level_0'
+            match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
+            self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
+            if match_rate > 0.7:
+                self.lyb_mouse_click(pb_name, custom_threshold=0)
+                self.status = 5
+                return self.status
+        elif 5 <= self.status < 10:
+            self.status += 1
+            pb_name = 'soul_scene_level_1'
+            match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
+            self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
+            if match_rate > 0.55:
+                self.lyb_mouse_click(pb_name, custom_threshold=0)
+                self.status = 10
+                return self.status
+        elif 10 <= self.status < 15:
+            self.status += 1
+            rect_list = [
+                (650, 300, 950, 390),
+                (650, 390, 950, 480),
+                (650, 480, 950, 560),
+            ]
+            resource_name = 'soul_scene_stonename_loc'
+            for each in rect_list:
+                (loc_x, loc_y), match_rate = self.game_object.locationResourceOnWindowPart(
+                    self.window_image,
+                    resource_name,
+                    custom_rect=each,
+                    custom_top_level=(255, 255, 255),
+                    custom_below_level=(0, 0, 90),
+                    custom_threshold=0.80,  # 기본값 0.85
+                    custom_flag=1,
+                    average=True,
+                    debug=True,
+                )
+                self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+                if loc_x != -1:
+                    self.lyb_mouse_click_location(loc_x, loc_y)
+                    self.status = 15
+                    return self.status
+            self.lyb_mouse_drag('soul_scene_drag_bot', 'soul_scene_drag_top', stop_delay=1.0)
+        elif 15 <= self.status < 20:
+            self.status += 1
+
+            pb_name = 'soul_scene_level_2'
+            match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
+            self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
+            if match_rate > 0.99:
+                self.lyb_mouse_click(pb_name, custom_threshold=0)
+            # resource_name = 'soul_scene_level_2'
+            # (loc_x, loc_y), match_rate = self.game_object.locationResourceOnWindowPart(
+            #     self.window_image,
+            #     resource_name,
+            #     custom_rect=(850, 520, 950, 565),
+            #     custom_top_level=(120, 120, 120),
+            #     custom_below_level=(0, 0, 0),
+            #     custom_threshold=0.7,
+            #     custom_flag=1,
+            # )
+            # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+            # if loc_x != -1:
+            #     self.lyb_mouse_click_location(loc_x, loc_y)
+                self.status = 20
+                return self.status
+        elif 20 <= self.status < 25:
+            self.status += 1
+            pb_name = 'soul_scene_level_3'
+            match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
+            self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
+            if match_rate > 0.9:
+                self.lyb_mouse_click(pb_name, custom_threshold=0)
+                time.sleep(3)
+                self.lyb_mouse_click('soul_scene_level_ok_click', custom_threshold=0)
+                self.status = 25
         else:
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
                 self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
@@ -1431,6 +1574,9 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.set_option('init_status', 1)
             self.status = 1000
         elif 1 <= self.status < 5:
+            # TODO 마우스 클릭 - 쿵야님 추가
+            # self.lyb_mouse_click_location(42, 525)
+            # -------------------------------------------
             self.status += 1
             resource_name = 'monster_josa_scene_new_loc'
             resource = self.game_object.resource_manager.resource_dic[resource_name]
@@ -1485,7 +1631,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                     self.window_image,
                     resource_name,
                     custom_rect=each,
-                    custom_threshold=0.8,
+                    custom_threshold=0.8,  # 기본값 0.85
                     custom_flag=1,
                     average=False,
                     debug=True,
@@ -1683,18 +1829,48 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             else:
                 self.status = 10
         elif self.status == 10:
-            pb_name = 'recover_scene_item'
+            self.status += 1
+            cfg_item_recover = self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'recover_item')
+            if cfg_item_recover is True or cfg_item_recover is False:
+                self.status = 15
+                return self.status
+            else:
+                self.status = 99999
+        elif 15 <= self.status < 20:
+            self.status += 1
+            pb_name = 'recover_scene_item_2'
             match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
             self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
-            if match_rate < 0.9:
+            if match_rate > 0.8:
                 self.lyb_mouse_click(pb_name, custom_threshold=0)
-            self.status = 99999
+                self.status = 20
+                return self.status
+            else:
+                self.status = 99999
+        elif 20 <= self.status < 25:
+            self.status += 1
+            pb_name = 'recover_scene_item_ok_0'
+            match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
+            self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
+            if match_rate > 0.8:
+                self.lyb_mouse_click(pb_name, custom_threshold=0)
+                self.status = 25
+                return self.status
+            else:
+                self.status = 99999
+        elif 25 <= self.status < 30:
+            self.status += 1
+            pb_name = 'recover_scene_item_ok_popup_3'
+            match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
+            self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
+            if match_rate > 0.8:
+                self.lyb_mouse_click(pb_name, custom_threshold=0)
+                self.status = 99999
+                return self.status
         else:
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
                 self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
-
             self.status = 0
-
         return self.status
 
     def local_map_scene(self):
@@ -2323,7 +2499,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                     self.status = 20020
                     return self.status
         elif self.status == 20005:
-            self.logger.warn('발견한 사냥터가 없습니다')
+            self.logger.warn('발견한 창고가 없습니다')
             self.status = 99999
         elif 20020 <= self.status < 20030:
             self.status += 1
@@ -2508,9 +2684,6 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             potion_list = self.get_option('potion_list')
             potion_index = self.get_option('potion_index')
             self.logger.info(str(potion_list))
-            if potion_index > len(potion_list) - 1:
-                self.status = 99999
-                return self.status
 
             self.game_object.get_scene('potion_gume_scene').status = 0
             self.game_object.get_scene('potion_gume_scene').set_option('overflow', False)
@@ -2760,11 +2933,19 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.status = 99998
                 return self.status
 
-            cfg_duration = int(self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'auto_jamjeryeok_duration'))
-            if cfg_duration > 0:
+            auto_jamjeryeok_cfg_duration = int(self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'auto_jamjeryeok_duration'))
+            if auto_jamjeryeok_cfg_duration > 0:
                 elapsed_time = time.time() - self.game_object.get_scene('main_scene').get_checkpoint('auto_jamjeryeok')
                 current_work = self.game_object.get_scene('main_scene').current_work
-                if current_work == '자동 사냥' and elapsed_time > cfg_duration:
+                if current_work == '자동 사냥' and elapsed_time > auto_jamjeryeok_cfg_duration:
+                    self.status = 99998
+                    return self.status
+
+            auto_soul_cfg_duration = int(self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'auto_soul_duration'))
+            if auto_soul_cfg_duration > 0:
+                elapsed_time = time.time() - self.game_object.get_scene('main_scene').get_checkpoint('auto_soul_duration')
+                current_work = self.game_object.get_scene('main_scene').current_work
+                if current_work == '자동 사냥' and elapsed_time > auto_soul_cfg_duration:
                     self.status = 99998
                     return self.status
 
@@ -3018,6 +3199,11 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             if self.status % 2 == 0:
                 self.lyb_mouse_click('menu_scene_character', custom_threshold=0)
                 self.game_object.get_scene('character_scene').status = 0
+            self.status += 1
+        elif 2400 <= self.status < 2430:
+            if self.status % 2 == 0:
+                self.lyb_mouse_click('menu_scene_soul', custom_threshold=0)
+                self.game_object.get_scene('soul_scene').status = 0
             self.status += 1
         else:
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
@@ -3278,10 +3464,14 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                             self.lyb_mouse_click('main_scene_channel', custom_threshold=0)
 
                     self.set_option('go_jeoljeon', 0)
-                elif inner_status == 5:
+                elif 5 <= inner_status < 20:
+                    # if self.get_option(self.current_work + '_skip_auto') is not True:
                     if self.get_option('go_home') is not True and self.is_town() is not True:
-                        self.lyb_mouse_click('main_scene_auto', custom_threshold=0)
-                elif 6 <= inner_status < 150:
+                        # 자동사냥중인지 체크
+                        if self.is_not_auto2():
+                            self.lyb_mouse_click('main_scene_auto', custom_threshold=0)
+
+                elif 20 <= inner_status < 150:
                     if inner_status % 10 == 0:
                         self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
                         self.game_object.get_scene('menu_scene').status = 110
@@ -3338,6 +3528,10 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                     if self.get_option(self.current_work + '_move_ok') is not True:
                         self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
                         self.game_object.get_scene('menu_scene').status = 900
+                    if self.get_option(self.current_work + '_move_ok') is True:
+                        if self.get_option('go_home') is not True and self.is_town() is not True:
+                            if self.is_not_auto2():
+                                self.lyb_mouse_click('main_scene_auto', custom_threshold=0)
 
                     go_jeoljeon = self.get_option('go_jeoljeon')
 
@@ -3553,11 +3747,13 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                             self.game_object.get_scene('channel_scene').status = 0
                             self.lyb_mouse_click('main_scene_channel', custom_threshold=0)
                     self.set_option('go_jeoljeon', 0)
-                elif inner_status == 5:
+                elif 5 <= inner_status < 20:
                     if self.get_option(self.current_work + '_skip_auto') is not True:
                         if self.get_option('go_home') is not True and self.is_town() is not True:
-                            self.lyb_mouse_click('main_scene_auto', custom_threshold=0)
-                elif 6 <= inner_status < 150:
+                            # 자동사냥중인지 체크
+                            if self.is_not_auto2():
+                                self.lyb_mouse_click('main_scene_auto', custom_threshold=0)
+                elif 20 <= inner_status < 150:
                     go_jeoljeon = self.get_option('go_jeoljeon')
                     if go_jeoljeon == 5:
                         self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
@@ -3600,7 +3796,8 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.set_option(self.current_work + '_inner_status', inner_status + 1)
             elif inner_status >= 1:
                 self.set_option(self.current_work + '_inner_status', inner_status + 1)
-                cfg_auto_jamjeryeok = int(self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'auto_jamjeryeok_duration'))
+                cfg_auto_jamjeryeok = int(
+                    self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'auto_jamjeryeok_duration'))
                 if cfg_auto_jamjeryeok > 0:
                     jamjeryeok_elapsed_time = time.time() - self.get_checkpoint('auto_jamjeryeok')
                     if jamjeryeok_elapsed_time > cfg_auto_jamjeryeok:
@@ -3608,6 +3805,16 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                         self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
                         self.game_object.get_scene('menu_scene').status = 110
                         self.game_object.get_scene('gabang_scene').status = 0
+                        return True
+
+                cfg_auto_soul = int(self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'auto_soul_duration'))
+                if cfg_auto_soul > 0:
+                    soul_elapsed_time = time.time() - self.get_checkpoint('auto_soul_duration')
+                    if soul_elapsed_time > cfg_auto_soul:
+                        self.set_checkpoint('auto_soul_duration')
+                        self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
+                        self.game_object.get_scene('menu_scene').status = 2400
+                        self.game_object.get_scene('soul_scene').status = 0
                         return True
 
                 cfg_auto_jeoljeon = int(self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'auto_jeoljeon'))
@@ -3623,13 +3830,15 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                         self.set_option('go_jeoljeon', 0)
                     elif go_jeoljeon == 10:
                         if self.get_option('go_home') is not True and self.is_town() is not True:
-                            self.lyb_mouse_click('main_scene_auto', custom_threshold=0)
+                            # 자동사냥중인지 체크
+                            if self.is_not_auto2():
+                                self.lyb_mouse_click('main_scene_auto', custom_threshold=0)
                         self.set_option('go_jeoljeon', 0)
                         return self.status
                     self.set_option('go_jeoljeon', go_jeoljeon + 1)
 
                 if self.get_option('go_home') is not True and self.is_town() is not True:
-                    if self.is_not_auto():
+                    if self.is_not_auto2():
                         self.lyb_mouse_click('main_scene_auto', custom_threshold=0)
                         return self.status
 
@@ -3807,7 +4016,8 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             elapsed_time = time.time() - self.get_checkpoint('hp_potion_low')
             if elapsed_time > self.period_bot(3):
                 self.set_checkpoint('hp_potion_low')
-                if self.is_hp_potion_low() or self.get_option('hp_potion_low') or self.get_option('from_jeoljeon_hp_empty'):
+                if self.is_hp_potion_low() or self.get_option('hp_potion_low') or self.get_option(
+                        'from_jeoljeon_hp_empty'):
                     self.set_option('go_jeoljeon', 0)
                     self.set_option('from_jeoljeon_hp_empty', False)
                     if self.click_potion_menu():
@@ -3942,6 +4152,33 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.game_object.get_scene('shop_scene').status = 0
                 self.set_checkpoint('shop_check', time.time() + self.period_bot(36000))
                 return True
+        # TODO 아이템 복구 옵션 활성화 & 자동장착 활성화시 300초마다 아이템 자동장착
+        cfg_recover_item = self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'recover_item')
+        # TODO 아이템 복구 옵션 강제 활성화
+        if cfg_recover_item is True:
+            elapsed_time = time.time() - self.get_checkpoint('recover_item')
+            if elapsed_time > self.period_bot(30):
+                self.set_checkpoint('recover_item')
+                resource_name = 'event_scene_newitem_loc'
+                (loc_x, loc_y), match_rate = self.game_object.locationResourceOnWindowPart(
+                    self.window_image,
+                    resource_name,
+                    # custom_top_level=(255, 255, 255),
+                    # custom_below_level=(150, 150, 150),
+                    custom_rect=(828, 36, 947, 53),
+                    custom_threshold=0.6,
+                    custom_flag=1,
+                    average=True
+                )
+                self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
+                if loc_x != -1:
+                        self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
+                        self.game_object.get_scene('menu_scene').status = 110
+                        self.game_object.get_scene('gabang_scene').set_option('equip', True)
+                        self.game_object.get_scene('gabang_scene').status = 0
+                        self.set_option('go_jeoljeon', 0)
+                        # self.game_object.interval = self.period_bot(5)
+                        return True
 
         return False
 
@@ -4078,7 +4315,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
 
     def is_not_auto(self, limit=5):
         return self.is_status_by_resource('자동 전투 꺼짐 감지', 'auto_loc',
-                                          custom_top_level=(230, 230, 230),
+                                          custom_top_level=(230, 230, 220),
                                           custom_below_level=(185, 180, 170),
                                           custom_rect=(900, 280, 960, 340),
                                           custom_threshold=0.5,
@@ -4086,14 +4323,14 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                                           reverse=False,
                                           )
 
-    def is_auto(self, limit=3):
-        return self.is_status_by_resource('자동 꺼짐 감지', 'no_auto_loc',
-                                          custom_top_level=(180, 180, 180),
-                                          custom_below_level=(100, 100, 100),
-                                          custom_rect=(240, 500, 300, 550),
-                                          custom_threshold=0.3,
+    def is_not_auto2(self, limit=5):
+        return self.is_status_by_resource('자동 전투 꺼짐 감지', 'auto2_loc',
+                                          custom_top_level=-1,
+                                          custom_below_level=-1,
+                                          custom_rect=(430, 420, 550, 460),
+                                          custom_threshold=0.5,
                                           limit_count=limit,
-                                          reverse=True,
+                                          reverse=False,
                                           )
 
     def fail_to_detect_m(self, limit=10):

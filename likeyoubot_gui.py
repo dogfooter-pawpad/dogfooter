@@ -1,17 +1,13 @@
 import tkinter
 from tkinter import ttk
 import time
-
 import websocket
-
 import likeyoubot_worker
 import queue
 import pickle
 import os
 import likeyoubot_message
-
 import likeyoubot_v4 as LYBV4
-
 from likeyoubot_configure import LYBConstant as lybconstant
 import datetime
 import copy
@@ -26,6 +22,7 @@ import random
 import string
 import shutil
 import requests
+
 
 from subprocess import Popen, PIPE
 
@@ -227,7 +224,7 @@ class LYBGUI:
 
         label = ttk.Label(
             master=frame,
-            text="앱 플레이어: "
+            text="앱 플레이어:"
         )
         label.pack(side=tkinter.LEFT)
 
@@ -241,7 +238,7 @@ class LYBGUI:
             textvariable=self.app_player_process,
             state="readonly",
             height=20,
-            width=30,
+            width=20,
             font=lybconstant.LYB_FONT
         )
         self.app_player_process_list.pack(anchor=tkinter.W, side=tkinter.LEFT)
@@ -252,7 +249,7 @@ class LYBGUI:
             font=lybconstant.LYB_FONT,
             width=20
         )
-        self.keyword_entry.pack(side=tkinter.LEFT, padx=10)
+        self.keyword_entry.pack(side=tkinter.LEFT, padx=5)
         self.keyword_entry.insert(0, self.configure.keyword)
         self.tooltip(self.keyword_entry, lybconstant.LYB_TOOLTIP_APP_TITLE)
 
@@ -721,8 +718,8 @@ class LYBGUI:
 
         frame.pack(anchor=tkinter.W)
 
-        frame_inner.pack(side=tkinter.LEFT, padx=5, pady=3)
-        frame_app_player_config.pack(anchor=tkinter.NW, pady=5)
+        frame_inner.pack(side=tkinter.LEFT, padx=5, pady=1)
+        frame_app_player_config.pack(anchor=tkinter.NW, pady=1)
         frame_l.pack(side=tkinter.LEFT, anchor=tkinter.NW, padx=2)
 
         # frame_c = ttk.Frame(frame_s, relief=frame_relief)
@@ -959,7 +956,7 @@ class LYBGUI:
         # self.notice_frame_label.pack(anchor=tkinter.NW, side=tkinter.LEFT, fill=tkinter.BOTH, expand=True)
         #
         frame_r.pack(side=tkinter.LEFT, anchor=tkinter.NW, fill=tkinter.BOTH, expand=True, padx=5, pady=5)
-        frame_s.pack(anchor=tkinter.NW, fill=tkinter.BOTH, pady=5)
+        frame_s.pack(anchor=tkinter.NW, fill=tkinter.BOTH, pady=1)
 
         # - TAB
 
@@ -997,7 +994,7 @@ class LYBGUI:
 
         # frame_label = self.add_monitor_master_frame()
 
-        self.option_dic['monitor_master'].pack(anchor=tkinter.NW, fill=tkinter.BOTH, padx=2, pady=2)
+        self.option_dic['monitor_master'].pack(anchor=tkinter.NW, fill=tkinter.BOTH, padx=1, pady=1)
 
         frame_bottom = ttk.Frame(self.option_dic['monitoring_tab'])
         frame_log = ttk.Frame(frame_bottom)
@@ -1207,7 +1204,7 @@ class LYBGUI:
 
         self.information = tkinter.Text(
             master=self.information_frame,
-            width=90,
+            width=95,
             height=25,
             # spacing1 			= 3,
             font=('Consolas', 8),
@@ -1265,16 +1262,16 @@ class LYBGUI:
         s = ttk.Style()
         s.configure('button_kakao.TButton', justify=tkinter.CENTER, background='yellow')
 
-        frame = ttk.Frame(frame_log)
-        frame_sub = ttk.LabelFrame(frame, text='바로가기')
-        button = ttk.Button(
-            master=frame_sub,
-            text="홈페이지",
-            width=14,
-            style='button_homepage.TButton',
-            command=lambda: self.callback_homepage(None)
-        )
-        button.pack()
+        # frame = ttk.Frame(frame_log)
+        # frame_sub = ttk.LabelFrame(frame, text='바로가기')
+        #button = ttk.Button(
+        #    master=frame_sub,
+        #    text="홈페이지",
+        #    width=10,
+        #    style='button_homepage.TButton',
+        #    command=lambda: self.callback_homepage(None)
+        #)
+        #button.pack()
 
         # button = ttk.Button(
         #     master=frame_sub,
@@ -1294,8 +1291,8 @@ class LYBGUI:
         # )
         # button.pack()
 
-        frame_sub.pack()
-        frame_sub = ttk.LabelFrame(frame, text='오픈채팅방')
+        # frame_sub.pack()
+        # frame_sub = ttk.LabelFrame(frame, text='오픈채팅방')
         # button = ttk.Button(
         #     master=frame_sub,
         #     text="테라M",
@@ -1358,11 +1355,19 @@ class LYBGUI:
         # 	)
         # button.pack()
 
-        frame_sub.pack()
-        frame.pack(side=tkinter.LEFT, anchor=tkinter.NW, padx=7)
+        #frame_sub.pack()
+        #frame.pack(side=tkinter.LEFT, anchor=tkinter.NW, padx=7)
         # ----- BUTTON FRAME -----
 
         frame_br = ttk.Frame(frame_log)
+        button = ttk.Button(
+            master=frame_br,
+            text="홈페이지",
+            width=10,
+            style='button_homepage.TButton',
+            command=lambda: self.callback_homepage(None)
+        )
+        button.pack()
 
         login_frame = ttk.LabelFrame(frame_br, text='계정')
         user_account = self.configure.common_config[lybconstant.LYB_DO_BOOLEAN_SAVE_LOGIN_ACCOUNT + '_id']
@@ -1401,7 +1406,7 @@ class LYBGUI:
         self.hide_button = ttk.Button(
             master=login_frame,
             text="숨기기",
-            width=14,
+            width=10,
             style='button_1.TButton',
             command=lambda: self.callback_hide_window(None, None)
         )
@@ -1409,7 +1414,7 @@ class LYBGUI:
         self.show_button = ttk.Button(
             master=login_frame,
             text="보이기",
-            width=14,
+            width=10,
             style='button_1.TButton',
             command=lambda: self.callback_show_window(None, None)
         )
@@ -1480,7 +1485,7 @@ class LYBGUI:
         self.start_button = ttk.Button(
             master=button_frame,
             text="시작",
-            width=14,
+            width=10,
             style='button_1.TButton',
             command=lambda: self.startWorkerWrapper(None)
         )
@@ -1488,7 +1493,7 @@ class LYBGUI:
         self.pause_button = ttk.Button(
             master=button_frame,
             text="일시정지",
-            width=14,
+            width=10,
             style='button_1.TButton',
             command=lambda: self.pauseWorker(None)
         )
@@ -1496,7 +1501,7 @@ class LYBGUI:
         self.stop_button = ttk.Button(
             master=button_frame,
             text="정지",
-            width=14,
+            width=10,
             style='button_1.TButton',
             command=lambda: self.terminateWorker(None)
         )
@@ -4285,7 +4290,7 @@ class LYBGUI:
                 try:
                     self.option_dic[window_name + '_monitor'] = self.add_monitor_master_frame(
                         title=window_name,
-                        subject='통계 정보가 출력됩니다',
+                        subject='통계 정보 출력',
                         workname='',
                         status='stop'
                     )
@@ -4364,7 +4369,7 @@ class LYBGUI:
                         self.option_dic[window_name + '_monitor'],
                         arg_list=[
                             window_name,
-                            '통계 정보가 출력됩니다',
+                            '통계 정보 출력',
                             new_work_name,
                             'start'
                         ],
@@ -4375,7 +4380,7 @@ class LYBGUI:
                         self.option_dic[window_name + '_monitor'],
                         arg_list=[
                             window_name,
-                            '통계 정보가 출력됩니다',
+                            '통계 정보 출력',
                             '',
                             'stop',
                         ]
@@ -4537,7 +4542,7 @@ class LYBGUI:
         button = ttk.Button(
             master=frame_label,
             text=title,
-            width=18,
+            width=10,
             command=lambda: self.callback_monitoring_title_button(None, window_name=title)
         )
         button.pack(side=tkinter.LEFT)
@@ -4546,10 +4551,10 @@ class LYBGUI:
         button = ttk.Button(
             master=frame_label,
             text=subject,
-            width=38,
+            width=28,
             command=lambda: self.callback_monitoring_subject_button(None, window_name=title)
         )
-        button.pack(side=tkinter.LEFT, padx=5)
+        button.pack(side=tkinter.LEFT, padx=1)
         column_count += 1
 
         monitor_font = ('굴림체', 9)

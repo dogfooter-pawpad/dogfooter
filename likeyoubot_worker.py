@@ -548,7 +548,7 @@ class LYBWorker(threading.Thread):
         cur_x, cur_y = pyautogui.position()
 
         self.game.cursor_loc = (cur_x - anchor_x + adj_x, cur_y - anchor_y + adj_x)
-        self.game.statistics['마우스 포인터 위치'] = (cur_x - anchor_x + adj_x, cur_y - anchor_y + adj_x)
+        self.game.statistics['마우스 위치'] = (cur_x- anchor_x + adj_x, cur_y - anchor_y + adj_x)
 
         # print('inactive mode flag =', self.window_config[lybconstant.LYB_DO_STRING_INACTIVE_MODE_FLAG])
         if self.window_config[lybconstant.LYB_DO_STRING_INACTIVE_MODE_FLAG] == '윈7':

@@ -87,6 +87,7 @@ class LYBMakeResource():
 		print(window.my_handle)
 
 		print("'E' : New resource data")
+		print("'H' : Pick 3x3 pixels")
 		print("'G' : Pick 7x7 pixels")
 		print("'A' : Pick 15x15 pixels")
 		print("'S' : Pick 31x31 pixels")

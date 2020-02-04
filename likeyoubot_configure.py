@@ -126,7 +126,7 @@ class LYBConstant():
                 '. 어차피 저도 오픈소스 도움으로 만든겁니다.                          \n' \
                 '. 소스 위치 - https://bitbucket.org/dogfooter/dogfooter/src          \n'
 
-    LYB_VERSION = 'v3.0.0'
+    LYB_VERSION = 'v3.0.0 S'
 
     # LYB_SECURITY_CODE = '72830158'		# 1.3.5.fix4
     # LYB_SECURITY_CODE = '25218203'		# 1.3.6.fix1
