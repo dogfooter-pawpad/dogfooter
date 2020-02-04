@@ -10,7 +10,6 @@ import likeyoubot_logger
 # import pystray
 # from PIL import Image
 
-import likeyoubot_gui
 
 
 
