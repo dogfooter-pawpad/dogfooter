@@ -1866,7 +1866,7 @@ class LYBV4Tab(lybgame.LYBGameTab):
 
         self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'auto_soul_duration'] = tkinter.StringVar(frame)
         self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'auto_soul_duration'].trace(
-            'w', lambda *args: self.auto_soul_duration(args,lybconstant.LYB_DO_STRING_V4_WORK + 'auto_soul_duration')
+            'w', lambda *args: self.auto_soul_duration(args, lybconstant.LYB_DO_STRING_V4_WORK + 'auto_soul_duration')
         )
         combobox_list = []
         for i in range(0, 500, 10):
@@ -1900,7 +1900,7 @@ class LYBV4Tab(lybgame.LYBGameTab):
 
         self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'jamjeryeok_mode'] = tkinter.StringVar(frame)
         self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'jamjeryeok_mode'].trace(
-            'w', lambda *args: self.hyusik_bosang(args, lybconstant.LYB_DO_STRING_V4_ETC + 'jamjeryeok_mode')
+            'w', lambda *args: self.jamjeryeok_mode(args, lybconstant.LYB_DO_STRING_V4_ETC + 'jamjeryeok_mode')
         )
         combobox_list = [
             '투지',
@@ -2889,6 +2889,12 @@ class LYBV4Tab(lybgame.LYBGameTab):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
     def auto_duration(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def auto_soul_duration(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def jamjeryeok_mode(self, args, option_name):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
     def auto_jeoljeon_duration(self, args, option_name):

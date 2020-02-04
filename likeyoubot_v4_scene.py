@@ -688,7 +688,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
         elif 101 <= self.status < 120:
             self.status += 1
             if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_tal_gotcha') is True:
-                resource_name = 'shop_scene_화려한 탈것 소환_loc'
+                resource_name = 'shop_scene_눈부신 탈것 소환_loc'
                 elapsed_time = time.time() - self.get_checkpoint(resource_name)
                 if elapsed_time > self.period_bot(3600) and self.click_shop_resource(resource_name):
                     self.set_checkpoint(resource_name)
@@ -700,7 +700,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                     self.set_checkpoint(resource_name)
                     self.game_object.get_scene('sangpum_gume_scene').set_checkpoint('clicked')
                     return self.status
-                resource_name = 'shop_scene_눈부신 탈것 소환_loc'
+                resource_name = 'shop_scene_화려한 탈것 소환_loc'
                 elapsed_time = time.time() - self.get_checkpoint(resource_name)
                 if elapsed_time > self.period_bot(3600) and self.click_shop_resource(resource_name):
                     self.set_checkpoint(resource_name)
@@ -1495,27 +1495,13 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                     self.status = 15
                     return self.status
             self.lyb_mouse_drag('soul_scene_drag_bot', 'soul_scene_drag_top', stop_delay=1.0)
-        elif 15 <= self.status < 20:
+        elif 15 <= self.status < 16:
             self.status += 1
-
             pb_name = 'soul_scene_level_2'
             match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
             self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
             if match_rate > 0.99:
                 self.lyb_mouse_click(pb_name, custom_threshold=0)
-            # resource_name = 'soul_scene_level_2'
-            # (loc_x, loc_y), match_rate = self.game_object.locationResourceOnWindowPart(
-            #     self.window_image,
-            #     resource_name,
-            #     custom_rect=(850, 520, 950, 565),
-            #     custom_top_level=(120, 120, 120),
-            #     custom_below_level=(0, 0, 0),
-            #     custom_threshold=0.7,
-            #     custom_flag=1,
-            # )
-            # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
-            # if loc_x != -1:
-            #     self.lyb_mouse_click_location(loc_x, loc_y)
                 self.status = 20
                 return self.status
         elif 20 <= self.status < 25:
@@ -3493,7 +3479,6 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.set_option(self.current_work + '_inner_status', inner_status + 1)
 
         elif self.status == self.get_work_status('몽환의 틈'):
-
             if self.get_option(self.current_work + '_end_flag'):
                 self.set_option(self.current_work + '_end_flag', False)
                 self.set_option(self.current_work + '_inner_status', None)
@@ -4152,9 +4137,8 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.game_object.get_scene('shop_scene').status = 0
                 self.set_checkpoint('shop_check', time.time() + self.period_bot(36000))
                 return True
-        # TODO 아이템 복구 옵션 활성화 & 자동장착 활성화시 300초마다 아이템 자동장착
+
         cfg_recover_item = self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'recover_item')
-        # TODO 아이템 복구 옵션 강제 활성화
         if cfg_recover_item is True:
             elapsed_time = time.time() - self.get_checkpoint('recover_item')
             if elapsed_time > self.period_bot(30):
