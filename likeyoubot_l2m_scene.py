@@ -1205,7 +1205,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
             custom_rect=custom_rect,
             average=True
         )
-        # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+        self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
         if loc_x != -1 and reverse is not True:
             self.set_option(resource_name + 'check_count', 0)
             return False
@@ -1456,6 +1456,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
             if self.move_item_slot_1():
                 return True
 
+            # self.logger.info('------->' + str(self.get_option('click_auto')))
             if self.get_option('click_auto'):
                 self.logger.info('[AUTO] 클릭')
                 self.lyb_mouse_click('main_scene_auto', custom_threshold=0)
