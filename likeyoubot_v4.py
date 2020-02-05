@@ -730,6 +730,23 @@ class LYBV4Tab(lybgame.LYBGameTab):
         check_box.pack(anchor=tkinter.W, side=tkinter.LEFT)
         frame.pack(anchor=tkinter.W)
 
+        frame = ttk.Frame(frame_label)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'recover_item'] = tkinter.BooleanVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'recover_item'].trace(
+            'w', lambda *args: self.recover_free(args, lybconstant.LYB_DO_STRING_V4_ETC + 'recover_item'))
+        if not lybconstant.LYB_DO_STRING_V4_ETC + 'recover_item' in self.configure.common_config[self.game_name]:
+            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_ETC + 'recover_item'] = False
+
+        check_box = ttk.Checkbutton(
+            master=frame,
+            text=self.get_option_text('아이템 복구하기', width=27),
+            variable=self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'recover_item'],
+            onvalue=True,
+            offvalue=False
+        )
+        check_box.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
         frame_label.pack(anchor=tkinter.NW, padx=5, pady=5)
 
         frame_l.pack(side=tkinter.LEFT, anchor=tkinter.NW)
@@ -2547,6 +2564,43 @@ class LYBV4Tab(lybgame.LYBGameTab):
         combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
         frame.pack(anchor=tkinter.W)
 
+        # 잠재력 모드 시작 ----------------
+        frame = ttk.Frame(frame_label)
+        label = ttk.Label(
+            master=frame,
+            text=self.get_option_text('잠재력 모드', width=15)
+        )
+        label.pack(side=tkinter.LEFT)
+
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'jamjeryeok_mode'] = tkinter.StringVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'jamjeryeok_mode'].trace(
+            'w', lambda *args: self.hyusik_bosang(args, lybconstant.LYB_DO_STRING_V4_ETC + 'jamjeryeok_mode')
+        )
+        combobox_list = [
+            '투지',
+            '인내',
+            '통찰',
+            '의지',
+        ]
+
+        if not lybconstant.LYB_DO_STRING_V4_ETC + 'jamjeryeok_mode' in self.configure.common_config[self.game_name]:
+            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_ETC + 'jamjeryeok_mode'] = \
+                combobox_list[0]
+
+        combobox = ttk.Combobox(
+            master=frame,
+            values=combobox_list,
+            textvariable=self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'jamjeryeok_mode'],
+            state="readonly",
+            height=10,
+            width=7,
+            font=lybconstant.LYB_FONT
+        )
+        combobox.set(self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_ETC + 'jamjeryeok_mode'])
+        combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+        # 잠재력 모드 끝----------------------------------
+
         frame = ttk.Frame(frame_label)
         label = ttk.Label(
             master=frame,
@@ -2581,6 +2635,41 @@ class LYBV4Tab(lybgame.LYBGameTab):
                          lybconstant.LYB_DO_STRING_V4_WORK + 'auto_jamjeryeok_duration'])
         combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
         frame.pack(anchor=tkinter.W)
+
+        # 영혼석 ------------------------
+        frame = ttk.Frame(frame_label)
+        label = ttk.Label(
+            master=frame,
+            text=self.get_option_text('영혼석 주기(초)', width=15)
+        )
+        label.pack(side=tkinter.LEFT)
+
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'auto_soul_duration'] = tkinter.StringVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'auto_soul_duration'].trace(
+            'w', lambda *args: self.auto_soul_duration(args,lybconstant.LYB_DO_STRING_V4_WORK + 'auto_soul_duration')
+        )
+        combobox_list = []
+        for i in range(0, 500, 10):
+            combobox_list.append(str(i))
+
+        if not lybconstant.LYB_DO_STRING_V4_WORK + 'auto_soul_duration' in self.configure.common_config[self.game_name]:
+            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_WORK + 'auto_soul_duration'] = 300
+
+        combobox = ttk.Combobox(
+            master=frame,
+            values=combobox_list,
+            textvariable=self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'auto_soul_duration'],
+            state="readonly",
+            height=10,
+            width=7,
+            font=lybconstant.LYB_FONT
+        )
+        combobox.set(self.configure.common_config[self.game_name][
+                         lybconstant.LYB_DO_STRING_V4_WORK + 'auto_soul_duration'])
+        combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
+        # 영혼석 끝 ----------------
 
         frame_label.pack(anchor=tkinter.NW, padx=5, pady=5)
 
