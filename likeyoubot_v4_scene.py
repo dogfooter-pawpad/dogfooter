@@ -1444,7 +1444,8 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             if match_rate > 0.7:
                 self.lyb_mouse_click(pb_name, custom_threshold=0)
                 self.status = 5
-                return self.status
+            else:
+                self.status = 99999
         elif 5 <= self.status < 10:
             self.status += 1
             pb_name = 'soul_scene_level_1'
@@ -1452,14 +1453,17 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
             if match_rate > 0.55:
                 self.lyb_mouse_click(pb_name, custom_threshold=0)
-                self.status = 10
+                self.status = 8
                 return self.status
         elif 10 <= self.status < 15:
             self.status += 1
+            # self.set_option('last_status', self.status)
             rect_list = [
-                (650, 300, 950, 390),
-                (650, 390, 950, 480),
-                (650, 480, 950, 560),
+                (677, 130, 810, 230),
+                (677, 200, 810, 300),
+                (677, 280, 810, 400),
+                (677, 380, 810, 500),
+                (677, 480, 810, 560),
             ]
             resource_name = 'soul_scene_stonename_loc'
             for each in rect_list:
@@ -1468,8 +1472,8 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                     resource_name,
                     custom_rect=each,
                     custom_top_level=(255, 255, 255),
-                    custom_below_level=(0, 0, 90),
-                    custom_threshold=0.80,  # 기본값 0.85
+                    custom_below_level=(120, 120, 120),
+                    custom_threshold=0.7,  # 기본값 0.85
                     custom_flag=1,
                     average=True,
                     debug=True,
@@ -1480,17 +1484,16 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                     self.status = 15
                     return self.status
             self.lyb_mouse_drag('soul_scene_drag_bot', 'soul_scene_drag_top', stop_delay=1.0)
-        elif 15 <= self.status < 20:
-            self.status += 1
 
+        elif 15 <= self.status < 16:
+            self.status += 1
             pb_name = 'soul_scene_level_2'
             match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
             self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
-            if match_rate > 0.99:
+            if match_rate > 0.9:
                 self.lyb_mouse_click(pb_name, custom_threshold=0)
                 self.status = 20
-                return self.status
-        elif 20 <= self.status < 25:
+        elif 20 <= self.status < 21:
             self.status += 1
             pb_name = 'soul_scene_level_3'
             match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
@@ -1499,7 +1502,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.lyb_mouse_click(pb_name, custom_threshold=0)
                 time.sleep(3)
                 self.lyb_mouse_click('soul_scene_level_ok_click', custom_threshold=0)
-                self.status = 25
+                self.status = 99999
         else:
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
                 self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
@@ -1782,13 +1785,14 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
         if self.status == 0:
             self.logger.info('scene: ' + self.scene_name)
             self.status += 1
-        elif 1 <= self.status < 10:
+        elif 1 <= self.status < 5:
             self.status += 1
             cfg_free = self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'recover_free')
             pb_name = 'recover_scene_free'
-            if cfg_free is False:
+            # TODO 골드로 복구하는거 기능삭제
+            if (cfg_free is False or cfg_free is True) and self.status != 5:
                 self.lyb_mouse_click(pb_name, custom_threshold=0)
-                self.status = 10
+                self.status = 5
                 return self.status
 
             match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
@@ -1796,13 +1800,20 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             if match_rate > 0.9 and cfg_free is True:
                 self.lyb_mouse_click(pb_name, custom_threshold=0)
             else:
-                self.status = 10
-        elif self.status == 10:
+                self.status = 5
+        elif 5 <= self.status < 8:
+            self.status += 1
+            pb_name = 'recover_scene_item_ok_popup_3'
+            match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
+            self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
+            if match_rate > 0.8:
+                self.lyb_mouse_click(pb_name, custom_threshold=0)
+                self.status = 8
+        elif 8 <= self.status < 12:
             self.status += 1
             cfg_item_recover = self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'recover_item')
             if cfg_item_recover is True or cfg_item_recover is False:
                 self.status = 15
-                return self.status
             else:
                 self.status = 99999
         elif 15 <= self.status < 20:
@@ -1813,7 +1824,6 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             if match_rate > 0.8:
                 self.lyb_mouse_click(pb_name, custom_threshold=0)
                 self.status = 20
-                return self.status
             else:
                 self.status = 99999
         elif 20 <= self.status < 25:
@@ -1824,7 +1834,6 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             if match_rate > 0.8:
                 self.lyb_mouse_click(pb_name, custom_threshold=0)
                 self.status = 25
-                return self.status
             else:
                 self.status = 99999
         elif 25 <= self.status < 30:
