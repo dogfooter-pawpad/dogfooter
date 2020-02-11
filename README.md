@@ -126,6 +126,18 @@ npm install --loglevel verbose
 node dogfooter.js master
 ```
 
+그리고 아래 명령을 입력하면 도그푸터 V4 매크로가 실행됩니다.
+
+```
+node dogfooter.js v4
+```
+
+그리고 아래 명령을 입력하면 도그푸터 V4C 매크로가 실행됩니다.
+
+```
+node dogfooter.js v4c
+```
+
 도그푸터 매크로 실행시 로그인 팝업창이 뜨게 됩니다.
 
 이후 회원 가입은 자유이며 마음대로 코드를 수정하여 사용하시기 바랍니다.
