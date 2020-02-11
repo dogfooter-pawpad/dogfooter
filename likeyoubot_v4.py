@@ -1143,6 +1143,23 @@ class LYBV4Tab(lybgame.LYBGameTab):
         frame.pack(anchor=tkinter.W)
 
         frame = ttk.Frame(frame_label)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'fellow_event_check'] = tkinter.BooleanVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'fellow_event_check'].trace(
+            'w', lambda *args: self.event_check(args, lybconstant.LYB_DO_STRING_V4_ETC + 'fellow_event_check'))
+        if not lybconstant.LYB_DO_STRING_V4_ETC + 'fellow_event_check' in self.configure.common_config[self.game_name]:
+            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_ETC + 'fellow_event_check'] = True
+
+        check_box = ttk.Checkbutton(
+            master=frame,
+            text=self.get_option_text('동료 이벤트 알림 감지하기', width=27),
+            variable=self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'fellow_event_check'],
+            onvalue=True,
+            offvalue=False
+        )
+        check_box.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
+        frame = ttk.Frame(frame_label)
         self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'gabang_full_move'] = tkinter.BooleanVar(frame)
         self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'gabang_full_move'].trace(
             'w', lambda *args: self.gabang_full_move(args, lybconstant.LYB_DO_STRING_V4_ETC + 'gabang_full_move'))
