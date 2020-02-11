@@ -1944,14 +1944,14 @@ class LYBV4Tab(lybgame.LYBGameTab):
             '소녀의 악몽 III',
             '상인의 소원 I',
             '상인의 소원 II',
-            '광란의 숲',
-            '저주의 평야',
-            '상실의 숲',
+            # '수집가의 의뢰I',  # 필요없을듯
+            # '수집가의 의뢰II',  # 필요없을듯
+            '고독의 숲',
             '환각의 사막',
             '파멸의 화산',
             '허상의 고원',
-            '오만의 평야',
-            '좌절의 숲',
+            # '오만의 평야',  # 투력되면 추가
+            # '좌절의 숲',  # 투력되면 추가
         ]
 
         if not lybconstant.LYB_DO_STRING_V4_WORK + 'monster_josa_area' in self.configure.common_config[self.game_name]:
