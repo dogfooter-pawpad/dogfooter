@@ -4455,9 +4455,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
         return False
 
     def click_event(self):
-        # TODO  이벤트 체크 동료 ON/OFF 추가
         cfg_fellow = self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'fellow_event_check')
-        cfg_fellow = False
         if cfg_fellow is True:
             pb_name = 'main_scene_event_new'
             (loc_x, loc_y), match_rate = self.game_object.locationOnWindowPart(
@@ -4467,8 +4465,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 custom_flag=1,
                 custom_top_level=(210, 60, 60),
                 custom_below_level=(180, 40, 40),
-                custom_rect=(210, 80, 330, 240),  # 원본
-                # custom_rect=(210, 140, 330, 240), # TODO 이벤트 계속 표시 버그 대응 서치영역 축소
+                custom_rect=(210, 80, 330, 240),
             )
             self.logger.debug(pb_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
             if loc_x != -1:
@@ -4482,8 +4479,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 custom_flag=1,
                 custom_top_level=(210, 60, 60),
                 custom_below_level=(180, 40, 40),
-                custom_rect=(10, 80, 130, 240),  # 원본
-                # custom_rect=(10, 140, 130, 240), # TODO 이벤트 계속 표시 버그 대응 서치영역 축소
+                custom_rect=(10, 80, 130, 240),
             )
             self.logger.debug(pb_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
             if loc_x != -1:
@@ -4498,9 +4494,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 custom_flag=1,
                 custom_top_level=(210, 60, 60),
                 custom_below_level=(180, 40, 40),
-                # custom_rect=(210, 80, 330, 240),  # 원본
-                custom_rect=(210, 80, 330, 180),  # 동료 영역 감지 해제
-                # custom_rect=(210, 140, 330, 240), # TODO 이벤트 계속 표시 버그 대응 서치영역 축소
+                custom_rect=(210, 80, 330, 180),
             )
             self.logger.debug(pb_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
             if loc_x != -1:
@@ -4514,9 +4508,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 custom_flag=1,
                 custom_top_level=(210, 60, 60),
                 custom_below_level=(180, 40, 40),
-                # custom_rect=(10, 80, 130, 240),  # 원본
-                custom_rect=(10, 80, 130, 180),  # 동료 영역 감지 해제
-                # custom_rect=(10, 140, 130, 240), # TODO 이벤트 계속 표시 버그 대응 서치영역 축소
+                custom_rect=(10, 80, 130, 180),
             )
             self.logger.debug(pb_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
             if loc_x != -1:
