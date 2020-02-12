@@ -54,6 +54,8 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
             rc = self.sintak2_scene()
         elif self.scene_name == 'sintak3_scene':
             rc = self.sintak3_scene()
+        elif self.scene_name == 'sintak4_scene':
+            rc = self.sintak4_scene()
 
 
         else:
@@ -78,6 +80,9 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
         return self.game_object.get_scene('sintak_scene').process(self.window_image, self.window_pixels)
 
     def sintak3_scene(self):
+        return self.game_object.get_scene('sintak_scene').process(self.window_image, self.window_pixels)
+
+    def sintak4_scene(self):
         return self.game_object.get_scene('sintak_scene').process(self.window_image, self.window_pixels)
 
     def sintak_scene(self):
