@@ -137,72 +137,72 @@ class LYBWin:
             # print('--------------------> !!! found window DEBUG2 new : ', wildcard, str(win32gui.GetWindowText(hwnd)), ':', self.handle_list, ':')
             if not hwnd in self.handle_list:
                 (top_left_x, top_left_y, bottom_right_x, bottom_right_y) = win32gui.GetWindowRect(hwnd)
-                # print('--------------------> !!! found window DEBUG3 new : ', (top_left_x, top_left_y, bottom_right_x, bottom_right_y))
+                window_title = win32gui.GetWindowText(hwnd)
+                # print('-> !!! found window DEBUG3 new : ', (top_left_x, top_left_y, bottom_right_x, bottom_right_y), win32gui.GetWindowText(hwnd), win32gui.IsWindowVisible(hwnd))
                 # print(hwnd, win32gui.GetWindowText(hwnd), abs(bottom_right_y - top_left_y))
 
-                if (abs(bottom_right_x - top_left_x - LYBWin.WIDTH) < 100 and
-                        abs(bottom_right_y - top_left_y - LYBWin.HEIGHT) < 100
-                ):
+                # if (abs(bottom_right_x - top_left_x - LYBWin.WIDTH) < 100 and
+                #         abs(bottom_right_y - top_left_y - LYBWin.HEIGHT) < 100
+                # ):
+                #
+                #     diff_width = abs(top_left_x - bottom_right_x)
+                #     diff_height = abs(bottom_right_y - top_left_y)
+                #
+                #     print(hwnd, win32gui.GetWindowText(hwnd), diff_width, diff_height)
+                #
+                #     if diff_height == LYBWin.HEIGHT + 34 and diff_width == LYBWin.WIDTH + 4:
+                #         # 녹스 FHD
+                #         self.handle_list.append(hwnd)
+                #     elif diff_height == LYBWin.HEIGHT + 50 and diff_width == LYBWin.WIDTH + 4:
+                #         # 녹스 UHD
+                #         self.handle_list.append(hwnd)
+                #     elif diff_height == LYBWin.HEIGHT + 38 and diff_width == LYBWin.WIDTH + 38:
+                #         # LDPlayer FHD
+                #         win32gui.EnumChildWindows(hwnd, self.callback_momo_child_process, hwnd)
+                #     elif diff_height == LYBWin.HEIGHT + 56 and diff_width == LYBWin.WIDTH + 56:
+                #         # LDPlayer UHD
+                #         win32gui.EnumChildWindows(hwnd, self.callback_momo_child_process, hwnd)
+                #     elif diff_height == LYBWin.HEIGHT + 30 and diff_width == LYBWin.WIDTH + 38:
+                #         # MEmu FHD Portrait
+                #         win32gui.EnumChildWindows(hwnd, self.callback_memu_child_process, hwnd)
+                #     elif diff_height == LYBWin.HEIGHT + 34 and diff_width == LYBWin.WIDTH + 40:
+                #         # MEmu FHD Landscape
+                #         win32gui.EnumChildWindows(hwnd, self.callback_memu_child_process, hwnd)
+                #     elif abs(bottom_right_y - top_left_y) == LYBWin.HEIGHT + 38:
+                #         # LDPlayer FHD
+                #         win32gui.EnumChildWindows(hwnd, self.callback_momo_child_process, hwnd)
+                #     elif abs(bottom_right_y - top_left_y) == LYBWin.HEIGHT + 56:
+                #         # LDPlayer UHD
+                #         win32gui.EnumChildWindows(hwnd, self.callback_momo_child_process, hwnd)
+                #     elif abs(bottom_right_y - top_left_y) == LYBWin.HEIGHT + 34:
+                #         # Nox FHD
+                #         self.handle_list.append(hwnd)
+                #     elif abs(bottom_right_y - top_left_y) == LYBWin.HEIGHT + 37:
+                #         # Nox UHD
+                #         self.handle_list.append(hwnd)
+                #         # win32gui.EnumChildWindows(hwnd, self.callback_nox_child_process, hwnd)
+                #     elif abs(bottom_right_y - top_left_y) == LYBWin.HEIGHT + 50:
+                #         # Nox UHD
+                #         self.handle_list.append(hwnd)
+                #         # win32gui.EnumChildWindows(hwnd, self.callback_nox_child_process, hwnd)
+                #     elif abs(bottom_right_x - top_left_x) == LYBWin.WIDTH + 40:
+                #         # Memu
+                #         win32gui.EnumChildWindows(hwnd, self.callback_memu_child_process, hwnd)
+                #     elif abs(bottom_right_x - top_left_x) == LYBWin.WIDTH and abs(
+                #             bottom_right_y - top_left_y) == LYBWin.HEIGHT:
+                #         # Purple
+                #         self.handle_list.append(hwnd)
+                #     elif diff_height == LYBWin.HEIGHT + 36 and diff_width == LYBWin.WIDTH + 42:
+                #         # LDPlayer FHD For L2M
+                #         win32gui.EnumChildWindows(hwnd, self.callback_momo_child_process, hwnd)
+                #     elif diff_height == LYBWin.HEIGHT + 53 and diff_width == LYBWin.WIDTH + 62:
+                #         # LDPlayer UHD For L2M
+                #         win32gui.EnumChildWindows(hwnd, self.callback_momo_child_process, hwnd)
+                #
+                #         # if re.match('Nox', str(win32gui.GetWindowText(hwnd))):
+                #         #     print('Nox 사이드 바: ', str(win32gui.GetWindowText(hwnd)), win32gui.IsWindowVisible(hwnd))
 
-                    diff_width = abs(top_left_x - bottom_right_x)
-                    diff_height = abs(bottom_right_y - top_left_y)
-
-                    print(hwnd, win32gui.GetWindowText(hwnd), diff_width, diff_height)
-
-                    if diff_height == LYBWin.HEIGHT + 34 and diff_width == LYBWin.WIDTH + 4:
-                        # 녹스 FHD
-                        self.handle_list.append(hwnd)
-                    elif diff_height == LYBWin.HEIGHT + 50 and diff_width == LYBWin.WIDTH + 4:
-                        # 녹스 UHD
-                        self.handle_list.append(hwnd)
-                    elif diff_height == LYBWin.HEIGHT + 38 and diff_width == LYBWin.WIDTH + 38:
-                        # LDPlayer FHD
-                        win32gui.EnumChildWindows(hwnd, self.callback_momo_child_process, hwnd)
-                    elif diff_height == LYBWin.HEIGHT + 56 and diff_width == LYBWin.WIDTH + 56:
-                        # LDPlayer UHD
-                        win32gui.EnumChildWindows(hwnd, self.callback_momo_child_process, hwnd)
-                    elif diff_height == LYBWin.HEIGHT + 30 and diff_width == LYBWin.WIDTH + 38:
-                        # MEmu FHD Portrait
-                        win32gui.EnumChildWindows(hwnd, self.callback_memu_child_process, hwnd)
-                    elif diff_height == LYBWin.HEIGHT + 34 and diff_width == LYBWin.WIDTH + 40:
-                        # MEmu FHD Landscape
-                        win32gui.EnumChildWindows(hwnd, self.callback_memu_child_process, hwnd)
-                    elif abs(bottom_right_y - top_left_y) == LYBWin.HEIGHT + 38:
-                        # LDPlayer FHD
-                        win32gui.EnumChildWindows(hwnd, self.callback_momo_child_process, hwnd)
-                    elif abs(bottom_right_y - top_left_y) == LYBWin.HEIGHT + 56:
-                        # LDPlayer UHD
-                        win32gui.EnumChildWindows(hwnd, self.callback_momo_child_process, hwnd)
-                    elif abs(bottom_right_y - top_left_y) == LYBWin.HEIGHT + 34:
-                        # Nox FHD
-                        self.handle_list.append(hwnd)
-                    elif abs(bottom_right_y - top_left_y) == LYBWin.HEIGHT + 37:
-                        # Nox UHD
-                        self.handle_list.append(hwnd)
-                        # win32gui.EnumChildWindows(hwnd, self.callback_nox_child_process, hwnd)
-                    elif abs(bottom_right_y - top_left_y) == LYBWin.HEIGHT + 50:
-                        # Nox UHD
-                        self.handle_list.append(hwnd)
-                        # win32gui.EnumChildWindows(hwnd, self.callback_nox_child_process, hwnd)
-                    elif abs(bottom_right_x - top_left_x) == LYBWin.WIDTH + 40:
-                        # Memu
-                        win32gui.EnumChildWindows(hwnd, self.callback_memu_child_process, hwnd)
-                    elif abs(bottom_right_x - top_left_x) == LYBWin.WIDTH and abs(
-                            bottom_right_y - top_left_y) == LYBWin.HEIGHT:
-                        # Purple
-                        self.handle_list.append(hwnd)
-                    elif diff_height == LYBWin.HEIGHT + 36 and diff_width == LYBWin.WIDTH + 42:
-                        # LDPlayer FHD For L2M
-                        win32gui.EnumChildWindows(hwnd, self.callback_momo_child_process, hwnd)
-                    elif diff_height == LYBWin.HEIGHT + 53 and diff_width == LYBWin.WIDTH + 62:
-                        # LDPlayer UHD For L2M
-                        win32gui.EnumChildWindows(hwnd, self.callback_momo_child_process, hwnd)
-
-                        # if re.match('Nox', str(win32gui.GetWindowText(hwnd))):
-                        #     print('Nox 사이드 바: ', str(win32gui.GetWindowText(hwnd)), win32gui.IsWindowVisible(hwnd))
-
-                window_title = win32gui.GetWindowText(hwnd)
-                if window_title is not None and len(window_title) > 0 and "LINEAGE" in window_title:
+                if window_title is not None and len(window_title) > 0 and "LINEAGE" in window_title and top_left_x > 0 and bottom_right_x > 0:
                     # Purple
                     self.handle_list.append(hwnd)
                     win32gui.SetWindowPos(hwnd, win32con.HWND_TOP, 0, 0, LYBWin.WIDTH, LYBWin.HEIGHT, win32con.SWP_NOMOVE + win32con.SWP_SHOWWINDOW)
@@ -457,14 +457,6 @@ class LYBWin:
             pyautogui.mouseUp(button="left")
             # pyautogui.dragTo(anchor_x + to_x, anchor_y + to_y, duration=delay)
             return
-
-
-
-
-
-
-
-
 
         if self.dd_class is None or self.dd_class[3] > 8500:
             if self.dd_class is not None:

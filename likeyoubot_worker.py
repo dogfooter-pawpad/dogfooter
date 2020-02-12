@@ -87,7 +87,7 @@ class LYBWorker(threading.Thread):
                             mHwnd = multi_hwnd_dic[lybconstant.LYB_MULTI_APP_PLAYER_NAME_NOX]
                             app_player_index = int(
                                 window_config[lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'number']) - 1
-                            self.logger.debug('app_player_index: ' + str(app_player_index))
+                            # self.logger.debug('app_player_index: ' + str(app_player_index))
 
                             window.mouse_click(mHwnd, 523, 116 + (57 * app_player_index))
                     elif player_type == 'momo':
@@ -95,7 +95,7 @@ class LYBWorker(threading.Thread):
                             mHwnd = multi_hwnd_dic[lybconstant.LYB_MULTI_APP_PLAYER_NAME_MOMO]
                             app_player_index = int(
                                 window_config[lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'number']) - 1
-                            self.logger.debug('app_player_index: ' + str(app_player_index))
+                            # self.logger.debug('app_player_index: ' + str(app_player_index))
 
                             window.mouse_click(mHwnd, 387, 116 + (50 * app_player_index))
 
@@ -135,13 +135,13 @@ class LYBWorker(threading.Thread):
                 elif recv_msg.type == 'search':
                     window_config = recv_msg.message
                     (handle_list, side_handle_dic, parent_handle_dic, multi_handle_dic) = self.findWindows()
-                    self.logger.debug(handle_list)
-                    self.logger.debug(parent_handle_dic)
+                    print(handle_list)
+                    print(parent_handle_dic)
 
                     window_list, rhwnds_dic = self.set_location(window_config, handle_list, side_handle_dic,
                                                                 parent_handle_dic)
 
-                    self.logger.debug('search window handle list: ' + str(window_list))
+                    print('search window handle list: ', str(window_list))
                     self.response_queue.put_nowait(likeyoubot_message.LYBMessage('search_hwnd_return', rhwnds_dic))
                     self.response_queue.put_nowait(
                         likeyoubot_message.LYBMessage('search_side_hwnd_return', side_handle_dic))

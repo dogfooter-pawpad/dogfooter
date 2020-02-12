@@ -95,7 +95,7 @@ class LYBHttp:
             # self.logger.debug('adjustTime:'+str(self.adjustTime))
             return ''
         else:
-            self.logger.debug(soup.findAll("p", {"class": "cbg"})[0].text.strip())
+            # self.logger.debug(soup.findAll("p", {"class": "cbg"})[0].text.strip())
             return soup.findAll("p", {"class": "cbg"})[0].text.strip()
 
     def get_notice(self):
@@ -263,8 +263,8 @@ class LYBHttp:
             string = res.read().decode('utf-8')
             soup = BeautifulSoup(string, 'html.parser')
             self.json_obj = json.loads(soup.prettify())
-            self.logger.debug(str(self.json_obj[self.mb_id]['macro']))
-            self.logger.debug(str(self.json_obj[self.mb_id]['ip']))
+            # self.logger.debug(str(self.json_obj[self.mb_id]['macro']))
+            # self.logger.debug(str(self.json_obj[self.mb_id]['ip']))
         except:
             self.logger.error(str(sys.exc_info()[0]) + '(' + str(sys.exc_info()[1]) + ')')
             return None
@@ -440,8 +440,8 @@ class LYBHttp:
             # update_id = 284752270
             # last_log = bot.getUpdates(offset=update_id)
             last_log = bot.getUpdates()
-            for each_log in last_log:
-                self.logger.debug(each_log)
+            # for each_log in last_log:
+                # self.logger.debug(each_log)
 
         except:
             self.logger.error(traceback.format_exc())
@@ -499,7 +499,7 @@ class LYBHttp:
                         update_id = int(eachLog.update_id)
                 else:
                     if chat_id == -1:
-                        self.logger.debug('텔레그램 연동')
+                        # self.logger.debug('텔레그램 연동')
                         if str(eachLog.message.text) == match_string:
                             if self.last_id != eachLog.update_id:
                                 self.last_id = eachLog.update_id

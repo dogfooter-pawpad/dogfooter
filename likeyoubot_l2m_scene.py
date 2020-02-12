@@ -18,6 +18,12 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
             rc = self.login_scene()
         elif self.scene_name == 'main_scene':
             rc = self.main_scene()
+        elif self.scene_name == 'main2_scene':
+            rc = self.main2_scene()
+        elif self.scene_name == 'main3_scene':
+            rc = self.main3_scene()
+        elif self.scene_name == 'main4_scene':
+            rc = self.main4_scene()
         elif self.scene_name == 'quick_config_scene':
             rc = self.quick_config_scene()
         elif self.scene_name == 'jeoljeon_mode_scene':
@@ -154,14 +160,15 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                 (loc_x, loc_y), match_rate = self.game_object.locationResourceOnWindowPart(
                     self.window_image,
                     resource_name,
-                    custom_top_level=(255, 255, 255),
-                    custom_below_level=(155, 155, 155),
+                    # custom_top_level=(255, 255, 255),
+                    # custom_below_level=(100, 100, 100),
                     custom_rect=rect,
                     custom_threshold=0.7,
                     custom_flag=1,
-                    average=False
+                    average=False,
+                    debug=True,
                 )
-                # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+                self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
                 if loc_x != -1:
                     self.lyb_mouse_click_location(loc_x, loc_y)
                     return self.status
@@ -667,14 +674,14 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                     self.status = 99999
                     return self.status
 
-            cfg_duration = int(self.get_game_config(lybconstant.LYB_DO_STRING_L2M_WORK + 'auto_jeoljeon_duration'))
-            elapsed_time = time.time() - self.get_checkpoint('start')
-            if elapsed_time > cfg_duration:
+            if self.is_not_auto_jeoljeon_mode():
+                self.game_object.get_scene('main_scene').set_option('click_auto', True)
                 self.status = 99999
                 return self.status
 
-            if self.is_not_auto_jeoljeon_mode():
-                self.game_object.get_scene('main_scene').set_option('click_auto', True)
+            cfg_duration = int(self.get_game_config(lybconstant.LYB_DO_STRING_L2M_WORK + 'auto_jeoljeon_duration'))
+            elapsed_time = time.time() - self.get_checkpoint('start')
+            if elapsed_time > cfg_duration:
                 self.status = 99999
                 return self.status
 
@@ -908,6 +915,14 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
     # Main
     #
     #
+    def main4_scene(self):
+        return self.game_object.get_scene('main_scene').process(self.window_image, self.window_pixels)
+
+    def main3_scene(self):
+        return self.game_object.get_scene('main_scene').process(self.window_image, self.window_pixels)
+
+    def main2_scene(self):
+        return self.game_object.get_scene('main_scene').process(self.window_image, self.window_pixels)
 
     def main_scene(self):
 
@@ -1125,9 +1140,9 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
             if loop_count is None:
                 loop_count = 1
 
-            self.logger.debug('[반복 종료] ' + str(loop_count) + ' 회 수행 완료, ' +
-                              str(int(
-                                  self.get_game_config(lybconstant.LYB_DO_STRING_COUNT_LOOP)) - loop_count) + ' 회 남음')
+            # self.logger.debug('[반복 종료] ' + str(loop_count) + ' 회 수행 완료, ' +
+            #                   str(int(
+            #                       self.get_game_config(lybconstant.LYB_DO_STRING_COUNT_LOOP)) - loop_count) + ' 회 남음')
             if loop_count >= int(self.get_game_config(lybconstant.LYB_DO_STRING_COUNT_LOOP)):
                 self.status = self.last_status[self.current_work] + 1
                 self.set_option('loop_count', 1)
@@ -1137,7 +1152,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                 # print('DEBUG LOOP STATUS = ', self.status )
 
                 if self.status is None:
-                    self.logger.debug('[반복 시작] 점을 찾지 못해서 다음 작업을 수행합니다')
+                    # self.logger.debug('[반복 시작] 점을 찾지 못해서 다음 작업을 수행합니다')
                     self.status = self.last_status[self.current_work] + 1
 
                 self.set_option('loop_count', loop_count + 1)
@@ -1205,7 +1220,7 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
             custom_rect=custom_rect,
             average=True
         )
-        self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+        # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
         if loc_x != -1 and reverse is not True:
             self.set_option(resource_name + 'check_count', 0)
             return False

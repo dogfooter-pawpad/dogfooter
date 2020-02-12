@@ -2720,7 +2720,6 @@ class LYBGUI:
 
         self.workers = [worker for worker in self.workers if worker.isAlive()]
         worker_count = len(self.workers)
-
         if worker_count < 1:
             worker_count = 1
 
@@ -2998,7 +2997,7 @@ class LYBGUI:
             return
 
         command = update.message.text
-        self.logger.debug('command: ' + str(command))
+        # self.logger.debug('command: ' + str(command))
         self.process_command(command)
 
     def update_server_information(self):
@@ -3365,7 +3364,7 @@ class LYBGUI:
             return
 
         if window_name in self.worker_dic:
-            self.logger.debug('start: already started ' + window_name + ' ' + str(self.worker_dic))
+            # self.logger.debug('start: already started ' + window_name + ' ' + str(self.worker_dic))
             self.logging_message('INFO', window_name + ' 이미 실행 중입니다.')
             return
 
@@ -3434,7 +3433,7 @@ class LYBGUI:
 
     def pause_each_worker(self, window_name):
         if not window_name in self.worker_dic:
-            self.logger.debug('Not found worker ' + window_name + ' ' + str(self.worker_dic))
+            # self.logger.debug('Not found worker ' + window_name + ' ' + str(self.worker_dic))
             return
 
         worker = self.worker_dic[window_name]
@@ -3444,7 +3443,7 @@ class LYBGUI:
 
     def terminate_each_worker(self, window_name):
         if not window_name in self.worker_dic:
-            self.logger.debug('DEBUG terminate: Not found worker ' + window_name + ' ' + str(self.worker_dic))
+            # self.logger.debug('DEBUG terminate: Not found worker ' + window_name + ' ' + str(self.worker_dic))
             return
 
         worker = self.worker_dic[window_name]
@@ -3555,13 +3554,13 @@ class LYBGUI:
             pass
         except:
             self.logger.error(traceback.format_exc())
-            self.logger.debug('New file: ' + file_name)
+            # self.logger.debug('New file: ' + file_name)
 
-        self.logger.debug(file_name)
+        # self.logger.debug(file_name)
 
         lybcfg_information = self.rest.get_elem('lybcfg')
 
-        self.logger.debug('TEST: ' + str(lybcfg_information))
+        # self.logger.debug('TEST: ' + str(lybcfg_information))
         path = resource_path(file_name)
 
         try:
@@ -3602,7 +3601,7 @@ class LYBGUI:
 
             return
 
-        self.logger.debug(file_path)
+        # self.logger.debug(file_path)
         cmd = [
             resource_path(file_path),
             "dogfooter"
@@ -3922,7 +3921,7 @@ class LYBGUI:
     # 	self.logger.debug(str(round(e-s,2)))
 
     def callback_security_code_stringvar(self, args):
-        self.logger.debug(self.security_code.get())
+        # self.logger.debug(self.security_code.get())
         self.configure.common_config['security_code'] = self.security_code.get()
 
     def callback_reopen_log(self):
@@ -4549,10 +4548,10 @@ class LYBGUI:
                 if (not window_name in self.current_work_dic or
                         self.current_work_dic[window_name] != each_arg
                 ):
-                    self.logger.debug(
-                        'wlist work: ' + self.wlist_stringvar_dic[window_name].get() + ' game work: ' + each_arg)
-                    if window_name in self.current_work_dic:
-                        self.logger.debug(str(self.current_work_dic[window_name]))
+                    # self.logger.debug(
+                    #     'wlist work: ' + self.wlist_stringvar_dic[window_name].get() + ' game work: ' + each_arg)
+                    # if window_name in self.current_work_dic:
+                    #     self.logger.debug(str(self.current_work_dic[window_name]))
                     self.current_work_dic[window_name] = each_arg
                     new_wlist = []
                     windex = 1
@@ -4952,8 +4951,8 @@ class LYBGUI:
         self.move_to_work_index(window_name, work_index)
 
     def callback_select_wlist_stringvar(self, args, option_name):
-        self.logger.debug('[MoveStatus] callback_select_wlist_stringvar: ' + option_name)
-        self.logger.debug(str(self.wlist_stringvar_skip_dic))
+        # self.logger.debug('[MoveStatus] callback_select_wlist_stringvar: ' + option_name)
+        # self.logger.debug(str(self.wlist_stringvar_skip_dic))
 
         if len(option_name) < 1:
             return
@@ -4965,7 +4964,7 @@ class LYBGUI:
         if option_name in self.wlist_stringvar_skip_dic:
             if self.wlist_stringvar_skip_dic[option_name] == True:
                 self.wlist_stringvar_skip_dic[option_name] = False
-                self.logger.debug('[MoveStatus] ' + str(self.wlist_stringvar_skip_dic))
+                # self.logger.debug('[MoveStatus] ' + str(self.wlist_stringvar_skip_dic))
                 return
 
         # self.logger.debug('[MoveStatus] CP2')
@@ -4974,9 +4973,9 @@ class LYBGUI:
 
         # self.logger.debug('[DEBUG MoveStatus] CP3')
         move_status = int(self.wlist_stringvar_dic[option_name].get().split('.')[0])
-        self.logger.debug(
-            '[DEBUG MoveStatus] moveStatus: ' + str(move_status) + ' current_work_name: ' + self.current_work_dic[
-                option_name])
+        # self.logger.debug(
+        #     '[DEBUG MoveStatus] moveStatus: ' + str(move_status) + ' current_work_name: ' + self.current_work_dic[
+        #         option_name])
 
         game_object = self.game_object[option_name]
         if game_object == None or game_object.main_scene == None:
@@ -5056,7 +5055,7 @@ class LYBGUI:
                     self.logger.info('DEBUG3')
 
                     chat_id = rest.get_chat_id()
-                    self.logger.debug('update chatting id: ' + str(chat_id))
+                    # self.logger.debug('update chatting id: ' + str(chat_id))
                     return
             self.logging_message("FAIL", "텔레그램 연동에 실패했습니다.")
             self.logging_message("FAIL", "[" + self.telegram_entry.get() + "]를 텔레그램 대화창에 제대로 입력했는지 확인하세요.")
@@ -5102,7 +5101,7 @@ class LYBGUI:
         return ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
 
     def send_screenshot_telegram(self):
-        self.logger.debug('/SS')
+        # self.logger.debug('/SS')
         screenShot = ImageGrab.grab()
         png_name = self.save_image(screenShot, 'ss_command')
         rest = self.login()

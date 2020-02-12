@@ -246,8 +246,8 @@ class LYBGame():
                     # self.weight_tolerance = self.weight_tolerance + int(self.get_window_config('adjust_entry'))*0.001
                     self.weight_threshold = self.weight_threshold - 0.01
                     self.weight_tolerance = self.weight_tolerance + 0.01
-                    self.logger.debug('허용 가중치: ' + str(int(self.weight_threshold * 100)) + '%, RGB 가중치: ' + str(
-                        int(self.weight_tolerance * 100)) + '%')
+                    # self.logger.debug('허용 가중치: ' + str(int(self.weight_threshold * 100)) + '%, RGB 가중치: ' + str(
+                    #     int(self.weight_tolerance * 100)) + '%')
 
                     return 0
 
@@ -258,11 +258,11 @@ class LYBGame():
                                 self.current_matched_scene['rate'],
                                 # self.current_matched_scene['threshold'],
                                 self.get_scene(self.current_matched_scene['name']).status))
-            self.logger.debug('[Scene Changed] ' +
-                              str(self.current_matched_scene['name']) + ' ' +
-                              str(self.current_matched_scene['rate']) + ' ' +
-                              str(self.get_scene(self.current_matched_scene['name']).status) + ' scene_name: ' + str(
-                scene_name))
+            # self.logger.debug('[Scene Changed] ' +
+            #                   str(self.current_matched_scene['name']) + ' ' +
+            #                   str(self.current_matched_scene['rate']) + ' ' +
+            #                   str(self.get_scene(self.current_matched_scene['name']).status) + ' scene_name: ' + str(
+            #     scene_name))
 
         self.last_time = time.time()
 
@@ -294,9 +294,9 @@ class LYBGame():
                     # self.window.mouse_click(self.hwnd, 320, 180)
                     else:
                         is_same = True
-                else:
-                    self.logger.debug(
-                        '[Scene] ' + str(scene_name) + ', status: ' + str(self.last_scene['status']) + '-->' + str(rc))
+                # else:
+                    # self.logger.debug(
+                    #     '[Scene] ' + str(scene_name) + ', status: ' + str(self.last_scene['status']) + '-->' + str(rc))
 
         if is_same == False:
             # 못찾을 경우에는 점점 낮아지고, 찾았다면 원위치.
@@ -334,9 +334,9 @@ class LYBGame():
         if abs(reserved_second - now_second) > 5:
             return False
 
-        self.logger.debug(
-            'ReservedTime: ' + str(reserved_hour) + str(reserved_minute) + str(reserved_second) + ':' + str(
-                now_hour) + str(now_minute) + str(now_second))
+        # self.logger.debug(
+        #     'ReservedTime: ' + str(reserved_hour) + str(reserved_minute) + str(reserved_second) + ':' + str(
+        #         now_hour) + str(now_minute) + str(now_second))
         return True
 
     def check_reserved(self):
@@ -347,7 +347,7 @@ class LYBGame():
         if self.wait_for_start_reserved_work is False:
             work_index_to_move = self.recursive_check_reserved(self.get_game_config(self.game_name, '', flag=1), [], [])
             if work_index_to_move is not None:
-                self.logger.debug('reserved work index=' + str(work_index_to_move))
+                # self.logger.debug('reserved work index=' + str(work_index_to_move))
                 schedule_list = self.get_game_config(self.game_name, 'schedule_list')
                 self.main_scene.move_status[self.current_schedule_work] = work_index_to_move
                 self.wait_for_start_reserved_work = True
@@ -509,18 +509,18 @@ class LYBGame():
                 mHwnd = self.multi_hwnd_dic[lybconstant.LYB_MULTI_APP_PLAYER_NAME_NOX]
                 app_player_index = int(
                     self.window_config[lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'number']) - 1
-                self.logger.debug('app_player_index: ' + str(app_player_index))
-                self.logger.debug('mHwnd: ' + str(mHwnd))
+                # self.logger.debug('app_player_index: ' + str(app_player_index))
+                # self.logger.debug('mHwnd: ' + str(mHwnd))
 
                 while True:
                     self.window.mouse_click(mHwnd, 523, 116 + (57 * app_player_index))
                     time.sleep(1)
 
                     confirm_window_hwnd_list = self.window.getInnerWindow(mHwnd)
-                    self.logger.debug(confirm_window_hwnd_list)
+                    # self.logger.debug(confirm_window_hwnd_list)
                     if len(confirm_window_hwnd_list) > 0:
                         for each_hwnd in confirm_window_hwnd_list:
-                            self.logger.debug(each_hwnd)
+                            # self.logger.debug(each_hwnd)
                             time.sleep(1)
                             self.window.mouse_click(each_hwnd, 120, 180)
                         break
@@ -533,14 +533,14 @@ class LYBGame():
                 mHwnd = self.multi_hwnd_dic[lybconstant.LYB_MULTI_APP_PLAYER_NAME_MOMO]
                 app_player_index = int(
                     self.window_config[lybconstant.LYB_DO_BOOLEAN_FIX_WINDOW_LOCATION + 'number']) - 1
-                self.logger.debug('app_player_index: ' + str(app_player_index))
+                # self.logger.debug('app_player_index: ' + str(app_player_index))
 
                 while True:
                     self.window.mouse_click(mHwnd, 387, 116 + (50 * app_player_index))
                     time.sleep(1)
 
                     confirm_window_hwnd_list = self.window.getInnerWindow(mHwnd)
-                    self.logger.debug(confirm_window_hwnd_list)
+                    # self.logger.debug(confirm_window_hwnd_list)
                     if len(confirm_window_hwnd_list) > 0:
                         for each_hwnd in confirm_window_hwnd_list:
                             self.logger.debug(each_hwnd)

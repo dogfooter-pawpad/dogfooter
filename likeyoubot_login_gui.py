@@ -41,7 +41,7 @@ class LYBLoginGUI:
         self.download_file_label = None
 
         self.logger = likeyoubot_logger.LYBLogger.getLogger()
-        self.logger.debug(self.gui_style.theme_names())
+        # self.logger.debug(self.gui_style.theme_names())
 
         self.gui_style.theme_use('vista')
         self.gui_style.configure('.', font=lybconstant.LYB_FONT)
@@ -348,7 +348,7 @@ class LYBLoginGUI:
         self.patch_urls = self.rest.get_update_file()
         # self.logger.info('DEBUG-3')
 
-        self.logger.debug('last_version: ' + last_version + ', ' + lybconstant.LYB_VERSION)
+        # self.logger.debug('last_version: ' + last_version + ', ' + lybconstant.LYB_VERSION)
 
         if (last_version == lybconstant.LYB_VERSION or
                 len(self.patch_urls) < 1
@@ -387,7 +387,7 @@ class LYBLoginGUI:
             label.pack(expand=True)
             self.main_frame.pack(expand=True)
 
-            self.logger.debug('GoogleDrive file list: ' + str(self.patch_urls))
+            # self.logger.debug('GoogleDrive file list: ' + str(self.patch_urls))
 
             self.waiting_queue = queue.Queue()
             self.worker_thread = LYBUpdateWorker('Update',
@@ -475,7 +475,7 @@ class LYBUpdateWorker(threading.Thread):
         threading.currentThread().setName(self.name)
 
         self.dropbox_access_token = self.rest.get_elem('dropbox_access_token')
-        self.logger.debug('dropbox_access_token:' + str(self.dropbox_access_token))
+        # self.logger.debug('dropbox_access_token:' + str(self.dropbox_access_token))
 
         # patch_url_list = list(self.patch_urls)
         current_version = likeyoubot_configure.LYBConfigure.get_version(lybconstant.LYB_VERSION)
@@ -491,9 +491,9 @@ class LYBUpdateWorker(threading.Thread):
             # h = requests.head(each_url, allow_redirects=True)
             # header = h.headers
             # content_length = header.get('content-length', None)
-            self.logger.debug('GoogleDrive id: ' + str(each_url[0]))
-            self.logger.debug('file name: ' + str(file_name))
-            self.logger.debug('Each version: ' + str(each_url[2]))
+            # self.logger.debug('GoogleDrive id: ' + str(each_url[0]))
+            # self.logger.debug('file name: ' + str(file_name))
+            # self.logger.debug('Each version: ' + str(each_url[2]))
 
             each_version = likeyoubot_configure.LYBConfigure.get_version(each_url[2])
             if current_version >= each_version:
@@ -514,11 +514,11 @@ class LYBUpdateWorker(threading.Thread):
                             likeyoubot_configure.LYBConfigure.resource_path(file_name + '.bak'))
             except:
                 self.logger.error(traceback.format_exc())
-                self.logger.debug('New file: ' + file_name)
+                # self.logger.debug('New file: ' + file_name)
 
-            self.logger.debug(file_name)
+            # self.logger.debug(file_name)
 
-            self.logger.debug('TEST: ' + each_url[0])
+            # self.logger.debug('TEST: ' + each_url[0])
             path = likeyoubot_configure.LYBConfigure.resource_path(file_name)
             self.progress_bar['value'] = 0
             self.progress_bar['maximum'] = int(each_url[1]) * 1024
