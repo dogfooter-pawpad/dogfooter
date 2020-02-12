@@ -1431,16 +1431,19 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                         custom_threshold=0.8,
                         custom_flag=1,
                         average=False,
-                        # debug=True
+                        debug=True
                     )
-                    # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+                    self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
                     if loc_x != -1:
                         self.lyb_mouse_click_location(loc_x, loc_y)
                         self.set_option('npc_ok', False)
                         self.set_option('home_status', self.get_option('next_home_status'))
                         return True
-                if home_status % 4 < 2:
+                if home_status % 5 < 2:
                     self.lyb_mouse_drag('main_scene_npc_list_drag_bot', 'main_scene_npc_list_drag_top')
+                elif home_status % 5 < 3:
+                    direction = int(random.random() * 8)
+                    self.lyb_mouse_drag('main_scene_pad_c', 'main_scene_pad_' + str(direction))
                 else:
                     self.lyb_mouse_drag('main_scene_npc_list_drag_top', 'main_scene_npc_list_drag_bot')
             elif 1010 <= home_status < 1200:
