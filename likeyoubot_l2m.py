@@ -697,6 +697,42 @@ class LYBL2MTab(lybgame.LYBGameTab):
                          lybconstant.LYB_DO_STRING_L2M_ETC + 'use_item_premium_potion'])
         combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
         frame.pack(anchor=tkinter.W)
+
+        frame = ttk.Frame(frame_label)
+        label = ttk.Label(
+            master=frame,
+            text=self.get_option_text('장비 수리 쿨타임(초)', width=27)
+        )
+        label.pack(side=tkinter.LEFT)
+
+        self.option_dic[lybconstant.LYB_DO_STRING_L2M_ETC + 'repair_item_cooltime'] = tkinter.StringVar(frame)
+        self.option_dic[lybconstant.LYB_DO_STRING_L2M_ETC + 'repair_item_cooltime'].trace(
+            'w', lambda *args: self.repair_item_cooltime(args,
+                                                            lybconstant.LYB_DO_STRING_L2M_ETC + 'repair_item_cooltime')
+        )
+        combobox_list = []
+        for i in range(0, 3601, 60):
+            combobox_list.append(str(i))
+
+        if not lybconstant.LYB_DO_STRING_L2M_ETC + 'repair_item_cooltime' in self.configure.common_config[
+            self.game_name]:
+            self.configure.common_config[self.game_name][
+                lybconstant.LYB_DO_STRING_L2M_ETC + 'repair_item_cooltime'] = 600
+
+        combobox = ttk.Combobox(
+            master=frame,
+            values=combobox_list,
+            textvariable=self.option_dic[lybconstant.LYB_DO_STRING_L2M_ETC + 'repair_item_cooltime'],
+            state="readonly",
+            height=10,
+            width=9,
+            font=lybconstant.LYB_FONT
+        )
+        combobox.set(self.configure.common_config[self.game_name][
+                         lybconstant.LYB_DO_STRING_L2M_ETC + 'repair_item_cooltime'])
+        combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
+        frame.pack(anchor=tkinter.W)
+
         # frame = ttk.Frame(frame_label)
         # s = ttk.Style()
         # s.configure('Warning.TLabel', foreground='#ff0000')
@@ -2680,6 +2716,9 @@ class LYBL2MTab(lybgame.LYBGameTab):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
     def use_item_premium_potion(self, args, option_name):
+        self.set_game_config(option_name, self.option_dic[option_name].get())
+
+    def repair_item_cooltime(self, args, option_name):
         self.set_game_config(option_name, self.option_dic[option_name].get())
 
     def item_name_0(self, args, option_name):

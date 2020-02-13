@@ -56,6 +56,8 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
             rc = self.sintak3_scene()
         elif self.scene_name == 'sintak4_scene':
             rc = self.sintak4_scene()
+        elif self.scene_name == 'repair_confirm_scene':
+            rc = self.repair_confirm_scene()
 
 
         else:
@@ -73,6 +75,16 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
                 self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
 
             self.status = 0
+
+        return self.status
+
+    def repair_confirm_scene(self):
+
+        if self.get_option('repair'):
+            self.lyb_mouse_click('repair_confirm_scene_ok', custom_threshold=0)
+            self.set_option('repair', False)
+        else:
+            self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
 
         return self.status
 
@@ -1517,6 +1529,17 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
             if self.process_item():
                 return True
 
+            if self.process_repair():
+                return True
+            # else:
+            #     if self.is_open_repair():
+            #         pb_name = 'main_scene_repair_close'
+            #         match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
+            #         # self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
+            #         if match_rate > 0.75:
+            #             self.lyb_mouse_click(pb_name, custom_threshold=0)
+            #             return True
+
         cfg_period = int(self.get_game_config(lybconstant.LYB_DO_STRING_L2M_ETC + 'check_mail_period'))
         if cfg_period > 0:
             elapsed_time = time.time() - self.get_checkpoint('check_mail_period')
@@ -1543,6 +1566,34 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
 
         if self.is_clicked_recover_icon():
             return True
+
+        if self.is_open_repair():
+            repair_status = self.get_option('repair_status')
+            if repair_status is None:
+                repair_status = 0
+
+            if repair_status == 0:
+                self.set_option('repair_status', repair_status + 1)
+            elif 1 <= repair_status < 10:
+                self.lyb_mouse_click('main_scene_repair_item', custom_threshold=0)
+                self.set_option('repair_status', repair_status + 100)
+                return True
+            elif 101 <= repair_status < 110:
+                self.set_option('repair_status', repair_status + 1)
+                if self.is_repair_enable():
+                    self.lyb_mouse_click('main_scene_repair_enable', custom_threshold=0)
+                    self.game_object.get_scene('repair_confirm_scene').set_option('repair', True)
+                    self.set_option('repair_status', repair_status - 100)
+                    return True
+                else:
+                    self.set_option('repair_status', 99999)
+            else:
+                self.lyb_mouse_click('main_scene_repair_close', custom_threshold=0)
+                return True
+
+            return True
+        else:
+            self.set_option('repair_status', 0)
 
         if self.is_detected_recover():
             recover_status = self.get_option('recover_status')
@@ -1588,6 +1639,10 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
             return True
         else:
             self.set_option('recover_status', 0)
+
+        if self.is_open_gabang():
+            self.lyb_mouse_click('main_scene_gabang_close_icon', custom_threshold=0)
+            return True
 
         return False
 
@@ -1659,6 +1714,24 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
 
         return False
 
+    def process_repair(self):
+
+        if self.current_work == "자동 사냥" and self.get_option('자동 사냥' + '_end_flag') is not True:
+            cfg_cooltime = int(self.get_game_config(lybconstant.LYB_DO_STRING_L2M_ETC + 'repair_item_cooltime'))
+            if cfg_cooltime != 0:
+                elapsed_time = time.time() - self.get_checkpoint('repair_item')
+
+                if elapsed_time > self.period_bot(81640):
+                    self.set_checkpoint('repair_item', time.time() + self.period_bot(10))
+                elif elapsed_time > cfg_cooltime:
+                    self.set_checkpoint('repair_item')
+                    if self.is_open_repair() is not True:
+                        pb_name = 'main_scene_item_1'
+                        self.lyb_mouse_click(pb_name, custom_threshold=0)
+                        return True
+
+        return False
+
     def process_auto(self):
         inner_status = self.get_option(self.current_work + '_inner_status')
         if inner_status is None:
@@ -1703,6 +1776,24 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
         )
         # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
         if loc_x != -1:
+            return True
+
+        return False
+
+    def is_open_repair(self):
+        pb_name = 'main_scene_repair'
+        match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
+        # self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
+        if match_rate > 0.75:
+            return True
+
+        return False
+
+    def is_open_gabang(self):
+        pb_name = 'main_scene_gabang'
+        match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
+        # self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
+        if match_rate > 0.75:
             return True
 
         return False
@@ -1774,6 +1865,15 @@ class LYBL2MScene(likeyoubot_scene.LYBScene):
 
     def is_recover_cross_active(self):
         pb_name = 'main_scene_recover_cross_active'
+        match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
+        # self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
+        if match_rate > 0.9:
+            return True
+
+        return False
+
+    def is_repair_enable(self):
+        pb_name = 'main_scene_repair_enable'
         match_rate = self.game_object.rateMatchedPixelBox(self.window_pixels, pb_name)
         # self.logger.debug(pb_name + ' ' + str(round(match_rate, 2)))
         if match_rate > 0.9:
