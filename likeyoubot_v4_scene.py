@@ -606,7 +606,8 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                     self.status = 100
                     return self.status
             self.set_option('last_status', self.status)
-            self.status = 40
+            self.status = 60
+
         elif 10 <= self.status < 20:
             self.status += 1
             resource_name = 'shop_scene_list_소환수_loc'
@@ -624,11 +625,34 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 if loc_x != -1:
                     self.lyb_mouse_click_location(loc_x, loc_y)
                     self.set_option('last_status', 20)
-                    self.status = 100
+                    self.status = 120
                     return self.status
             self.set_option('last_status', self.status)
-            self.status = 40
+            self.status = 60
+
         elif 20 <= self.status < 30:
+            self.status += 1
+            resource_name = 'shop_scene_list_동료_loc'
+            for each in rect_list:
+                (loc_x, loc_y), match_rate = self.game_object.locationResourceOnWindowPart(
+                    self.window_image,
+                    resource_name,
+                    custom_rect=each,
+                    custom_threshold=0.85,
+                    custom_flag=1,
+                    average=False,
+                    debug=True,
+                )
+                self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
+                if loc_x != -1:
+                    self.lyb_mouse_click_location(loc_x, loc_y)
+                    self.set_option('last_status', 30)
+                    self.status = 140
+                    return self.status
+            self.set_option('last_status', self.status)
+            self.status = 60
+
+        elif 30 <= self.status < 40:
             self.status += 1
             resource_name = 'shop_scene_list_일일 한정_loc'
             for each in rect_list:
@@ -645,11 +669,12 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 if loc_x != -1:
                     self.lyb_mouse_click_location(loc_x, loc_y)
                     self.set_option('last_status', 99999)
-                    self.status = 100
+                    self.status = 160
                     return self.status
             self.set_option('last_status', self.status)
-            self.status = 40
-        elif self.status == 40:
+            self.status = 60
+
+        elif self.status == 60:
             if self.get_option('drag_direction') is not True:
                 self.lyb_mouse_drag('shop_scene_list_drag_bot', 'shop_scene_list_drag_top', stop_delay=0.0)
                 self.set_option('drag_direction', True)
@@ -657,17 +682,17 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.lyb_mouse_drag('shop_scene_list_drag_top', 'shop_scene_list_drag_bot', stop_delay=0.0)
                 self.set_option('drag_direction', False)
             self.status += 1
-        elif 41 <= self.status < 43:
+        elif 61 <= self.status < 63:
             self.status += 1
-        elif self.status == 43:
+        elif self.status == 63:
             self.status = self.get_option('last_status')
         elif self.status == 100:
             self.set_option('content_drag', False)
             self.status += 1
-        elif 101 <= self.status < 120:
+        elif 101 <= self.status < 110:
             self.status += 1
             if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_tal_gotcha') is True:
-                resource_name = 'shop_scene_화려한 탈것 소환_loc'
+                resource_name = 'shop_scene_눈부신 탈것 소환_loc'
                 elapsed_time = time.time() - self.get_checkpoint(resource_name)
                 if elapsed_time > self.period_bot(3600) and self.click_shop_resource(resource_name):
                     self.set_checkpoint(resource_name)
@@ -679,13 +704,28 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                     self.set_checkpoint(resource_name)
                     self.game_object.get_scene('sangpum_gume_scene').set_checkpoint('clicked')
                     return self.status
-                resource_name = 'shop_scene_눈부신 탈것 소환_loc'
+                resource_name = 'shop_scene_화려한 탈것 소환_loc'
                 elapsed_time = time.time() - self.get_checkpoint(resource_name)
                 if elapsed_time > self.period_bot(3600) and self.click_shop_resource(resource_name):
                     self.set_checkpoint(resource_name)
                     self.game_object.get_scene('sangpum_gume_scene').set_checkpoint('clicked')
                     return self.status
+            if self.get_option('content_drag') is not True:
+                self.set_option('content_drag', True)
+                self.lyb_mouse_drag('shop_scene_drag_right', 'shop_scene_drag_left', stop_delay=1.0)
+                self.status = 110
+            else:
+                self.status = self.get_option('last_status')
+        elif self.status == 110:
+            self.status += 1
+        elif self.status == 111:
+            self.status = 101
 
+        elif self.status == 120:
+            self.set_option('content_drag', False)
+            self.status += 1
+        elif 121 <= self.status < 130:
+            self.status += 1
             if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'shop_gold_pet_gotcha') is True:
                 resource_name = 'shop_scene_화려한 소환수 부화_loc'
                 elapsed_time = time.time() - self.get_checkpoint(resource_name)
@@ -706,28 +746,66 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                     self.game_object.get_scene('sangpum_gume_scene').set_checkpoint('clicked')
                     return self.status
 
-            if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'shop_sang_potion') is True:
-                resource_name = 'shop_scene_상급 축복의 물약_loc'
-                elapsed_time = time.time() - self.get_checkpoint(resource_name)
-                if elapsed_time > self.period_bot(3600) and self.click_shop_resource(resource_name):
-                    self.set_checkpoint(resource_name)
-                    self.game_object.get_scene('sangpum_gume_scene').set_checkpoint('clicked')
-                    return self.status
-                resource_name = 'shop_scene_빛나는 흔적 상자_loc'
-                elapsed_time = time.time() - self.get_checkpoint(resource_name)
-                if elapsed_time > self.period_bot(3600) and self.click_shop_resource(resource_name):
-                    self.set_checkpoint(resource_name)
-                    self.game_object.get_scene('sangpum_gume_scene').set_checkpoint('clicked')
-                    return self.status
+            if self.get_option('content_drag') is not True:
+                self.set_option('content_drag', True)
+                self.lyb_mouse_drag('shop_scene_drag_right', 'shop_scene_drag_left', stop_delay=1.0)
+                self.status = 130
+            else:
+                self.status = self.get_option('last_status')
+        elif self.status == 130:
+            self.status += 1
+        elif self.status == 131:
+            self.status = 121
 
+        elif self.status == 140:
+            self.set_option('content_drag', False)
+            self.status += 1
+        elif 141 <= self.status < 150:
+            self.status += 1
             if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'shop_fellow_gotcha') is True:
+                resource_name = 'shop_scene_리노어 동료 계약서_loc'
+                elapsed_time = time.time() - self.get_checkpoint(resource_name)
+                if elapsed_time > self.period_bot(3600) and self.click_shop_resource(resource_name):
+                    self.set_checkpoint(resource_name)
+                    self.game_object.get_scene('sangpum_gume_scene').set_checkpoint('clicked')
+                    return self.status
                 resource_name = 'shop_scene_화려한 동료 계약서_loc'
                 elapsed_time = time.time() - self.get_checkpoint(resource_name)
                 if elapsed_time > self.period_bot(3600) and self.click_shop_resource(resource_name):
                     self.set_checkpoint(resource_name)
                     self.game_object.get_scene('sangpum_gume_scene').set_checkpoint('clicked')
                     return self.status
-                resource_name = 'shop_scene_리노어 동료 계약서_loc'
+            if self.get_option('content_drag') is not True:
+                self.set_option('content_drag', True)
+                self.lyb_mouse_drag('shop_scene_drag_right', 'shop_scene_drag_left', stop_delay=1.0)
+                self.status = 150
+            else:
+                self.status = self.get_option('last_status')
+        elif self.status == 150:
+            self.status += 1
+        elif self.status == 151:
+            self.status = 141
+
+        elif self.status == 160:
+            self.set_option('content_drag', False)
+            self.status += 1
+        elif 161 <= self.status < 180:
+            self.status += 1
+            if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'shop_sang_potion') is True:
+                resource_name = 'shop_scene_빛나는 흔적 상자_loc'
+                count = self.get_option(resource_name + '_count')
+                if count is None:
+                    count = 0
+                elapsed_time = time.time() - self.get_checkpoint(resource_name)
+                if elapsed_time > self.period_bot(3600) and self.click_shop_resource(resource_name):
+                    if count == 10:
+                        self.set_checkpoint(resource_name)
+                        self.set_option(resource_name + '_count', 0)
+                    else:
+                        self.set_option(resource_name + '_count', count + 1)
+                    self.game_object.get_scene('sangpum_gume_scene').set_checkpoint('clicked')
+                    return self.status
+                resource_name = 'shop_scene_상급 축복의 물약_loc'
                 elapsed_time = time.time() - self.get_checkpoint(resource_name)
                 if elapsed_time > self.period_bot(3600) and self.click_shop_resource(resource_name):
                     self.set_checkpoint(resource_name)
@@ -781,14 +859,15 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
 
             if self.get_option('content_drag') is not True:
                 self.set_option('content_drag', True)
-                self.lyb_mouse_drag('shop_scene_drag_right', 'shop_scene_drag_left', stop_delay=0.0)
-                self.status = 130
+                self.lyb_mouse_drag('shop_scene_drag_right', 'shop_scene_drag_left', stop_delay=1.0)
+                self.status = 180
             else:
                 self.status = self.get_option('last_status')
-        elif self.status == 130:
+        elif self.status == 180:
             self.status += 1
-        elif self.status == 131:
-            self.status = 101
+        elif self.status == 181:
+            self.status = 161
+
         else:
             if self.scene_name + '_close_icon' in self.game_object.resource_manager.pixel_box_dic:
                 self.lyb_mouse_click(self.scene_name + '_close_icon', custom_threshold=0)
@@ -1388,10 +1467,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.status += 1
         elif 1 <= self.status < 10:
             self.status += 1
-            # TODO 잠재력 모드 추가
             cfg_jamjeryeok_mode = self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'jamjeryeok_mode')
-            # TODO 잠재력모드 인내 강제설정
-            # cfg_jamjeryeok_mode = '인내'
             if cfg_jamjeryeok_mode == '투지':
                 self.lyb_mouse_click('jamjeryeok_scene_select_tuzi', custom_threshold=0)
             elif cfg_jamjeryeok_mode == '인내':
@@ -4133,9 +4209,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.game_object.get_scene('shop_scene').status = 0
                 self.set_checkpoint('shop_check', time.time() + self.period_bot(36000))
                 return True
-        # TODO 아이템 복구 옵션 활성화 & 자동장착 활성화시 300초마다 아이템 자동장착
         cfg_recover_item = self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'recover_item')
-        # TODO 아이템 복구 옵션 강제 활성화
         if cfg_recover_item is True:
             elapsed_time = time.time() - self.get_checkpoint('recover_item')
             if elapsed_time > self.period_bot(30):
@@ -4153,13 +4227,13 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 )
                 self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
                 if loc_x != -1:
-                        self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
-                        self.game_object.get_scene('menu_scene').status = 110
-                        self.game_object.get_scene('gabang_scene').set_option('equip', True)
-                        self.game_object.get_scene('gabang_scene').status = 0
-                        self.set_option('go_jeoljeon', 0)
-                        # self.game_object.interval = self.period_bot(5)
-                        return True
+                    self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
+                    self.game_object.get_scene('menu_scene').status = 110
+                    self.game_object.get_scene('gabang_scene').set_option('equip', True)
+                    self.game_object.get_scene('gabang_scene').status = 0
+                    self.set_option('go_jeoljeon', 0)
+                    # self.game_object.interval = self.period_bot(5)
+                    return True
 
         return False
 
@@ -4456,7 +4530,14 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
 
     def click_event(self):
         cfg_fellow = self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'fellow_event_check')
-        if cfg_fellow is True:
+        cfg_fellow = True
+        cfg_world_map = self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_area')
+        if (cfg_world_map != '루나트라' or cfg_world_map != '몽환의 틈') and cfg_fellow is True:
+            fellow = True
+        else:
+            fellow = False
+
+        if fellow is True:
             pb_name = 'main_scene_event_new'
             (loc_x, loc_y), match_rate = self.game_object.locationOnWindowPart(
                 self.window_image,
