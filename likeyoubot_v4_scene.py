@@ -4167,9 +4167,9 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             if self.click_party_decline():
                 return True
 
-        if self.is_main_quest_complete():
-            self.set_option('go_jeoljeon', 0)
-            return True
+        # if self.is_main_quest_complete():
+        #     self.set_option('go_jeoljeon', 0)
+        #     return True
 
         if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'quest_tobeol'):
             cfg_tobeol_period = int(self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'quest_tobeol_period'))
