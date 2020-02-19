@@ -115,7 +115,9 @@ try:
 except FileNotFoundError:
     dogfooter_logger.error(str(sys.exc_info()[0]) + '(' + str(sys.exc_info()[1]) + ')')
 
-configure.merge()
+configure.setGeometry(800, 700, 0, 0)
+
+# configure.merge()
 root.update()
 
 # if lybconstant.LYB_DO_BOOLEAN_LOG_LEVEL + 'remove' in configure.common_config:
