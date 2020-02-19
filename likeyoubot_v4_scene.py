@@ -1987,9 +1987,10 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.logger.debug(pb_name + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
             if loc_x != -1:
                 self.lyb_mouse_click_location(loc_x, loc_y)
+                self.set_option('last_status', self.status)
         elif 2002 <= self.status < 2020:
             self.status += 1
-            if self.fail_to_detect_m(limit=2) is True:
+            if self.fail_to_detect_m(limit=5) is True:
                 pb_name = 'local_map_scene_follow'
                 (loc_x, loc_y), match_rate = self.game_object.locationOnWindowPart(
                     self.window_image,
@@ -2011,8 +2012,9 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 else:
                     self.status = 99999
         elif self.status == 2025:
-            (loc_x, loc_y) = self.get_option('last_follow_location')
-            self.lyb_mouse_click_location(loc_x, loc_y)
+            if self.fail_to_detect_m(limit=5) is True:
+                (loc_x, loc_y) = self.get_option('last_follow_location')
+                self.lyb_mouse_click_location(loc_x, loc_y)
             self.status = self.get_option('last_status')
         elif 2030 <= self.status < 2500:
             self.status += 1
