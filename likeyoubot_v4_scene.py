@@ -4033,7 +4033,16 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                     self.status = self.last_status[self.current_work] + 1
 
                 self.set_option('loop_count', loop_count + 1)
-
+        # TODO [복귀 시작] 기능 추가
+        elif self.status == self.get_work_status('[복귀 시작]'):
+            self.logger.warn('[복귀 시작] 기능 무시 다음 작업을 수행합니다')
+            self.status = self.last_status[self.current_work] + 1
+        # ------------------------------------------------------
+        # TODO [복귀 종료] 기능 추가
+        elif self.status == self.get_work_status('[복귀 종료]'):
+            self.logger.warn('[복귀 시작] 기능 무시 다음 작업을 수행합니다')
+            self.status = self.last_status[self.current_work] + 1
+        # ------------------------------------------------------
         else:
             self.status = self.last_status[self.current_work] + 1
 
@@ -4537,7 +4546,6 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
 
     def click_event(self):
         cfg_fellow = self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'fellow_event_check')
-        cfg_fellow = True
         cfg_world_map = self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'jido_move_area')
         if (cfg_world_map != '루나트라' or cfg_world_map != '몽환의 틈') and cfg_fellow is True:
             fellow = True
