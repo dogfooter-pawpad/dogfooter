@@ -792,19 +792,19 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
         elif 161 <= self.status < 180:
             self.status += 1
             if self.get_game_config(lybconstant.LYB_DO_STRING_V4_ETC + 'shop_sang_potion') is True:
-                resource_name = 'shop_scene_빛나는 흔적 상자_loc'
-                count = self.get_option(resource_name + '_count')
-                if count is None:
-                    count = 0
-                elapsed_time = time.time() - self.get_checkpoint(resource_name)
-                if elapsed_time > self.period_bot(3600) and self.click_shop_resource(resource_name):
-                    if count == 10:
-                        self.set_checkpoint(resource_name)
-                        self.set_option(resource_name + '_count', 0)
-                    else:
-                        self.set_option(resource_name + '_count', count + 1)
-                    self.game_object.get_scene('sangpum_gume_scene').set_checkpoint('clicked')
-                    return self.status
+                # resource_name = 'shop_scene_빛나는 흔적 상자_loc'
+                # count = self.get_option(resource_name + '_count')
+                # if count is None:
+                #     count = 0
+                # elapsed_time = time.time() - self.get_checkpoint(resource_name)
+                # if elapsed_time > self.period_bot(3600) and self.click_shop_resource(resource_name):
+                #     if count == 10:
+                #         self.set_checkpoint(resource_name)
+                #         self.set_option(resource_name + '_count', 0)
+                #     else:
+                #         self.set_option(resource_name + '_count', count + 1)
+                #     self.game_object.get_scene('sangpum_gume_scene').set_checkpoint('clicked')
+                #     return self.status
                 resource_name = 'shop_scene_상급 축복의 물약_loc'
                 elapsed_time = time.time() - self.get_checkpoint(resource_name)
                 if elapsed_time > self.period_bot(3600) and self.click_shop_resource(resource_name):
