@@ -1211,7 +1211,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                     custom_flag=1,
                     custom_top_level=(220, 60, 60),
                     custom_below_level=(130, 40, 40),
-                    custom_rect=(230, 80, 740, 485)
+                    custom_rect=(170, 80, 800, 540)
                 )
                 self.logger.debug(each + ' ' + str((loc_x, loc_y)) + ' ' + str(round(match_rate, 2)))
                 if loc_x != -1:
@@ -3305,11 +3305,17 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             self.status += 1
         elif self.status == 1:
             self.lyb_mouse_click(self.scene_name + '_touch', custom_threshold=0)
+            # TODO 쿵야님이 추가한거
+            self.lyb_mouse_click_location(26, 553)
+            # -------------------------------------
             self.status += 1
         elif 2 <= self.status < 6:
             self.status += 1
         elif self.status == 6:
             self.lyb_mouse_click(self.scene_name + '_touch', custom_threshold=0)
+            # TODO 쿵야님이 추가한거
+            self.lyb_mouse_click_location(26, 553)
+            # -------------------------------------
             self.status += 1
         elif 7 <= self.status < 10:
             self.status += 1
@@ -3463,19 +3469,19 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                         self.set_option(self.current_work + '_inner_status', inner_status + 1)
                         return True
 
-                    go_jeoljeon = self.get_option('go_jeoljeon')
-                    self.logger.debug('go_jeoljeon ' + str(go_jeoljeon))
-                    if go_jeoljeon == 5:
+                    cfg_go_jeoljeon = self.get_option('go_jeoljeon')
+                    self.logger.debug('go_jeoljeon ' + str(cfg_go_jeoljeon))
+                    if cfg_go_jeoljeon == 5:
                         self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
                         self.game_object.get_scene('menu_scene').status = 200
-                        go_jeoljeon = 0
-                    elif go_jeoljeon == 9:
-                        go_jeoljeon = 0
-                    elif go_jeoljeon == 10:
+                        cfg_go_jeoljeon = 0
+                    elif cfg_go_jeoljeon == 9:
+                        cfg_go_jeoljeon = 0
+                    elif cfg_go_jeoljeon == 10:
                         self.set_option(self.current_work + '_auto_ok', False)
-                        go_jeoljeon = 0
+                        cfg_go_jeoljeon = 0
 
-                    self.set_option('go_jeoljeon', go_jeoljeon + 1)
+                    self.set_option('go_jeoljeon', cfg_go_jeoljeon + 1)
 
                 self.set_option(self.current_work + '_inner_status', inner_status + 1)
 
@@ -3538,14 +3544,14 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                         self.set_option(self.current_work + '_inner_status', inner_status + 1)
                         return True
 
-                    go_jeoljeon = self.get_option('go_jeoljeon')
-                    if go_jeoljeon == 5:
+                    cfg_go_jeoljeon = self.get_option('go_jeoljeon')
+                    if cfg_go_jeoljeon == 5:
                         self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
                         self.game_object.get_scene('menu_scene').status = 400
-                        go_jeoljeon = 0
-                    elif go_jeoljeon == 10:
+                        cfg_go_jeoljeon = 0
+                    elif cfg_go_jeoljeon == 10:
                         self.set_option(self.current_work + '_move_ok', False)
-                    self.set_option('go_jeoljeon', go_jeoljeon + 1)
+                    self.set_option('go_jeoljeon', cfg_go_jeoljeon + 1)
                 else:
                     self.set_option(self.current_work + '_move_ok', False)
 
@@ -3592,7 +3598,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                             if self.is_not_auto2():
                                 self.lyb_mouse_click('main_scene_auto', custom_threshold=0)
 
-                    go_jeoljeon = self.get_option('go_jeoljeon')
+                    cfg_go_jeoljeon = self.get_option('go_jeoljeon')
 
                     if self.is_main_quest_complete():
                         self.set_option('go_jeoljeon', 0)
@@ -3609,14 +3615,14 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                         self.set_option(self.current_work + '_inner_status', inner_status + 1)
                         return True
 
-                    if go_jeoljeon == 5:
+                    if cfg_go_jeoljeon == 5:
                         self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
                         self.game_object.get_scene('menu_scene').status = 400
-                        go_jeoljeon = 0
-                    elif go_jeoljeon == 10:
+                        cfg_go_jeoljeon = 0
+                    elif cfg_go_jeoljeon == 10:
                         inner_status = 2
                         self.set_option(self.current_work + '_move_ok', False)
-                    self.set_option('go_jeoljeon', go_jeoljeon + 1)
+                    self.set_option('go_jeoljeon', cfg_go_jeoljeon + 1)
                 else:
                     inner_status = 2
                     self.set_option(self.current_work + '_move_ok', False)
@@ -3723,16 +3729,16 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                     self.game_object.get_scene('menu_scene').status = 600
                     self.set_option('go_jeoljeon', 0)
             elif 10 <= inner_status < 60:
-                go_jeoljeon = self.get_option('go_jeoljeon')
-                if go_jeoljeon == 5:
+                cfg_go_jeoljeon = self.get_option('go_jeoljeon')
+                if cfg_go_jeoljeon == 5:
                     self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
                     self.game_object.get_scene('menu_scene').status = 200
-                    go_jeoljeon = 0
+                    cfg_go_jeoljeon = 0
 
                 if self.get_option('go_jeoljeon') == 10:
                     inner_status = 0
                 else:
-                    self.set_option('go_jeoljeon', go_jeoljeon + 1)
+                    self.set_option('go_jeoljeon', cfg_go_jeoljeon + 1)
             else:
                 inner_status = 0
 
@@ -3813,16 +3819,17 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                             if self.is_not_auto2():
                                 self.lyb_mouse_click('main_scene_auto', custom_threshold=0)
                 elif 20 <= inner_status < 150:
-                    go_jeoljeon = self.get_option('go_jeoljeon')
-                    if go_jeoljeon == 5:
+                    cfg_go_jeoljeon = self.get_option('go_jeoljeon')
+                    if cfg_go_jeoljeon == 5:
                         self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
                         self.game_object.get_scene('menu_scene').status = 2000
-                        go_jeoljeon = 0
-                    elif go_jeoljeon == 10:
+                        cfg_go_jeoljeon = 0
+                    elif cfg_go_jeoljeon == 10:
                         self.set_option(self.current_work + '_move_ok', False)
-                    elif go_jeoljeon == 99:
+                    elif cfg_go_jeoljeon == 99:
                         self.set_option(self.current_work + '_end_flag', True)
-                    self.set_option('go_jeoljeon', go_jeoljeon + 1)
+                    self.set_option('go_jeoljeon', cfg_go_jeoljeon + 1)
+
                 else:
                     self.set_option(self.current_work + '_move_ok', False)
 
@@ -3877,23 +3884,23 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
 
                 cfg_auto_jeoljeon = int(self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'auto_jeoljeon'))
                 if cfg_auto_jeoljeon:
-                    go_jeoljeon = self.get_option('go_jeoljeon')
-                    self.logger.debug('go_jeoljeon ' + str(go_jeoljeon))
-                    if go_jeoljeon == 5:
+                    cfg_go_jeoljeon = self.get_option('go_jeoljeon')
+                    self.logger.debug('go_jeoljeon ' + str(cfg_go_jeoljeon))
+                    if cfg_go_jeoljeon == 5:
                         self.lyb_mouse_click('main_scene_menu', custom_threshold=0)
                         self.game_object.get_scene('menu_scene').status = 400
                         self.set_option('go_jeoljeon', 0)
                         return self.status
-                    elif go_jeoljeon == 9:
+                    elif cfg_go_jeoljeon == 9:
                         self.set_option('go_jeoljeon', 0)
-                    elif go_jeoljeon == 10:
+                    elif cfg_go_jeoljeon == 10:
                         if self.get_option('go_home') is not True and self.is_town() is not True:
                             # 자동사냥중인지 체크
                             if self.is_not_auto2():
                                 self.lyb_mouse_click('main_scene_auto', custom_threshold=0)
                         self.set_option('go_jeoljeon', 0)
                         return self.status
-                    self.set_option('go_jeoljeon', go_jeoljeon + 1)
+                    self.set_option('go_jeoljeon', cfg_go_jeoljeon + 1)
 
                 if self.get_option('go_home') is not True and self.is_town() is not True:
                     if self.is_not_auto2():
@@ -4517,7 +4524,7 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.window_image,
                 resource_name,
                 custom_rect=each,
-                custom_threshold=0.8,
+                custom_threshold=0.7,
                 custom_flag=1,
                 average=False
             )
