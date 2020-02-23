@@ -30,8 +30,6 @@ class LYBV4(lybgame.LYBGame):
         '마을 이동',
 
         '알림',
-        '[복귀 시작]',  #복귀기능 추가
-        '[복귀 종료]',  #복귀기능 추가
         '[반복 시작]',
         '[반복 종료]',
         '[작업 대기]',
@@ -196,28 +194,9 @@ class LYBV4(lybgame.LYBGame):
                 resource_name,
                 custom_threshold=0.75,
                 custom_flag=1,
-                custom_top_level=(255, 255, 140),
-                custom_below_level=(0, 0, 60),
-                custom_rect=(50, 530, 130, 550),
-            )
-            self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
-            if loc_x != -1:
-                self.get_scene('main_scene').set_checkpoint(resource_name)
-                self.logger.info('팝업: ' + str(round(match_rate, 2)))
-                self.get_scene('main_scene').lyb_mouse_click_location(loc_x, loc_y)
-                return resource_name
-
-        resource_name = 'popup_20200207_loc'
-        elapsed_time = time.time() - self.get_scene('main_scene').get_checkpoint(resource_name)
-        if elapsed_time > self.period_bot(30):
-            (loc_x, loc_y), match_rate = self.locationResourceOnWindowPart(
-                self.window_image,
-                resource_name,
-                custom_threshold=0.75,
-                custom_flag=1,
-                custom_top_level=(255, 255, 255),
-                custom_below_level=(80, 80, 80),
-                custom_rect=(50, 530, 130, 550),
+                custom_top_level=(200, 170, 170),
+                custom_below_level=(145, 110, 110),
+                custom_rect=(25, 510, 100, 560),
             )
             # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
             if loc_x != -1:
@@ -226,7 +205,7 @@ class LYBV4(lybgame.LYBGame):
                 self.get_scene('main_scene').lyb_mouse_click_location(loc_x, loc_y)
                 return resource_name
 
-        resource_name = 'popup_20200211_loc'
+        resource_name = 'popup_20200115_1_loc'
         elapsed_time = time.time() - self.get_scene('main_scene').get_checkpoint(resource_name)
         if elapsed_time > self.period_bot(30):
             (loc_x, loc_y), match_rate = self.locationResourceOnWindowPart(
@@ -234,9 +213,9 @@ class LYBV4(lybgame.LYBGame):
                 resource_name,
                 custom_threshold=0.75,
                 custom_flag=1,
-                custom_top_level=(255, 255, 255),
-                custom_below_level=(185, 191, 0),
-                custom_rect=(50, 530, 130, 550),
+                custom_top_level=(255, 100, 50),
+                custom_below_level=(140, 50, 20),
+                custom_rect=(25, 510, 100, 560),
             )
             # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
             if loc_x != -1:
@@ -245,7 +224,7 @@ class LYBV4(lybgame.LYBGame):
                 self.get_scene('main_scene').lyb_mouse_click_location(loc_x, loc_y)
                 return resource_name
 
-        resource_name = 'popup_20200211_1_loc'
+        resource_name = 'popup_20200121_loc'
         elapsed_time = time.time() - self.get_scene('main_scene').get_checkpoint(resource_name)
         if elapsed_time > self.period_bot(30):
             (loc_x, loc_y), match_rate = self.locationResourceOnWindowPart(
@@ -253,9 +232,7 @@ class LYBV4(lybgame.LYBGame):
                 resource_name,
                 custom_threshold=0.75,
                 custom_flag=1,
-                custom_top_level=(255, 255, 255),
-                custom_below_level=(160, 150, 100),
-                custom_rect=(50, 530, 130, 550),
+                custom_rect=(25, 510, 100, 560),
             )
             # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
             if loc_x != -1:
@@ -263,42 +240,6 @@ class LYBV4(lybgame.LYBGame):
                 self.logger.info('팝업: ' + str(round(match_rate, 2)))
                 self.get_scene('main_scene').lyb_mouse_click_location(loc_x, loc_y)
                 return resource_name
-
-        # resource_name = 'popup_20200115_1_loc'
-        # elapsed_time = time.time() - self.get_scene('main_scene').get_checkpoint(resource_name)
-        # if elapsed_time > self.period_bot(30):
-        #     (loc_x, loc_y), match_rate = self.locationResourceOnWindowPart(
-        #         self.window_image,
-        #         resource_name,
-        #         custom_threshold=0.75,
-        #         custom_flag=1,
-        #         custom_top_level=(255, 100, 50),
-        #         custom_below_level=(140, 50, 20),
-        #         custom_rect=(25, 510, 100, 560),
-        #     )
-        #     self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
-        #     if loc_x != -1:
-        #         self.get_scene('main_scene').set_checkpoint(resource_name)
-        #         self.logger.info('팝업: ' + str(round(match_rate, 2)))
-        #         self.get_scene('main_scene').lyb_mouse_click_location(loc_x, loc_y)
-        #         return resource_name
-        #
-        # resource_name = 'popup_20200121_loc'
-        # elapsed_time = time.time() - self.get_scene('main_scene').get_checkpoint(resource_name)
-        # if elapsed_time > self.period_bot(30):
-        #     (loc_x, loc_y), match_rate = self.locationResourceOnWindowPart(
-        #         self.window_image,
-        #         resource_name,
-        #         custom_threshold=0.75,
-        #         custom_flag=1,
-        #         custom_rect=(25, 510, 100, 560),
-        #     )
-        #     self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
-        #     if loc_x != -1:
-        #         self.get_scene('main_scene').set_checkpoint(resource_name)
-        #         self.logger.info('팝업: ' + str(round(match_rate, 2)))
-        #         self.get_scene('main_scene').lyb_mouse_click_location(loc_x, loc_y)
-        #         return resource_name
 
         resource_name = 'confirm_loc'
         elapsed_time = time.time() - self.get_scene('main_scene').get_checkpoint(resource_name)
@@ -789,23 +730,6 @@ class LYBV4Tab(lybgame.LYBGameTab):
         check_box.pack(anchor=tkinter.W, side=tkinter.LEFT)
         frame.pack(anchor=tkinter.W)
 
-        frame = ttk.Frame(frame_label)
-        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'recover_item'] = tkinter.BooleanVar(frame)
-        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'recover_item'].trace(
-            'w', lambda *args: self.recover_free(args, lybconstant.LYB_DO_STRING_V4_ETC + 'recover_item'))
-        if not lybconstant.LYB_DO_STRING_V4_ETC + 'recover_item' in self.configure.common_config[self.game_name]:
-            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_ETC + 'recover_item'] = False
-
-        check_box = ttk.Checkbutton(
-            master=frame,
-            text=self.get_option_text('아이템 복구하기', width=27),
-            variable=self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'recover_item'],
-            onvalue=True,
-            offvalue=False
-        )
-        check_box.pack(anchor=tkinter.W, side=tkinter.LEFT)
-        frame.pack(anchor=tkinter.W)
-
         frame_label.pack(anchor=tkinter.NW, padx=5, pady=5)
 
         frame_l.pack(side=tkinter.LEFT, anchor=tkinter.NW)
@@ -1138,23 +1062,6 @@ class LYBV4Tab(lybgame.LYBGameTab):
             master=frame,
             text=self.get_option_text('미니맵 우측 이벤트 알림 감지하기', width=27),
             variable=self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'event_check'],
-            onvalue=True,
-            offvalue=False
-        )
-        check_box.pack(anchor=tkinter.W, side=tkinter.LEFT)
-        frame.pack(anchor=tkinter.W)
-
-        frame = ttk.Frame(frame_label)
-        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'fellow_event_check'] = tkinter.BooleanVar(frame)
-        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'fellow_event_check'].trace(
-            'w', lambda *args: self.event_check(args, lybconstant.LYB_DO_STRING_V4_ETC + 'fellow_event_check'))
-        if not lybconstant.LYB_DO_STRING_V4_ETC + 'fellow_event_check' in self.configure.common_config[self.game_name]:
-            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_ETC + 'fellow_event_check'] = True
-
-        check_box = ttk.Checkbutton(
-            master=frame,
-            text=self.get_option_text('동료 이벤트 알림 감지하기', width=27),
-            variable=self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'fellow_event_check'],
             onvalue=True,
             offvalue=False
         )
@@ -1946,14 +1853,14 @@ class LYBV4Tab(lybgame.LYBGameTab):
             '소녀의 악몽 III',
             '상인의 소원 I',
             '상인의 소원 II',
-            # '수집가의 의뢰I',  # 필요없을듯
-            # '수집가의 의뢰II',  # 필요없을듯
-            '고독의 숲',
+            '광란의 숲',
+            '저주의 평야',
+            '상실의 숲',
             '환각의 사막',
             '파멸의 화산',
             '허상의 고원',
-            # '오만의 평야',  # 투력되면 추가
-            # '좌절의 숲',  # 투력되면 추가
+            '오만의 평야',
+            '좌절의 숲',
         ]
 
         if not lybconstant.LYB_DO_STRING_V4_WORK + 'monster_josa_area' in self.configure.common_config[self.game_name]:
@@ -2640,43 +2547,6 @@ class LYBV4Tab(lybgame.LYBGameTab):
         combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
         frame.pack(anchor=tkinter.W)
 
-        # 잠재력 모드 시작 ----------------
-        frame = ttk.Frame(frame_label)
-        label = ttk.Label(
-            master=frame,
-            text=self.get_option_text('잠재력 모드', width=15)
-        )
-        label.pack(side=tkinter.LEFT)
-
-        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'jamjeryeok_mode'] = tkinter.StringVar(frame)
-        self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'jamjeryeok_mode'].trace(
-            'w', lambda *args: self.hyusik_bosang(args, lybconstant.LYB_DO_STRING_V4_ETC + 'jamjeryeok_mode')
-        )
-        combobox_list = [
-            '투지',
-            '인내',
-            '통찰',
-            '의지',
-        ]
-
-        if not lybconstant.LYB_DO_STRING_V4_ETC + 'jamjeryeok_mode' in self.configure.common_config[self.game_name]:
-            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_ETC + 'jamjeryeok_mode'] = \
-                combobox_list[0]
-
-        combobox = ttk.Combobox(
-            master=frame,
-            values=combobox_list,
-            textvariable=self.option_dic[lybconstant.LYB_DO_STRING_V4_ETC + 'jamjeryeok_mode'],
-            state="readonly",
-            height=10,
-            width=7,
-            font=lybconstant.LYB_FONT
-        )
-        combobox.set(self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_ETC + 'jamjeryeok_mode'])
-        combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
-        frame.pack(anchor=tkinter.W)
-        # 잠재력 모드 끝----------------------------------
-
         frame = ttk.Frame(frame_label)
         label = ttk.Label(
             master=frame,
@@ -2711,41 +2581,6 @@ class LYBV4Tab(lybgame.LYBGameTab):
                          lybconstant.LYB_DO_STRING_V4_WORK + 'auto_jamjeryeok_duration'])
         combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
         frame.pack(anchor=tkinter.W)
-
-        # 영혼석 ------------------------
-        frame = ttk.Frame(frame_label)
-        label = ttk.Label(
-            master=frame,
-            text=self.get_option_text('영혼석 주기(초)', width=15)
-        )
-        label.pack(side=tkinter.LEFT)
-
-        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'auto_soul_duration'] = tkinter.StringVar(frame)
-        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'auto_soul_duration'].trace(
-            'w', lambda *args: self.auto_soul_duration(args,lybconstant.LYB_DO_STRING_V4_WORK + 'auto_soul_duration')
-        )
-        combobox_list = []
-        for i in range(0, 500, 10):
-            combobox_list.append(str(i))
-
-        if not lybconstant.LYB_DO_STRING_V4_WORK + 'auto_soul_duration' in self.configure.common_config[self.game_name]:
-            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_WORK + 'auto_soul_duration'] = 300
-
-        combobox = ttk.Combobox(
-            master=frame,
-            values=combobox_list,
-            textvariable=self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'auto_soul_duration'],
-            state="readonly",
-            height=10,
-            width=7,
-            font=lybconstant.LYB_FONT
-        )
-        combobox.set(self.configure.common_config[self.game_name][
-                         lybconstant.LYB_DO_STRING_V4_WORK + 'auto_soul_duration'])
-        combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
-        frame.pack(anchor=tkinter.W)
-
-        # 영혼석 끝 ----------------
 
         frame_label.pack(anchor=tkinter.NW, padx=5, pady=5)
 
