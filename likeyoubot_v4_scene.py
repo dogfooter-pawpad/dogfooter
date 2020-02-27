@@ -232,7 +232,6 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
         return self.status
 
     def stash_scene(self):
-
         if self.status == 0:
             self.logger.info('scene: ' + self.scene_name)
             self.set_option('page_number', 1)
@@ -3560,7 +3559,6 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
                 self.set_option(self.current_work + '_inner_status', inner_status + 1)
 
         elif self.status == self.get_work_status('몽환의 틈'):
-
             if self.get_option(self.current_work + '_end_flag'):
                 self.set_option(self.current_work + '_end_flag', False)
                 self.set_option(self.current_work + '_inner_status', None)
@@ -3931,7 +3929,6 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
         elif self.status == self.get_work_status('마을 이동'):
             cfg_duration = int(self.get_game_config(lybconstant.LYB_DO_STRING_V4_WORK + 'go_home_duration'))
             elapsed_time = self.get_elapsed_time()
-
             if elapsed_time > self.period_bot(cfg_duration):
                 self.set_option(self.current_work + '_end_flag', True)
 
@@ -4029,7 +4026,6 @@ class LYBV4Scene(likeyoubot_scene.LYBScene):
             else:
                 self.status = self.get_option('loop_start')
                 # print('DEBUG LOOP STATUS = ', self.status )
-
                 if self.status is None:
                     self.logger.debug('[반복 시작] 점을 찾지 못해서 다음 작업을 수행합니다')
                     self.status = self.last_status[self.current_work] + 1
