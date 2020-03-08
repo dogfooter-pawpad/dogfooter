@@ -30,8 +30,6 @@ class LYBV4(lybgame.LYBGame):
         '마을 이동',
 
         '알림',
-        '[복귀 시작]',  #복귀기능 추가
-        '[복귀 종료]',  #복귀기능 추가
         '[반복 시작]',
         '[반복 종료]',
         '[작업 대기]',
@@ -187,118 +185,6 @@ class LYBV4(lybgame.LYBGame):
                 self.logger.info('팝업: ' + str(round(match_rate, 2)))
                 self.get_scene('main_scene').lyb_mouse_click_location(loc_x, loc_y)
                 return resource_name
-
-        resource_name = 'popup_20200115_loc'
-        elapsed_time = time.time() - self.get_scene('main_scene').get_checkpoint(resource_name)
-        if elapsed_time > self.period_bot(30):
-            (loc_x, loc_y), match_rate = self.locationResourceOnWindowPart(
-                self.window_image,
-                resource_name,
-                custom_threshold=0.75,
-                custom_flag=1,
-                custom_top_level=(255, 255, 140),
-                custom_below_level=(0, 0, 60),
-                custom_rect=(50, 530, 130, 550),
-            )
-            self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
-            if loc_x != -1:
-                self.get_scene('main_scene').set_checkpoint(resource_name)
-                self.logger.info('팝업: ' + str(round(match_rate, 2)))
-                self.get_scene('main_scene').lyb_mouse_click_location(loc_x, loc_y)
-                return resource_name
-
-        resource_name = 'popup_20200207_loc'
-        elapsed_time = time.time() - self.get_scene('main_scene').get_checkpoint(resource_name)
-        if elapsed_time > self.period_bot(30):
-            (loc_x, loc_y), match_rate = self.locationResourceOnWindowPart(
-                self.window_image,
-                resource_name,
-                custom_threshold=0.75,
-                custom_flag=1,
-                custom_top_level=(255, 255, 255),
-                custom_below_level=(80, 80, 80),
-                custom_rect=(50, 530, 130, 550),
-            )
-            # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
-            if loc_x != -1:
-                self.get_scene('main_scene').set_checkpoint(resource_name)
-                self.logger.info('팝업: ' + str(round(match_rate, 2)))
-                self.get_scene('main_scene').lyb_mouse_click_location(loc_x, loc_y)
-                return resource_name
-
-        resource_name = 'popup_20200211_loc'
-        elapsed_time = time.time() - self.get_scene('main_scene').get_checkpoint(resource_name)
-        if elapsed_time > self.period_bot(30):
-            (loc_x, loc_y), match_rate = self.locationResourceOnWindowPart(
-                self.window_image,
-                resource_name,
-                custom_threshold=0.75,
-                custom_flag=1,
-                custom_top_level=(255, 255, 255),
-                custom_below_level=(185, 191, 0),
-                custom_rect=(50, 530, 130, 550),
-            )
-            # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
-            if loc_x != -1:
-                self.get_scene('main_scene').set_checkpoint(resource_name)
-                self.logger.info('팝업: ' + str(round(match_rate, 2)))
-                self.get_scene('main_scene').lyb_mouse_click_location(loc_x, loc_y)
-                return resource_name
-
-        resource_name = 'popup_20200211_1_loc'
-        elapsed_time = time.time() - self.get_scene('main_scene').get_checkpoint(resource_name)
-        if elapsed_time > self.period_bot(30):
-            (loc_x, loc_y), match_rate = self.locationResourceOnWindowPart(
-                self.window_image,
-                resource_name,
-                custom_threshold=0.75,
-                custom_flag=1,
-                custom_top_level=(255, 255, 255),
-                custom_below_level=(160, 150, 100),
-                custom_rect=(50, 530, 130, 550),
-            )
-            # self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
-            if loc_x != -1:
-                self.get_scene('main_scene').set_checkpoint(resource_name)
-                self.logger.info('팝업: ' + str(round(match_rate, 2)))
-                self.get_scene('main_scene').lyb_mouse_click_location(loc_x, loc_y)
-                return resource_name
-
-        # resource_name = 'popup_20200115_1_loc'
-        # elapsed_time = time.time() - self.get_scene('main_scene').get_checkpoint(resource_name)
-        # if elapsed_time > self.period_bot(30):
-        #     (loc_x, loc_y), match_rate = self.locationResourceOnWindowPart(
-        #         self.window_image,
-        #         resource_name,
-        #         custom_threshold=0.75,
-        #         custom_flag=1,
-        #         custom_top_level=(255, 100, 50),
-        #         custom_below_level=(140, 50, 20),
-        #         custom_rect=(25, 510, 100, 560),
-        #     )
-        #     self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
-        #     if loc_x != -1:
-        #         self.get_scene('main_scene').set_checkpoint(resource_name)
-        #         self.logger.info('팝업: ' + str(round(match_rate, 2)))
-        #         self.get_scene('main_scene').lyb_mouse_click_location(loc_x, loc_y)
-        #         return resource_name
-        #
-        # resource_name = 'popup_20200121_loc'
-        # elapsed_time = time.time() - self.get_scene('main_scene').get_checkpoint(resource_name)
-        # if elapsed_time > self.period_bot(30):
-        #     (loc_x, loc_y), match_rate = self.locationResourceOnWindowPart(
-        #         self.window_image,
-        #         resource_name,
-        #         custom_threshold=0.75,
-        #         custom_flag=1,
-        #         custom_rect=(25, 510, 100, 560),
-        #     )
-        #     self.logger.debug(resource_name + ' ' + str((loc_x, loc_y)) + ' ' + str(match_rate))
-        #     if loc_x != -1:
-        #         self.get_scene('main_scene').set_checkpoint(resource_name)
-        #         self.logger.info('팝업: ' + str(round(match_rate, 2)))
-        #         self.get_scene('main_scene').lyb_mouse_click_location(loc_x, loc_y)
-        #         return resource_name
 
         resource_name = 'confirm_loc'
         elapsed_time = time.time() - self.get_scene('main_scene').get_checkpoint(resource_name)
@@ -2711,41 +2597,6 @@ class LYBV4Tab(lybgame.LYBGameTab):
                          lybconstant.LYB_DO_STRING_V4_WORK + 'auto_jamjeryeok_duration'])
         combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
         frame.pack(anchor=tkinter.W)
-
-        # 영혼석 ------------------------
-        frame = ttk.Frame(frame_label)
-        label = ttk.Label(
-            master=frame,
-            text=self.get_option_text('영혼석 주기(초)', width=15)
-        )
-        label.pack(side=tkinter.LEFT)
-
-        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'auto_soul_duration'] = tkinter.StringVar(frame)
-        self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'auto_soul_duration'].trace(
-            'w', lambda *args: self.auto_soul_duration(args,lybconstant.LYB_DO_STRING_V4_WORK + 'auto_soul_duration')
-        )
-        combobox_list = []
-        for i in range(0, 500, 10):
-            combobox_list.append(str(i))
-
-        if not lybconstant.LYB_DO_STRING_V4_WORK + 'auto_soul_duration' in self.configure.common_config[self.game_name]:
-            self.configure.common_config[self.game_name][lybconstant.LYB_DO_STRING_V4_WORK + 'auto_soul_duration'] = 300
-
-        combobox = ttk.Combobox(
-            master=frame,
-            values=combobox_list,
-            textvariable=self.option_dic[lybconstant.LYB_DO_STRING_V4_WORK + 'auto_soul_duration'],
-            state="readonly",
-            height=10,
-            width=7,
-            font=lybconstant.LYB_FONT
-        )
-        combobox.set(self.configure.common_config[self.game_name][
-                         lybconstant.LYB_DO_STRING_V4_WORK + 'auto_soul_duration'])
-        combobox.pack(anchor=tkinter.W, side=tkinter.LEFT)
-        frame.pack(anchor=tkinter.W)
-
-        # 영혼석 끝 ----------------
 
         frame_label.pack(anchor=tkinter.NW, padx=5, pady=5)
 
