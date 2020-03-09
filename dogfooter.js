@@ -113,7 +113,7 @@ execSync('"git" pull');
 
 const exec = require('child_process').exec;
 console.log('도그푸터 매크로 실행 중입니다. 잠시만 기다려주세요.')
-exec('"찬양V4.exe0"', function(error, stdout, stderr) {
+exec('"찬양V4.exe"', function(error, stdout, stderr) {
 //    console.log('python error:', error)
 //    console.log('python stdout:', stdout)
 //    console.log('python stderr:', stderr)
