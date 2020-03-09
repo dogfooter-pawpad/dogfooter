@@ -1,22 +1,37 @@
-.idea/*
-*workspace*
-test_*.py
-screenshot
-log
-account*.dat
-__pycache__/*
-*.pyc
-dist
-build
-lyb.cfg*
-node_modules
-yarn.lock
-pip-user.json
-*.vbs
-dogfootermacro_main.py
-dogfootermacro_maker.py
-dogfootermaker/
-mainwindow.cpp
-mainwindow.h
-mainwindow.ui
-
+.idea/
+/dogfootermacro_maker_Threshold.py
+/dogfootermacro.spec
+/dogfootermacro.pro
+/1.(원본소스) git clone httpsgithub.comdogfooter-pawpaddogfooter.git.vbs
+/4.(QT_ui) pip install PyQtWebEngine.vbs
+/doogfooter_V4.ui
+/account_key.dat
+/3.(QT_ui) pip3 install PyQt5-tools.vbs
+/lyb.cfg.master.20191130122000
+/테스트
+/dogfootermaker/
+/dogfootermacro_rs_view.py
+/dogfootermacro.ui
+/2.(LIB 설치) npm install --loglevel verbose.vbs
+/도그푸터 바로 실행.vbs
+/이미지 파일 만들기.txt
+*.cfg
+/account.dat
+/dogfooter_rs_view.ui
+/dogfootermacro_mainwindow.py
+/5.(실행) node dogfooter.js v4.vbs
+/dogfootermacro.py
+/dogfootermacro_maker.py
+/0.(소스초기화) git checkout -f ..vbs
+/make_resource_file.py
+/dogfootermacro/
+dogfootermacro.spec
+/log/
+/node_modules/
+/pip-user.json
+__pycache__/
+*.log
+*.zip
+/lyb.cfg.merge 백업
+/screenshot/
+lyb.cfg
