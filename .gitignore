@@ -9,14 +9,8 @@ __pycache__/*
 dist
 build
 lyb.cfg*
+*.lyb
 node_modules
 yarn.lock
 pip-user.json
 *.vbs
-dogfootermacro_main.py
-dogfootermacro_maker.py
-dogfootermaker/
-mainwindow.cpp
-mainwindow.h
-mainwindow.ui
-
