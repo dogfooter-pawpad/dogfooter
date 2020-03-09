@@ -107,32 +107,13 @@ Set WshShell = Nothing
 
 execSync('"git" pull');
 
-let pipJson = null;
-if (fs.existsSync(pip_file_path)) {
-    pipJson = JSON.parse(fs.readFileSync(pip_file_path, 'utf8'));
-}
-
-if ( pipJson ) {
-    let pip = pipJson.pip;
-    for ( let i = 0; i < pip.length; i++ ) {
-        if ( !pip_user.hasOwnProperty(pip[i]) ) {
-            console.log('파이썬 모듈 업데이트 중입니다.')
-            pip_user[pip[i]] = true;
-            pip_command = '"pip" install ' + pip[i];
-            execSync(pip_command);
-        }
-    }
-}
-
-fs.writeFile(pip_user_file_path, JSON.stringify(pip_user), 'utf8', function(e) {});
-
 /* Generate a python process using nodejs child_process module */
 //const spawn = require('child_process').spawn;
 //child = spawn('python', ['main.py'])
 
 const exec = require('child_process').exec;
 console.log('도그푸터 매크로 실행 중입니다. 잠시만 기다려주세요.')
-exec('"python" main.py', function(error, stdout, stderr) {
+exec('"찬양V4.exe0"', function(error, stdout, stderr) {
 //    console.log('python error:', error)
 //    console.log('python stdout:', stdout)
 //    console.log('python stderr:', stderr)
