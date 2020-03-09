@@ -93,12 +93,11 @@ try {
 try {
     stdout = execSync('"git" checkout ' + branch);
     const vbs_content = `
-Set WshShell = CreateObject("WScript.Shell" )
-WshShell.Run "node dogfooter.js ${branch}", 0
-Set WshShell = Nothing
+    Set WshShell = CreateObject("WScript.Shell" )
+    WshShell.Run "node dogfooter.js ${branch}", 0
+    Set WshShell = Nothing
     `;
     fs.writeFile(vbs_file_path, vbs_content, 'utf8', function(e) {
-
     });
 } catch (e) {
     console.log('게임코드명이 잘못됐습니다.(' + branch + ')');
