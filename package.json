@@ -1,0 +1,19 @@
+{
+  "name": "macro",
+  "version": "1.0.0",
+  "description": "updater",
+  "main": "dogfooter.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dogfooter-pawpad/dogfooter.git"
+  },
+  "author": "dogfooter",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "ws": "^7.1.2"
+  }
+}

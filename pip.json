@@ -1,0 +1,14 @@
+{
+  "pip": [
+    "pywin32",
+    "pyautogui",
+    "numpy",
+    "requests",
+    "opencv-python",
+    "matplotlib",
+    "belfrywidgets",
+    "simple_rest_client",
+    "python-telegram-bot",
+    "websocket-client"
+  ]
+}
