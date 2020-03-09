@@ -27,6 +27,22 @@
 
 [Python 3.6.8 버전 윈도우 64비트(Windows 10) 다운로드 링크](https://www.python.org/ftp/python/3.6.8/python-3.6.8-amd64-webinstall.exe)
 
+Python 설치를 시작하면 아래와 같은 화면이 계속됩니다. 윈도우 32비트 기준입니다.
+
+<img src="/images/guide_001.png" title="Python 설치 가이드" alt="guide_001"></img><br/>
+
+빨간색으로 표시된 부분을 반드시 체크해주세요.
+
+<img src="/images/guide_002.PNG" title="Python 설치 가이드" alt="guide_002"></img><br/>
+
+Python 이 설치 중입니다.
+
+<img src="/images/guide_003.PNG" title="Python 설치 가이드" alt="guide_003"></img><br/>
+
+Python 설치가 완료되었습니다.
+
+<img src="/images/guide_004.PNG" title="Python 설치 가이드" alt="guide_004"></img><br/>
+
 ## Git for Windows 설치
 
 오픈 소스 깃허브(github.com)를 사용하기 위해서는 컴퓨터에 git 이라는 프로그램을 설치해야 합니다.
@@ -35,8 +51,40 @@
 
 [Git for Windows 공식 홈페이지 바로가기 링크](https://gitforwindows.org/)
 
-"Git for Windows" 를 제대로 설치했다면 "Git Bash"라는 프로그램이 있어햐 합니다. 해당 프로그램이 없다면 구글링을 통해서 제대로 설치해주세요.
-Git Bash를 실행합니다. 이 프로그램은 윈도우즈 CMD 창과 비슷하게 생겼습니다.
+다운로드 받은 파일을 실행하면 다음과 같은 화면이 이어지는 데 아무것도 건들지 말고 계속 "Next"를 누르면 됩니다.
+
+<img src="/images/guide_005.PNG" title="Git Bash 설치 가이드" alt="guide_005"></img><br/>
+
+<img src="/images/guide_006.PNG" title="Git Bash 설치 가이드" alt="guide_006"></img><br/>
+
+<img src="/images/guide_007.PNG" title="Git Bash 설치 가이드" alt="guide_007"></img><br/>
+
+<img src="/images/guide_008.PNG" title="Git Bash 설치 가이드" alt="guide_008"></img><br/>
+
+<img src="/images/guide_009.PNG" title="Git Bash 설치 가이드" alt="guide_009"></img><br/>
+
+<img src="/images/guide_010.PNG" title="Git Bash 설치 가이드" alt="guide_010"></img><br/>
+
+<img src="/images/guide_011.PNG" title="Git Bash 설치 가이드" alt="guide_011"></img><br/>
+
+<img src="/images/guide_012.PNG" title="Git Bash 설치 가이드" alt="guide_012"></img><br/>
+
+<img src="/images/guide_013.PNG" title="Git Bash 설치 가이드" alt="guide_013"></img><br/>
+
+<img src="/images/guide_014.PNG" title="Git Bash 설치 가이드" alt="guide_014"></img><br/>
+
+<img src="/images/guide_015.PNG" title="Git Bash 설치 가이드" alt="guide_015"></img><br/>
+
+Git Bash 설치 진행 중입니다.
+
+<img src="/images/guide_016.PNG" title="Git Bash 설치 가이드" alt="guide_016"></img><br/>
+
+Git Bash 설치가 완료되었습니다.
+
+<img src="/images/guide_017.PNG" title="Git Bash 설치 가이드" alt="guide_017"></img><br/>
+
+"Git Bash"는 다음 단계에서 실행합니다.
+
 
 ## 도그푸터 깃허브 소스 다운로드 받기
 
