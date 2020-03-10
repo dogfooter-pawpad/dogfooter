@@ -46,7 +46,7 @@ const fs = require('fs');
 const pip_user_file_path = './pip-user.json';
 const pip_file_path = './pip.json';
 const git_file_path = './.git';
-const vbs_file_path = './도그푸터 바로 실행.vbs';
+const vbs_file_path = './찬양V4 바로 실행.vbs';
 let pip_user = null;
 let branch = 'master'
 if ( process.argv.length > 2 ) {
