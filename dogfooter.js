@@ -104,6 +104,7 @@ Set WshShell = Nothing
     console.log('게임코드명이 잘못됐습니다.(' + branch + ')');
     process.exit();
 }
+
 execSync('"git" pull');
 
 let pipJson = null;
